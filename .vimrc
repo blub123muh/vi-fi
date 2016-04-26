@@ -7,6 +7,7 @@ syntax on
 filetype plugin indent on
 set bg=dark
 colorscheme solarized
+"colorscheme elflord
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -48,15 +49,17 @@ augroup END
 augroup filetype_python
     autocmd!
     autocmd FileType python nnoremap <buffer> <localleader>c I#<esc>
-    autocmd FileType python iabbrev <buffer> print3 from __future__ import print_function
-    autocmd FileType python iabbrev <buffer> main if __name__ == '__main__':
+    autocmd FileType python nnoremap <buffer> <localleader>im Iif __name__ == '__main__':<esc>o
+    autocmd FileType python :iabbrev <buffer> iff if :<left>
+    autocmd FileType python :iabbrev <buffer> print3 from __future__ import print_function<cr>
+    autocmd FileType python :iabbrev <buffer> bin3 #!/usr/bin/env python3<cr># -*- coding=utf8 -*-
 augroup END
 
 augroup filetype_java
     autocmd!
     autocmd FileType java nnoremap <buffer> <localleader>c I//<esc>
-    autocmd FileType java iabbrev <buffer> main public static void main(String[] args){}
-    autocmd FileType java iabbrev <buffer> print System.out.println();
+    autocmd FileType java nnoremap <buffer> <localleader>im Ipublic static void main(String[] args){<cr>}<esc>ko
+    autocmd FileType java :iabbrev <buffer> print System.out.println()<left>;
 augroup END
 
 augroup filetype_vim
@@ -70,7 +73,7 @@ let maplocalleader = "\\"
 
 " move lines down and up
 nnoremap <leader>- ddp
-nnoremap <leader>_ ddkkp
+nnoremap <leader>_ ddkP
 
 " <c-u> uppercase word
 inoremap <leader><c-u> <esc>viwUi
@@ -105,10 +108,28 @@ onoremap al( :<c-u>normal! F)va(<cr>
 onoremap an{ :<c-u>normal! f{va{<cr>
 onoremap al{ :<c-u>normal! F}va{<cr>
 
+" open last buffer in split
 nnoremap <leader>op :execute "rightbelow vsplit " . bufname('#')<cr>
 
+" highlight trailing spaces
 noremap <leader>w :match Error /\v +$/<cr>
 noremap <leader>W :match<cr>
+
+" end of line semicolon; return
+nnoremap <leader>; mqA;<esc>`q
+
+"use very magic regex for searching
+nnoremap / /\v
+nnoremap ? ?\v
+"clear searched stuff with leader space
+nnoremap <leader><space> :nohlsearch<cr>
+
+"grep for a word
+nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
+nnoremap <leader>n :cnext<cr>
+nnoremap <leader>N :cprevious<cr>
+
+
 "}}}
 " Artefacts of default vimrc {{{
 " Convenient command to see the difference between the current buffer and the

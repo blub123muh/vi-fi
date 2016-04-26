@@ -1,4 +1,9 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_cnt =7
 let g:netrw_dirhist_1='/home/lpag/git/dotfiles/.vim/vim-gitgutter'
 let g:netrw_dirhist_2='/home/lpag/git/dotfiles/.vim'
+let g:netrw_dirhist_3='/home/lpag/git/dotfiles/.vim/bundle'
+let g:netrw_dirhist_4='/home/lpag/git/dotfiles/.vim/bundle/syntastic'
+let g:netrw_dirhist_5='/home/lpag/git/dotfiles/.vim/bundle'
+let g:netrw_dirhist_6='/home/lpag/git/dotfiles/.vim/bundle/vim-colors-solarized'
+let g:netrw_dirhist_7='/home/lpag/git/dotfiles/.vim/bundle/vim-colors-solarized/colors'
