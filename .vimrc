@@ -1,13 +1,14 @@
-" http://lpag.de/ vim.rc file
-" Maintainer:	Lukas Galke 
+" http://lpag.de/ 
+" A rapidly evolving vim.rc file
+" Maintainer:	Lukas Galke <lgalke@lpag.de>
 execute pathogen#infect()
 "Basic Settings {{{
 "colors
 syntax on
 filetype plugin indent on
 set bg=dark
-colorscheme solarized
-"colorscheme elflord
+"colorscheme solarized
+colorscheme slate
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -95,7 +96,7 @@ nnoremap L $
 inoremap jk <esc>
 inoremap <esc> <nop>
 
-" OPERATOR-PENDING
+" operator pending
 onoremap b /return<cr>
 " inside/around next/last parentheses
 onoremap in( :<c-u>normal! f(vi(<cr>
@@ -125,9 +126,9 @@ nnoremap ? ?\v
 nnoremap <leader><space> :nohlsearch<cr>
 
 "grep for a word
-nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
-nnoremap <leader>n :cnext<cr>
-nnoremap <leader>N :cprevious<cr>
+"nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
+"nnoremap <leader>n :cnext<cr>
+"nnoremap <leader>N :cprevious<cr>
 
 
 "}}}
