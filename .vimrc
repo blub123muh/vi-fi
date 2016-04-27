@@ -1,6 +1,6 @@
-" http://lpag.de/ 
 " A rapidly evolving vim.rc file
-" Maintainer:	Lukas Galke <lgalke@lpag.de>
+" Maintainer:	Lukas Galke <git@lpag.de>
+" Homepage:     http://lpag.de/ 
 execute pathogen#infect()
 "Basic Settings {{{
 "colors
@@ -40,33 +40,38 @@ set statusline+=%= " switch to the right side
 set statusline+=%l/%L " display current/max line number
 " }}}
 " FileType specific settings {{{
+" comments {{{
 augroup comments
     autocmd!
-    autocmd FileType tex nnoremap <buffer> <localleader>c I%<esc>
-    autocmd FileType erlang nnoremap <buffer> <localleader>c I%<esc>
+    autocmd FileType sh,c,python nnoremap <buffer> <localleader>c I#<esc>
+    autocmd FileType tex,erlang nnoremap <buffer> <localleader>c I%<esc>
     autocmd FileType vim nnoremap <buffer> <localleader>c I"<esc>
+    autocmd FileType java nnoremap <buffer> <localleader>c I//<esc>
 augroup END
-
+"}}}
+" python {{{
 augroup filetype_python
     autocmd!
-    autocmd FileType python nnoremap <buffer> <localleader>c I#<esc>
     autocmd FileType python nnoremap <buffer> <localleader>im Iif __name__ == '__main__':<esc>o
+    " some convenient abbreviations for python
     autocmd FileType python :iabbrev <buffer> iff if :<left>
     autocmd FileType python :iabbrev <buffer> print3 from __future__ import print_function<cr>
     autocmd FileType python :iabbrev <buffer> bin3 #!/usr/bin/env python3<cr># -*- coding=utf8 -*-
 augroup END
-
+"}}}
+" java {{{
 augroup filetype_java
     autocmd!
-    autocmd FileType java nnoremap <buffer> <localleader>c I//<esc>
     autocmd FileType java nnoremap <buffer> <localleader>im Ipublic static void main(String[] args){<cr>}<esc>ko
     autocmd FileType java :iabbrev <buffer> print System.out.println()<left>;
 augroup END
-
+"}}}
+" vim {{{
 augroup filetype_vim
     autocmd!
     autocmd FileType vim setlocal foldmethod=marker
 augroup END
+"}}}
 "}}}
 " Mappings {{{
 let mapleader = ","
@@ -149,8 +154,4 @@ if has('langmap') && exists('+langnoremap')
 endif
 "}}}
 
-iabbrev @@ lgalke@lpag.de
-iabbrev lpag http://lpag.de/
-iabbrev wtf todo
-iabbrev melli Melanie Poech
-iabbrev luk Lukas Galke
+iabbrev ssig -- <cr>Lukas Galke<cr>git@lpag.de
