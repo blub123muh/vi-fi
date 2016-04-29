@@ -52,11 +52,12 @@ augroup END
 " python {{{
 augroup filetype_python
     autocmd!
-    autocmd FileType python nnoremap <buffer> <localleader>im Iif __name__ == '__main__':<esc>o
+    autocmd FileType python setlocal foldmethod=marker
     " some convenient abbreviations for python
     autocmd FileType python :iabbrev <buffer> iff if :<left>
     autocmd FileType python :iabbrev <buffer> print3 from __future__ import print_function<cr>
     autocmd FileType python :iabbrev <buffer> bin3 #!/usr/bin/env python3<cr># -*- coding=utf8 -*-
+    autocmd FileType python :iabbrev <buffer> INEM if __name__ == '__main__':<cr>main()<esc>
 augroup END
 "}}}
 " java {{{
@@ -86,7 +87,7 @@ inoremap <leader><c-u> <esc>viwUi
 nnoremap <leader><c-u> viwU
 
 " access vimrc
-nnoremap <leader>ev :split $MYVIMRC<cr>
+nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 
 " enclose in quotes
@@ -115,7 +116,7 @@ onoremap an{ :<c-u>normal! f{va{<cr>
 onoremap al{ :<c-u>normal! F}va{<cr>
 
 " open last buffer in split
-nnoremap <leader>op :execute "rightbelow vsplit " . bufname('#')<cr>
+nnoremap <leader>op :execute "rightbelow split " . bufname('#')<cr>
 
 " highlight trailing spaces
 noremap <leader>w :match Error /\v +$/<cr>
@@ -131,11 +132,9 @@ nnoremap ? ?\v
 nnoremap <leader><space> :nohlsearch<cr>
 
 "grep for a word
-"nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
-"nnoremap <leader>n :cnext<cr>
-"nnoremap <leader>N :cprevious<cr>
-
-
+"nnoremap <leader>g :silent! execute "grep! -R " . shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
+nnoremap <leader>n :cnext<cr>
+nnoremap <leader>N :cprevious<cr>
 "}}}
 " Artefacts of default vimrc {{{
 " Convenient command to see the difference between the current buffer and the

@@ -1,7 +1,8 @@
-nnoremap <leader>g :set operatorfunc=GrepOperator<cr>g@
-vnoremap <leader>g :<c-u>call GrepOperator(visualmode())<cr>
+nnoremap <leader>g :set operatorfunc=<SID>GrepOperator<cr>g@
+vnoremap <leader>g :<c-u>call <SID>GrepOperator(visualmode())<cr>
 
-function! GrepOperator(type)
+function! s:GrepOperator(type)
+    let saved_unnamed_register = @@
     if a:type ==# 'v'
         " yank visually selected
         execute "normal! `<v`>y"
@@ -14,4 +15,6 @@ function! GrepOperator(type)
     "note that grep! somehow breaks coloring. very strange.
     silent execute "grep -R " . shellescape(@@) . " ."
     copen
+
+    let @@ = saved_unnamed_register
 endfunction
