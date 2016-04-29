@@ -1,0 +1,12 @@
+[submodule "vimfiles/bundle/syntastic"]
+	path = vimfiles/bundle/syntastic
+	url = https://github.com/scrooloose/syntastic
+[submodule "vimfiles/bundle/vim-latex"]
+	path = vimfiles/bundle/vim-latex
+	url = https://github.com/vim-latex/vim-latex
+[submodule "vimfiles/bundle/vim-gitgutter"]
+	path = vimfiles/bundle/vim-gitgutter
+	url = https://github.com/airblade/vim-gitgutter
+[submodule "vimfiles/bundle/vim-colors-solarized"]
+	path = vimfiles/bundle/vim-colors-solarized
+	url = https://github.com/altercation/vim-colors-solarized
