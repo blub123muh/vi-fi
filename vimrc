@@ -7,8 +7,8 @@ execute pathogen#infect()
 syntax on
 filetype plugin indent on
 set bg=dark
-"colorscheme solarized
-colorscheme slate
+colorscheme solarized
+"colorscheme slate
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
