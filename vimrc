@@ -2,6 +2,7 @@
 " Maintainer:	Lukas Galke <git@lpag.de>
 " Homepage:     http://lpag.de/ 
 execute pathogen#infect()
+set nocompatible
 "Basic Settings {{{
 "colors
 syntax on
@@ -101,6 +102,9 @@ nnoremap L $
 " jk to exit insert mode
 inoremap jk <esc>
 inoremap <esc> <nop>
+nnoremap jj :echom "blub"<cr>
+nnoremap kk :echom "blub"<cr>
+
 
 " operator pending
 onoremap b /return<cr>
