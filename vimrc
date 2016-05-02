@@ -1,9 +1,10 @@
 " A rapidly evolving vim.rc file
 " Maintainer:	Lukas Galke <git@lpag.de>
 " Homepage:     http://lpag.de/ 
+" Author:       Lukas Galke <vim@lpag.de>
+"Basic Settings {{{
 execute pathogen#infect()
 set nocompatible
-"Basic Settings {{{
 "colors
 syntax on
 filetype plugin indent on
@@ -156,3 +157,4 @@ endif
 "}}}
 
 iabbrev ssig -- <cr>Lukas Galke<cr>git@lpag.de
+iabbrev lpag Lukas Galke <vi-fi@lpag.de>
