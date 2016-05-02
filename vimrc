@@ -10,7 +10,7 @@ syntax on
 filetype plugin indent on
 set bg=dark
 "colorscheme solarized
-colorscheme slate
+colorscheme molokai
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
