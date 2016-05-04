@@ -3,6 +3,17 @@
 My rapdidly evolving vi[m]-fi[les].
 Have fun.
 
+## Submodules
+submodules in vimfiles/bundle/
+- syntastic <https://github.com/scrooloose/syntastic>
+- vim-latex <https://github.com/vim-latex/vim-latex>
+- git gutter <https://github.com/airblade/vim-gitgutter>
+- molokai <https://github.com/tomasr/molokai.git>
+
+## Contribution
+- plugins/grep-operator.vim
+- plugins/qutebrowser.vim
+
 ## Installation
 1. Clone the repository (with --recursive to obtain submodules)
 '$ git clone --recursive <http://www.github.com/blub123muh/vi-fi.git>'
