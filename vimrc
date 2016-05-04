@@ -157,4 +157,4 @@ endif
 "}}}
 
 iabbrev ssig -- <cr>Lukas Galke<cr>git@lpag.de
-iabbrev lpag Lukas Galke <vi-fi@lpag.de>
+"iabbrev lpag Lukas Galke <vi-fi@lpag.de>
