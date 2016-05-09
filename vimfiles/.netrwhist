@@ -1,5 +1,5 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_cnt =8
 let g:netrw_dirhist_1='/sys/class/drm/card0'
 let g:netrw_dirhist_2='/sys/class/drm/card0/card0-DP-1'
 let g:netrw_dirhist_3='/sys/class/drm/card0/card0-DP-1/device'
@@ -7,3 +7,4 @@ let g:netrw_dirhist_4='/home/lpag/git/moving/Code/elastify/testdir'
 let g:netrw_dirhist_5='/etc/X11/xorg.conf.d'
 let g:netrw_dirhist_6='/home/lpag/git/moving/Code/elastify'
 let g:netrw_dirhist_7='/home/lpag/git/vi-fi/vimfiles/plugin'
+let g:netrw_dirhist_8='/home/lpag/git/hci/presentation'

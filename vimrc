@@ -75,6 +75,13 @@ augroup filetype_vim
     autocmd FileType vim setlocal foldmethod=marker
 augroup END
 "}}}
+" csv {{{
+augroup CSV_Editing
+    autocmd!
+    autocmd BufRead,BufWritePost *.csv :%ArrangeColumn
+    autocmd BufWritePre *.csv :%UnArrangeColumn
+augroup end
+" }}}
 "}}}
 " Mappings {{{
 let mapleader = ","
