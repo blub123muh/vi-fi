@@ -39,8 +39,8 @@ set ruler	" show the cursor position all the time
 set showcmd	" display incomplete commands
 set laststatus=2 " ALWAYS display status line
 set statusline=%f " Path
-set statusline+=%{fugitive#statusline()} "vim fugitive
 set statusline+=%= " switch to the right side
+set statusline+=%{fugitive#statusline()} "vim fugitive
 set statusline+=%l/%L " display current/max line number
 " }}}
 " FileType specific settings {{{
