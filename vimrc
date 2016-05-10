@@ -50,12 +50,12 @@ augroup comments
     autocmd FileType vim nnoremap <buffer> <localleader>c I"<esc>
     autocmd FileType java nnoremap <buffer> <localleader>c I//<esc>
 augroup END
-"}}}
-" python {{{
-augroup filetype_python
-    autocmd!
-    autocmd FileType python setlocal foldmethod=marker
-    " some convenient abbreviations for python
+    "}}}
+    " python {{{
+    augroup filetype_python
+        autocmd!
+        autocmd FileType python setlocal foldmethod=marker
+        " some convenient abbreviations for python
     autocmd FileType python :iabbrev <buffer> iff if :<left>
     autocmd FileType python :iabbrev <buffer> print3 from __future__ import print_function<cr>
     autocmd FileType python :iabbrev <buffer> bin3 #!/usr/bin/env python3<cr># -*- coding=utf8 -*-
@@ -74,13 +74,18 @@ augroup filetype_vim
     autocmd!
     autocmd FileType vim setlocal foldmethod=marker
 augroup END
+    "}}}
+    "{{{ text
+augroup filetype_text
+    autocmd FileType text setlocal textwidth=78
+augroup END
 "}}}
 " csv {{{
 augroup CSV_Editing
     autocmd!
     autocmd BufRead,BufWritePost *.csv :%ArrangeColumn
     autocmd BufWritePre *.csv :%UnArrangeColumn
-augroup end
+augroup END
 " }}}
 "}}}
 " Mappings {{{
@@ -147,6 +152,21 @@ nnoremap <leader>n :cnext<cr>
 nnoremap <leader>N :cprevious<cr>
 "}}}
 " Artefacts of default vimrc {{{
+augroup vimrcEx
+    au!
+
+    " For all text files set 'textwidth' to 78 characters.
+
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it when the position is invalid or when inside an event handler
+    " (happens when dropping a file on gvim).
+    autocmd BufReadPost *
+                \ if line("'\"") >= 1 && line("'\"") <= line("$") |
+                \   exe "normal! g`\"" |
+                \ endif
+
+augroup END
+
 " Convenient command to see the difference between the current buffer and the
 " file it was loaded from, thus the changes you made.
 " Only define it when not defined already.
