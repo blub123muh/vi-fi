@@ -2,16 +2,23 @@
 " Maintainer:	Lukas Galke <git@lpag.de>
 " Homepage:     http://lpag.de/ 
 " Author:       Lukas Galke <vim@lpag.de>
-"Basic Settings {{{
 set nocompatible
-execute pathogen#infect()
-"colors
-syntax on
-filetype plugin indent on
-set bg=dark
-"colorscheme solarized
-colorscheme molokai
+" Vundle {{{
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
 
+Plugin 'tomasr/molokai.git'
+Plugin 'scrooloose/syntastic'
+Plugin 'tpope/vim-fugitive'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'vim-latex/vim-latex'
+
+call vundle#end()
+filetype plugin indent on
+" }}}
+"Basic Settings {{{
 " Don't use Ex mode, use Q for formatting
 map Q gq
 "set backspace=indent,eol,start "seems useless
@@ -27,8 +34,10 @@ set number
 set relativenumber
 
 "searching
+syntax on
 set hlsearch
 set incsearch
+colorscheme molokai
 
 "search and replace
 set gdefault
