@@ -9,11 +9,13 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
+" Put all your plugins here"
 Plugin 'tomasr/molokai.git'
 Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-latex/vim-latex'
+Plugin 'chrisbra/csv.vim'
 
 call vundle#end()
 filetype plugin indent on
@@ -194,4 +196,4 @@ endif
 "}}}
 
 iabbrev ssig -- <cr>Lukas Galke<cr>git@lpag.de
-"iabbrev lpag Lukas Galke <vi-fi@lpag.de>
+"iabbrev vi-fi Lukas Galke <vi-fi@lpag.de>
