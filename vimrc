@@ -3,8 +3,8 @@
 " Homepage:     http://lpag.de/ 
 " Author:       Lukas Galke <vim@lpag.de>
 "Basic Settings {{{
-execute pathogen#infect()
 set nocompatible
+execute pathogen#infect()
 "colors
 syntax on
 filetype plugin indent on
@@ -33,14 +33,13 @@ set incsearch
 "search and replace
 set gdefault
 "}}}
-
 " statusline {{{
-set ruler	" show the cursor position all the time
-set showcmd	" display incomplete commands
+set noruler	" show the cursor position all the time
+"set showcmd	" display incomplete commands
 set laststatus=2 " ALWAYS display status line
 set statusline=%f " Path
-set statusline+=%= " switch to the right side
 set statusline+=%{fugitive#statusline()} "vim fugitive
+set statusline+=%= " switch to the right side
 set statusline+=%l/%L " display current/max line number
 " }}}
 " FileType specific settings {{{
