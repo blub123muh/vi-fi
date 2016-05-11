@@ -13,6 +13,9 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'tomasr/molokai.git'
 Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-unimpaired'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-latex/vim-latex'
 Plugin 'chrisbra/csv.vim'
@@ -24,6 +27,15 @@ filetype plugin indent on
 " Don't use Ex mode, use Q for formatting
 map Q gq
 "set backspace=indent,eol,start "seems useless
+
+" Convenient access to [] buttons for non-US keyboards
+nmap < [
+nmap > ]
+omap < [
+omap > ]
+xmap < [
+xmap > ]
+
 
 "indenting
 set tabstop=8
@@ -103,7 +115,6 @@ augroup END
 " Mappings {{{
 let mapleader = ","
 let maplocalleader = "\\"
-
 " move lines down and up
 nnoremap <leader>- ddp
 nnoremap <leader>_ ddkP
@@ -115,10 +126,6 @@ nnoremap <leader><c-u> viwU
 " access vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
-
-" enclose in quotes
-nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
-nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
 
 " make H and L more useful
 nnoremap H 0
