@@ -1,4 +1,5 @@
 .netrwhist
 tags
 tags-te
-.vundle
+vimfiles/bundle/*
+!vimfiles/bundle/Vundle.vim
