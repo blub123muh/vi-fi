@@ -9,13 +9,13 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
-" Put all your plugins here"
+"Put all your plugins here"
 Plugin 'tomasr/molokai.git'
 Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
-"Plugin 'tpope/vim-unimpaired'
+Plugin 'tpope/vim-unimpaired'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-latex/vim-latex'
 Plugin 'chrisbra/csv.vim'
@@ -29,16 +29,16 @@ map Q gq
 "set backspace=indent,eol,start "seems useless
 
 " Convenient access to [] buttons for non-US keyboards
-nmap < [
-nmap > ]
-omap < [
-omap > ]
-xmap < [
-xmap > ]
+"nmap < [
+"nmap > ]
+"omap < [
+"omap > ]
+"xmap < [
+"xmap > ]
 
 
 "indenting
-set tabstop=8
+"set tabstop=8
 set softtabstop=4
 set shiftwidth=4
 set expandtab
@@ -74,12 +74,12 @@ augroup comments
     autocmd FileType vim nnoremap <buffer> <localleader>c I"<esc>
     autocmd FileType java nnoremap <buffer> <localleader>c I//<esc>
 augroup END
-    "}}}
-    " python {{{
-    augroup filetype_python
-        autocmd!
-        autocmd FileType python setlocal foldmethod=marker
-        " some convenient abbreviations for python
+"}}}
+" python {{{
+augroup filetype_python
+    autocmd!
+    autocmd FileType python setlocal foldmethod=marker
+    " some convenient abbreviations for python
     autocmd FileType python :iabbrev <buffer> iff if :<left>
     autocmd FileType python :iabbrev <buffer> print3 from __future__ import print_function<cr>
     autocmd FileType python :iabbrev <buffer> bin3 #!/usr/bin/env python3<cr># -*- coding=utf8 -*-
@@ -98,7 +98,7 @@ augroup filetype_vim
     autocmd!
     autocmd FileType vim setlocal foldmethod=marker
 augroup END
-    "}}}
+"}}}
     "{{{ text
 augroup filetype_text
     autocmd FileType text setlocal textwidth=78
@@ -112,7 +112,7 @@ augroup CSV_Editing
 augroup END
 " }}}
 "}}}
-" Mappings {{{
+"Mappings {{{
 let mapleader = ","
 let maplocalleader = "\\"
 " move lines down and up
@@ -139,15 +139,15 @@ inoremap <esc> <nop>
 " operator pending
 onoremap b /return<cr>
 " inside/around next/last parentheses
-onoremap in( :<c-u>normal! f(vi(<cr>
-onoremap il( :<c-u>normal! F)vi(<cr>
-onoremap in{ :<c-u>normal! f{vi{<cr>
-onoremap il{ :<c-u>normal! F}vi{<cr>
+onoremap in( :<c-u> normal! f(vi(<cr>
+onoremap il( :<c-u> normal! F)vi(<cr>
+onoremap in{ :<c-u> normal! f{vi{<cr>
+onoremap il{ :<c-u> normal! F}vi{<cr>
 
-onoremap an( :<c-u>normal! f(va(<cr>
-onoremap al( :<c-u>normal! F)va(<cr>
-onoremap an{ :<c-u>normal! f{va{<cr>
-onoremap al{ :<c-u>normal! F}va{<cr>
+onoremap an( :<c-u> normal! f(va(<cr>
+onoremap al( :<c-u> normal! F)va(<cr>
+onoremap an{ :<c-u> normal! f{va{<cr>
+onoremap al{ :<c-u> normal! F}va{<cr>
 
 " open last buffer in split
 nnoremap <leader>op :execute "rightbelow split " . bufname('#')<cr>

@@ -3,7 +3,7 @@ cd $VIFI_DIR
 echo "[vi-fi] Initializing submodule Vundle"
 git submodule init
 git submodule update
-echo "[vi-fi] Installing other Plugins"
+echo "[vi-fi] Installing other Plugins via Vundle"
 echo | vim +PluginInstall +qall 2>/dev/null
 # create symlinks
 echo "[vi-fi] Creating symlinks"
