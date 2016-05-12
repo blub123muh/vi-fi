@@ -18,7 +18,7 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-latex/vim-latex'
-Plugin 'chrisbra/csv.vim'
+"Plugin 'chrisbra/csv.vim' 
 
 call vundle#end()
 filetype plugin indent on
@@ -104,13 +104,6 @@ augroup filetype_text
     autocmd FileType text setlocal textwidth=78
 augroup END
 "}}}
-" csv {{{
-augroup CSV_Editing
-    autocmd!
-    autocmd BufRead,BufWritePost *.csv :%ArrangeColumn
-    autocmd BufWritePre *.csv :%UnArrangeColumn
-augroup END
-" }}}
 "}}}
 "Mappings {{{
 let mapleader = ","
