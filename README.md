@@ -11,6 +11,9 @@ Submodules in vimfiles/bundle/
 - molokai <https://github.com/tomasr/molokai.git>
 - vim-fugitive <https://github.com/tpope/vim-fugitive.git>
 
+### Current Ideas:
+Let Vundle handle the whole submodule structure!
+
 ## Contribution
 - plugins/grep-operator.vim
 - plugins/qutebrowser.vim

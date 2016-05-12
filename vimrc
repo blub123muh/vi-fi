@@ -15,7 +15,7 @@ Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-unimpaired'
+"Plugin 'tpope/vim-unimpaired'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-latex/vim-latex'
 Plugin 'chrisbra/csv.vim'
@@ -39,9 +39,9 @@ xmap > ]
 
 "indenting
 set tabstop=8
-set expandtab
-set shiftwidth=4
 set softtabstop=4
+set shiftwidth=4
+set expandtab
 
 "numbers
 set number
