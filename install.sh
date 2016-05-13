@@ -1,8 +1,7 @@
 VIFI_DIR=$( cd $(dirname "$0"); pwd -P)
 cd $VIFI_DIR
-echo "[vi-fi] Initializing submodule Vundle"
-git submodule init
-git submodule update
+echo "[vi-fi] Cloning Vundle"
+git clone https://github.com/VundleVim/Vundle.vim.git $VIFI_DIR/vimfiles/bundle/Vundle.vim
 echo "[vi-fi] Installing other Plugins via Vundle"
 echo | vim +PluginInstall! +qall 2>/dev/null
 # create symlinks

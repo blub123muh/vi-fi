@@ -3,4 +3,3 @@ tags
 tags-te
 *.swp
 vimfiles/bundle/*
-!vimfiles/bundle/Vundle.vim
