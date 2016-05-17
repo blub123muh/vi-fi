@@ -18,7 +18,7 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-latex/vim-latex'
-"Plugin 'chrisbra/csv.vim' 
+Plugin 'chrisbra/csv.vim' 
 
 call vundle#end()
 filetype plugin indent on
