@@ -19,6 +19,7 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-latex/vim-latex'
 Plugin 'chrisbra/csv.vim' 
+Plugin 'wannesm/wmgraphviz.vim'
 
 call vundle#end()
 filetype plugin indent on
@@ -107,7 +108,7 @@ augroup END
 "}}}
 "Mappings {{{
 let mapleader = ","
-let maplocalleader = "\\"
+let maplocalleader = "ö"
 " move lines down and up
 nnoremap <leader>- ddp
 nnoremap <leader>_ ddkP
