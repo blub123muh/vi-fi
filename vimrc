@@ -109,6 +109,7 @@ augroup END
 "}}}
     "{{{ text
 augroup filetype_text
+    autocmd!
     autocmd FileType text setlocal textwidth=78
 augroup END
 "}}}
