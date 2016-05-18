@@ -2,27 +2,32 @@
 " Maintainer:	Lukas Galke <git@lpag.de>
 " Homepage:     http://lpag.de/ 
 " Author:       Lukas Galke <vim@lpag.de>
-set nocompatible
-" Vundle {{{
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
+set nocompatible "be iMproved
+" vim-plug {{{
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall | source $MYVIMRC
+endif
 
+call plug#begin('~/.vim/bundle')
 "Put all your plugins here"
-Plugin 'tomasr/molokai.git'
-Plugin 'scrooloose/syntastic'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'vim-latex/vim-latex'
-Plugin 'chrisbra/csv.vim' 
-Plugin 'wannesm/wmgraphviz.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-unimpaired'
+Plug 'scrooloose/syntastic'
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'airblade/vim-gitgutter'
+Plug 'vim-latex/vim-latex'
+Plug 'chrisbra/csv.vim' 
+Plug 'wannesm/wmgraphviz.vim'
 
-call vundle#end()
-filetype plugin indent on
+" Colorschemes
+"Plug 'https://github.com/tomasr/molokai.git'
+Plug 'tomasr/molokai'
+call plug#end()
 " }}}
 "Basic Settings {{{
 " Don't use Ex mode, use Q for formatting
@@ -36,7 +41,6 @@ map Q gq
 "omap > ]
 "xmap < [
 "xmap > ]
-
 
 "indenting
 "set tabstop=8
@@ -52,6 +56,9 @@ set relativenumber
 syntax on
 set hlsearch
 set incsearch
+
+"colors
+set background=dark
 colorscheme molokai
 
 "search and replace
@@ -65,7 +72,7 @@ set statusline=%f " Path
 set statusline+=%{fugitive#statusline()} "vim fugitive
 set statusline+=%= " switch to the right side
 set statusline+=%l/%L " display current/max line number
-" }}}
+"}}}
 " FileType specific settings {{{
 " comments {{{
 augroup comments
@@ -124,11 +131,6 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
 " make H and L more useful
 nnoremap H 0
 nnoremap L $
-
-" jk to exit insert mode
-inoremap jk <esc>
-inoremap <esc> <nop>
-
 
 " operator pending
 onoremap b /return<cr>
@@ -195,6 +197,11 @@ if has('langmap') && exists('+langnoremap')
     set langnoremap
 endif
 "}}}
-
-iabbrev ssig -- <cr>Lukas Galke<cr>git@lpag.de
-"iabbrev vi-fi Lukas Galke <vi-fi@lpag.de>
+"{{{ STRICT
+" jk to exit insert mode
+inoremap jk <esc>
+inoremap <esc> <nop>
+"}}}
+"Plug specific {{{
+nnoremap <leader>tn :NERDTreeToggle<CR>
+"}}}
