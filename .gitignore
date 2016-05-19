@@ -2,5 +2,5 @@
 tags
 tags-te
 *.swp
-vimfiles/bundle/*
+vimfiles/plugged/**
 vimfiles/autoload/plug.vim

@@ -1,16 +1,24 @@
 " A rapidly evolving vim.rc file
-" Maintainer:	Lukas Galke <git@lpag.de>
+" Maintainer:	Lukas Galke <vi-fi@lpag.de>
 " Homepage:     http://lpag.de/ 
-" Author:       Lukas Galke <vim@lpag.de>
+" Author:       Lukas Galke <vi-fi@lpag.de>
 set nocompatible "be iMproved
 " vim-plug {{{
-if empty(glob('~/.vim/autoload/plug.vim'))
-    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall | source $MYVIMRC
-endif
+"if empty(glob('~/.vim/autoload/plug.vim'))
+"    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+"                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"    autocmd VimEnter * PlugInstall | source $MYVIMRC
+"endif
 
-call plug#begin('~/.vim/bundle')
+
+"if empty(glob(expand("%:p:h") . '/autoload/plug.vim'))
+"    silent execute "!curl -fLo " . expand("%:p:h") . "/vimfiles/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+
+"    autocmd VimEnter * PlugInstall | source $MYVIMRC
+"endif
+"echom expand("%:p:h") . '/autoload/plug.vim'
+
+call plug#begin('~/.vim/plugged')
 "Put all your plugins here"
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
@@ -50,7 +58,7 @@ set expandtab
 "numbers{{{
 set number
 set relativenumber
-}}}
+"}}}
 "colors {{{
 set background=dark
 colorscheme molokai
@@ -169,7 +177,7 @@ function! ResCur()
 endfunction
 augroup resCur
     autocmd!
-    autocmd BufWinEnter * call ResCur() 
+    autocmd BufWinEnter * call ResCur() | normal! zv
 augroup END
 
 " Convenient command to see the difference between the current buffer and the
