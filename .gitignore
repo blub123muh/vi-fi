@@ -3,3 +3,4 @@ tags
 tags-te
 *.swp
 vimfiles/bundle/*
+vimfiles/autoload/plug.vim
