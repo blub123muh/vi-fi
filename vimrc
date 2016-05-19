@@ -9,15 +9,15 @@ set nocompatible "be iMproved
 "                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 "    autocmd VimEnter * PlugInstall | source $MYVIMRC
 "endif
+" Retrieve path to _this_ file (with any symlinks resolved)
 let s:path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
-if empty(glob(s:path . '/autoload/plug.vim'))
+" Check for existence of plug.vim in autoload
+if empty(glob(s:path . '/vimfiles/autoload/plug.vim'))
+    " Download plug.vim
     silent execute "!curl -fLo " . s:path . "/vimfiles/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+    " Install all the rest
     autocmd VimEnter * PlugInstall | source s:path
 endif
-echom expand("%:p:h") . '/autoload/plug.vim'
-
-" Retrieve path to _this_ file (with any symlinks resolved)
-"echom s:path . '/vimfiles/plugged'
 
 "call plug#begin('~/.vim/plugged')
 call plug#begin(s:path . '/vimfiles/plugged')
