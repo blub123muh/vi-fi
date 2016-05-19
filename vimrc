@@ -13,13 +13,13 @@ set nocompatible "be iMproved
 let s:vifi_vimrc = resolve(expand('<sfile>:p'))
 " We also need its basename
 let s:vifi = fnamemodify(s:vifi_vimrc, ':h')
-let s:vifi_files = s:vifi . /vimfiles
-let &runtimepath.= ',' . s:vifi_files
+let s:vifi_files = s:vifi . "/vimfiles"
+"let &runtimepath.= ',' . s:vifi_files
 echom &runtimepath
 " Check for existence of plug.vim in autoload
 if empty(glob(s:vifi_files . '/autoload/plug.vim'))
     " Download plug.vim
-    silent execute "!curl -fLo " . s:vifi_files . "/vimfiles/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+    silent execute "!curl -fLo " . s:vifi_files . "/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
     " Install all the rest
     autocmd VimEnter * PlugInstall | execute "source " . s:vifi_vimrc
 endif
