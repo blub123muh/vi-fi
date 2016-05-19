@@ -22,7 +22,7 @@ if empty(glob(s:vifi . '/vimfiles/autoload/plug.vim'))
 endif
 
 "call plug#begin('~/.vim/plugged')
-call plug#begin(s:path . '/vimfiles/plugged')
+call plug#begin(s:vifi . '/vimfiles/plugged')
 "Put all your plugins here"
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
