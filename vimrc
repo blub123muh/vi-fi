@@ -5,9 +5,9 @@
 set nocompatible "be iMproved
 " vim-plug {{{
 if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall | source $MYVIMRC
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall | source $MYVIMRC
 endif
 
 call plug#begin('~/.vim/bundle')
@@ -29,18 +29,21 @@ Plug 'wannesm/wmgraphviz.vim'
 Plug 'tomasr/molokai'
 call plug#end()
 " }}}
+"{{{ Map Leaders and German Keyboard Layout
+let mapleader = ","
+let maplocalleader = "ü"
+
+nmap ö [
+nmap ä ]
+omap ö [
+omap ä ]
+xmap ö [
+xmap ä ]
+"}}}
 "Basic Settings {{{
 " Don't use Ex mode, use Q for formatting
 map Q gq
 "set backspace=indent,eol,start "seems useless
-
-" Convenient access to [] buttons for non-US keyboards
-"nmap < [
-"nmap > ]
-"omap < [
-"omap > ]
-"xmap < [
-"xmap > ]
 
 "indenting
 "set tabstop=8
@@ -107,16 +110,15 @@ augroup filetype_vim
     autocmd FileType vim setlocal foldmethod=marker
 augroup END
 "}}}
-    "{{{ text
+"{{{ text
 augroup filetype_text
     autocmd!
+    " For all text files set 'textwidth' to 78 characters.
     autocmd FileType text setlocal textwidth=78
 augroup END
 "}}}
 "}}}
 "Mappings {{{
-let mapleader = ","
-let maplocalleader = "ö"
 " move lines down and up
 nnoremap <leader>- ddp
 nnoremap <leader>_ ddkP
@@ -133,8 +135,6 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
 nnoremap H 0
 nnoremap L $
 
-" operator pending
-onoremap b /return<cr>
 " inside/around next/last parentheses
 onoremap in( :<c-u> normal! f(vi(<cr>
 onoremap il( :<c-u> normal! F)vi(<cr>
@@ -157,8 +157,8 @@ noremap <leader>W :match<cr>
 nnoremap <leader>; mqA;<esc>`q
 
 "use very magic regex for searching
-nnoremap / /\v
-nnoremap ? ?\v
+"nnoremap / /\v
+"nnoremap ? ?\v
 "clear searched stuff with leader space
 nnoremap <leader><space> :nohlsearch<cr>
 
@@ -167,20 +167,19 @@ nnoremap <leader><space> :nohlsearch<cr>
 nnoremap <leader>n :cnext<cr>
 nnoremap <leader>N :cprevious<cr>
 "}}}
-" Artefacts of default vimrc {{{
-augroup vimrcEx
-    au!
-
-    " For all text files set 'textwidth' to 78 characters.
-
-    " When editing a file, always jump to the last known cursor position.
-    " Don't do it when the position is invalid or when inside an event handler
-    " (happens when dropping a file on gvim).
-    autocmd BufReadPost *
-                \ if line("'\"") >= 1 && line("'\"") <= line("$") |
-                \   exe "normal! g`\"" |
-                \ endif
-
+" curser position {{{
+" restores curser position 
+" fixed version from
+" http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
+function! ResCur()
+    if line("'\"") <= line("$")
+        normal! g`"
+        return 1
+    endif
+endfunction
+augroup resCur
+    autocmd!
+    autocmd BufWinEnter * call ResCur() 
 augroup END
 
 " Convenient command to see the difference between the current buffer and the
@@ -191,12 +190,12 @@ if !exists(":DiffOrig")
                 \ | wincmd p | diffthis
 endif
 
-if has('langmap') && exists('+langnoremap')
-    " Prevent that the langmap option applies to characters that result from a
-    " mapping.  If unset (default), this may break plugins (but it's backward
-    " compatible).
-    set langnoremap
-endif
+"if has('langmap') && exists('+langnoremap')
+" Prevent that the langmap option applies to characters that result from a
+" mapping.  If unset (default), this may break plugins (but it's backward
+" compatible).
+"    set langnoremap
+"endif
 "}}}
 "{{{ STRICT
 " jk to exit insert mode
