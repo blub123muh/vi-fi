@@ -25,8 +25,8 @@ Plug 'chrisbra/csv.vim'
 Plug 'wannesm/wmgraphviz.vim'
 
 " Colorschemes
-"Plug 'https://github.com/tomasr/molokai.git'
 Plug 'tomasr/molokai'
+
 call plug#end()
 " }}}
 "{{{ Map Leaders and German Keyboard Layout
@@ -41,30 +41,24 @@ xmap ö [
 xmap ä ]
 "}}}
 "Basic Settings {{{
-" Don't use Ex mode, use Q for formatting
-map Q gq
-"set backspace=indent,eol,start "seems useless
-
-"indenting
+"indenting {{{
 "set tabstop=8
 set softtabstop=4
 set shiftwidth=4
 set expandtab
-
-"numbers
+"}}}
+"numbers{{{
 set number
 set relativenumber
-
-"searching
+}}}
+"colors {{{
+set background=dark
+colorscheme molokai
+"}}}
+"searching and replacing{{{
 syntax on
 set hlsearch
 set incsearch
-
-"colors
-set background=dark
-colorscheme molokai
-
-"search and replace
 set gdefault
 "}}}
 " statusline {{{
@@ -75,6 +69,7 @@ set statusline=%f " Path
 set statusline+=%{fugitive#statusline()} "vim fugitive
 set statusline+=%= " switch to the right side
 set statusline+=%l/%L " display current/max line number
+"}}}
 "}}}
 " FileType specific settings {{{
 " comments {{{
@@ -161,13 +156,8 @@ nnoremap <leader>; mqA;<esc>`q
 "nnoremap ? ?\v
 "clear searched stuff with leader space
 nnoremap <leader><space> :nohlsearch<cr>
-
-"grep for a word
-"nnoremap <leader>g :silent! execute "grep! -R " . shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
-nnoremap <leader>n :cnext<cr>
-nnoremap <leader>N :cprevious<cr>
 "}}}
-" curser position {{{
+" Rescue curser position {{{
 " restores curser position 
 " fixed version from
 " http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
@@ -197,8 +187,9 @@ endif
 "    set langnoremap
 "endif
 "}}}
-"{{{ STRICT
+"{{{ Unmappings
 " jk to exit insert mode
+map Q <nop>
 inoremap jk <esc>
 inoremap <esc> <nop>
 "}}}
