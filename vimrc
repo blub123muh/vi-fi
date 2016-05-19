@@ -9,15 +9,14 @@ set nocompatible "be iMproved
 "                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 "    autocmd VimEnter * PlugInstall | source $MYVIMRC
 "endif
-"if empty(glob(expand("%:p:h") . '/autoload/plug.vim'))
-"    silent execute "!curl -fLo " . expand("%:p:h") . "/vimfiles/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
-
-"    autocmd VimEnter * PlugInstall | source $MYVIMRC
-"endif
-"echom expand("%:p:h") . '/autoload/plug.vim'
+let s:path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+if empty(glob(s:path . '/autoload/plug.vim'))
+    silent execute "!curl -fLo " . s:path . "/vimfiles/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+    autocmd VimEnter * PlugInstall | source s:path
+endif
+echom expand("%:p:h") . '/autoload/plug.vim'
 
 " Retrieve path to _this_ file (with any symlinks resolved)
-let s:path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 "echom s:path . '/vimfiles/plugged'
 
 "call plug#begin('~/.vim/plugged')

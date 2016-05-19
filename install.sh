@@ -13,7 +13,7 @@ then
 fi
 
 echo "[vi-fi] Installing other plugins with vim-plug"
-echo | vim -u $VIFI_DIR/vimrc +PlugInstall +qall 2>/dev/null
+vim -u $VIFI_DIR/vimrc +PlugInstall +qall 2>/dev/null
 
 echo "[vi-fi] Creating symlinks (force with -f)"
 ln -snv "$@" $VIFI_DIR/vimrc ~/.vimrc
