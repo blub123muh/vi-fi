@@ -10,11 +10,13 @@ set nocompatible "be iMproved
 "    autocmd VimEnter * PlugInstall | source $MYVIMRC
 "endif
 " Retrieve path to _this_ file (with any symlinks resolved)
-let s:path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+let s:path = resolve(expand('<sfile>:p'))
+" We also need its basename
+let s:vifi = fnamemodify(s:path, ':h')
 " Check for existence of plug.vim in autoload
-if empty(glob(s:path . '/vimfiles/autoload/plug.vim'))
+if empty(glob(s:vifi . '/vimfiles/autoload/plug.vim'))
     " Download plug.vim
-    silent execute "!curl -fLo " . s:path . "/vimfiles/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+    silent execute "!curl -fLo " . s:vifi . "/vimfiles/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
     " Install all the rest
     autocmd VimEnter * PlugInstall | source s:path
 endif
