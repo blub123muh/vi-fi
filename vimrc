@@ -13,9 +13,9 @@ set nocompatible "be iMproved
 let s:vifi_vimrc = resolve(expand('<sfile>:p'))
 " We also need its basename
 let s:vifi = fnamemodify(s:vifi_vimrc, ':h')
+" And conveniently store path to virtual .vim dir
 let s:vifi_files = s:vifi . "/vimfiles"
-"let &runtimepath.= ',' . s:vifi_files
-echom &runtimepath
+let &runtimepath.= ',' . s:vifi_files
 " Check for existence of plug.vim in autoload
 if empty(glob(s:vifi_files . '/autoload/plug.vim'))
     " Download plug.vim
