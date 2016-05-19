@@ -18,7 +18,7 @@ if empty(glob(s:vifi . '/vimfiles/autoload/plug.vim'))
     " Download plug.vim
     silent execute "!curl -fLo " . s:vifi . "/vimfiles/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
     " Install all the rest
-    autocmd VimEnter * PlugInstall | source s:path
+    autocmd VimEnter * PlugInstall | execute "source " . s:path
 endif
 
 "call plug#begin('~/.vim/plugged')
