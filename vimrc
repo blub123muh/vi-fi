@@ -9,8 +9,6 @@ set nocompatible "be iMproved
 "                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 "    autocmd VimEnter * PlugInstall | source $MYVIMRC
 "endif
-
-
 "if empty(glob(expand("%:p:h") . '/autoload/plug.vim'))
 "    silent execute "!curl -fLo " . expand("%:p:h") . "/vimfiles/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
 
@@ -18,7 +16,12 @@ set nocompatible "be iMproved
 "endif
 "echom expand("%:p:h") . '/autoload/plug.vim'
 
-call plug#begin('~/.vim/plugged')
+" Retrieve path to _this_ file (with any symlinks resolved)
+let s:path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+"echom s:path . '/vimfiles/plugged'
+
+"call plug#begin('~/.vim/plugged')
+call plug#begin(s:path . '/vimfiles/plugged')
 "Put all your plugins here"
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'

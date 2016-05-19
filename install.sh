@@ -6,7 +6,7 @@ VIFI_DIR=$( cd $(dirname "$0"); pwd -P)
 #    echo "[vi-fi] Cloning Vundle"
 #    git clone https://github.com/VundleVim/Vundle.vim.git $VIFI_DIR/vimfiles/bundle/Vundle.vim
 #fi
-if [ -e $VIFI_DIR/vimfiles/autoload/plug.vim ]
+if [ ! -e $VIFI_DIR/vimfiles/autoload/plug.vim ]
 then
     curl -fLo $VIFI_DIR/vimfiles/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
