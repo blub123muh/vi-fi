@@ -12,28 +12,30 @@ set nocompatible "be iMproved
 " Retrieve path to _this_ file (with any symlinks resolved)
 let s:vifi_vimrc = resolve(expand('<sfile>:p'))
 " We also need its basename
-let s:vifi = fnamemodify(s:vifi_vimrc, ':h')
+"let s:vifi = fnamemodify(s:vifi_vimrc, ':h')
 " And conveniently store path to virtual .vim dir
-let s:vifi_files = s:vifi . "/vimfiles"
-let &runtimepath.= ',' . s:vifi_files
+"let s:vifi_vimfiles = s:vifi . "/vimfiles"
+
+let s:vifi_vimfiles = fnamemodify(s:vifi_vimrc, ':h') . '/vimfiles'
+let &runtimepath.= ',' . s:vifi_vimfiles
 " Check for existence of plug.vim in autoload
-if empty(glob(s:vifi_files . '/autoload/plug.vim'))
+if empty(glob(s:vifi_vimfiles . '/autoload/plug.vim'))
     " Download plug.vim
-    silent execute "!curl -fLo " . s:vifi_files . "/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+    silent execute "!curl -fLo " . s:vifi_vimfiles . "/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
     " Install all the rest
     autocmd VimEnter * PlugInstall | execute "source " . s:vifi_vimrc
 endif
 
 "call plug#begin('~/.vim/plugged')
-call plug#begin(s:vifi_files . '/plugged')
+call plug#begin(s:vifi_vimfiles . '/plugged')
 "Put all your plugins here"
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-unimpaired'
 Plug 'scrooloose/syntastic'
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
+"Plug 'scrooloose/nerdtree'
+"Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-latex/vim-latex'
 Plug 'chrisbra/csv.vim' 
@@ -68,7 +70,7 @@ set relativenumber
 "}}}
 "colors {{{
 set background=dark
-colorscheme molokai
+silent! colorscheme molokai
 "}}}
 "searching and replacing{{{
 syntax on
@@ -125,6 +127,12 @@ augroup filetype_text
     autocmd!
     " For all text files set 'textwidth' to 78 characters.
     autocmd FileType text setlocal textwidth=78
+augroup END
+"}}}
+"{{{ csv
+augroup filetype_csv
+    autocmd!
+    autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn
 augroup END
 "}}}
 "}}}
