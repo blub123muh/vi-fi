@@ -1,23 +1,18 @@
+" Header {{{
 " A rapidly evolving vim.rc file
 " Maintainer:	Lukas Galke <vi-fi@lpag.de>
 " Homepage:     http://lpag.de/ 
 " Author:       Lukas Galke <vi-fi@lpag.de>
 set nocompatible "be iMproved
-" vim-plug {{{
-"if empty(glob('~/.vim/autoload/plug.vim'))
-"    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-"                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-"    autocmd VimEnter * PlugInstall | source $MYVIMRC
-"endif
+"}}}
+" Nomadic mode {{{
+" Enables sourcing with 'vim -u' with all Plugs
 " Retrieve path to _this_ file (with any symlinks resolved)
 let s:vifi_vimrc = resolve(expand('<sfile>:p'))
-" We also need its basename
-"let s:vifi = fnamemodify(s:vifi_vimrc, ':h')
-" And conveniently store path to virtual .vim dir
-"let s:vifi_vimfiles = s:vifi . "/vimfiles"
-
 let s:vifi_vimfiles = fnamemodify(s:vifi_vimrc, ':h') . '/vimfiles'
 let &runtimepath.= ',' . s:vifi_vimfiles
+" }}}
+" vim-plug {{{
 " Check for existence of plug.vim in autoload
 if empty(glob(s:vifi_vimfiles . '/autoload/plug.vim'))
     " Download plug.vim
@@ -26,7 +21,6 @@ if empty(glob(s:vifi_vimfiles . '/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall | execute "source " . s:vifi_vimrc
 endif
 
-"call plug#begin('~/.vim/plugged')
 call plug#begin(s:vifi_vimfiles . '/plugged')
 "Put all your plugins here"
 Plug 'tpope/vim-fugitive'
