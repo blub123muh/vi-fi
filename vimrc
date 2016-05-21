@@ -28,13 +28,16 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-unimpaired'
 Plug 'scrooloose/syntastic'
-"Plug 'scrooloose/nerdtree'
-"Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-latex/vim-latex'
 Plug 'chrisbra/csv.vim' 
 Plug 'wannesm/wmgraphviz.vim'
 
+" Experimental
+"Plug 'powerline/powerline'
+Plug 'vim-airline/vim-airline'
+"Plug 'scrooloose/nerdtree'
+"Plug 'Xuyuanp/nerdtree-git-plugin'
 " Colorschemes
 Plug 'tomasr/molokai'
 
@@ -74,12 +77,12 @@ set gdefault
 "}}}
 " statusline {{{
 set noruler	" show the cursor position all the time
-"set showcmd	" display incomplete commands
+set showcmd	" display incomplete commands
 set laststatus=2 " ALWAYS display status line
-set statusline=%f " Path
-set statusline+=%{fugitive#statusline()} "vim fugitive
-set statusline+=%= " switch to the right side
-set statusline+=%l/%L " display current/max line number
+"set statusline=%f " Path
+"set statusline+=%{fugitive#statusline()} "vim fugitive
+"set statusline+=%= " switch to the right side
+"set statusline+=%l/%L " display current/max line number
 "}}}
 "}}}
 " FileType specific settings {{{
