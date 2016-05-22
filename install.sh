@@ -14,7 +14,7 @@ VIFI_DIR=$( cd $(dirname "$0"); pwd -P)
 #fi
 
 #echo "[vi-fi] Installing plugins with vim-plug"
-#vim -u $VIFI_DIR/vimrc +PlugInstall +qall
+vim -u $VIFI_DIR/vimrc +PlugUpgrade +PlugInstall +PlugUpdate +qall
 
 echo "[vi-fi] Creating symlinks (force with -f)"
 ln -snv "$@" $VIFI_DIR/vimrc ~/.vimrc
