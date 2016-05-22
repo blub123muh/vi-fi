@@ -1,7 +1,7 @@
 " Header {{{
 " A rapidly evolving vim.rc file
 " Maintainer:	Lukas Galke <vi-fi@lpag.de>
-" Homepage:     http://lpag.de/ 
+" Homepage:     http://lpag.de/
 " Author:       Lukas Galke <vi-fi@lpag.de>
 set nocompatible "be iMproved
 "}}}
@@ -30,16 +30,18 @@ Plug 'tpope/vim-unimpaired'
 Plug 'scrooloose/syntastic'
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-latex/vim-latex'
-Plug 'chrisbra/csv.vim' 
+Plug 'chrisbra/csv.vim'
 Plug 'wannesm/wmgraphviz.vim'
 
 " Experimental
-"Plug 'powerline/powerline'
 Plug 'vim-airline/vim-airline'
-"Plug 'scrooloose/nerdtree'
-"Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'vim-airline/vim-airline-themes'
+
 " Colorschemes
 Plug 'tomasr/molokai'
+Plug 'altercation/vim-colors-solarized'
+Plug 'sheerun/vim-wombat-scheme'
+Plug 'sjl/badwolf'
 
 call plug#end()
 " }}}
@@ -66,8 +68,9 @@ set number
 set relativenumber
 "}}}
 "colors {{{
+syntax enable
 set background=dark
-silent! colorscheme molokai
+silent! colorscheme badwolf
 "}}}
 "searching and replacing{{{
 syntax on
@@ -161,7 +164,7 @@ onoremap al( :<c-u> normal! F)va(<cr>
 onoremap an{ :<c-u> normal! f{va{<cr>
 onoremap al{ :<c-u> normal! F}va{<cr>
 
-" open last buffer in split
+" open last buffer in splint
 nnoremap <leader>op :execute "rightbelow split " . bufname('#')<cr>
 
 " highlight trailing spaces
@@ -178,7 +181,7 @@ nnoremap <leader>; mqA;<esc>`q
 nnoremap <leader><space> :nohlsearch<cr>
 "}}}
 " Rescue curser position {{{
-" restores curser position 
+" restores curser position
 " fixed version from
 " http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
 function! ResCur()
@@ -187,6 +190,7 @@ function! ResCur()
         return 1
     endif
 endfunction
+
 augroup resCur
     autocmd!
     autocmd BufWinEnter * call ResCur() | normal! zv
@@ -199,20 +203,10 @@ if !exists(":DiffOrig")
     command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
                 \ | wincmd p | diffthis
 endif
-
-"if has('langmap') && exists('+langnoremap')
-" Prevent that the langmap option applies to characters that result from a
-" mapping.  If unset (default), this may break plugins (but it's backward
-" compatible).
-"    set langnoremap
-"endif
 "}}}
 "{{{ Unmappings
 " jk to exit insert mode
 map Q <nop>
 inoremap jk <esc>
 inoremap <esc> <nop>
-"}}}
-"Plug specific {{{
-nnoremap <leader>tn :NERDTreeToggle<CR>
 "}}}
