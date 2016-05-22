@@ -38,6 +38,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 " Colorschemes
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-colorscheme-switcher'
 Plug 'tomasr/molokai'
 Plug 'altercation/vim-colors-solarized'
 Plug 'sheerun/vim-wombat-scheme'
@@ -68,12 +70,10 @@ set number
 set relativenumber
 "}}}
 "colors {{{
-syntax enable
 set background=dark
 silent! colorscheme badwolf
 "}}}
 "searching and replacing{{{
-syntax on
 set hlsearch
 set incsearch
 set gdefault
@@ -113,7 +113,7 @@ augroup END
 augroup filetype_java
     autocmd!
     autocmd FileType java nnoremap <buffer> <localleader>im Ipublic static void main(String[] args){<cr>}<esc>ko
-    autocmd FileType java :iabbrev <buffer> print System.out.println()<left>;
+    autocmd FileType java iabbrev <buffer> print System.out.println()<left>;
 augroup END
 "}}}
 " vim {{{
@@ -177,8 +177,10 @@ nnoremap <leader>; mqA;<esc>`q
 "use very magic regex for searching
 "nnoremap / /\v
 "nnoremap ? ?\v
+"
 "clear searched stuff with leader space
 nnoremap <leader><space> :nohlsearch<cr>
+
 "}}}
 " Rescue curser position {{{
 " restores curser position
