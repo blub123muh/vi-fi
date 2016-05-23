@@ -47,17 +47,6 @@ Plug 'sjl/badwolf'
 
 call plug#end()
 " }}}
-"{{{ Map Leaders and German Keyboard Layout
-let mapleader = ","
-let maplocalleader = "ü"
-
-nmap ö [
-nmap ä ]
-omap ö [
-omap ä ]
-xmap ö [
-xmap ä ]
-"}}}
 "Basic Settings {{{
 "indenting {{{
 "set tabstop=8
@@ -87,6 +76,10 @@ set laststatus=2 " ALWAYS display status line
 "set statusline+=%= " switch to the right side
 "set statusline+=%l/%L " display current/max line number
 "}}}
+" vim-latex {{{
+let g:tex_flavor='latex'
+let g:Tex_DefaultTargetFormat='pdf'
+" }}}
 "}}}
 " FileType specific settings {{{
 " comments {{{
@@ -113,7 +106,7 @@ augroup END
 augroup filetype_java
     autocmd!
     autocmd FileType java nnoremap <buffer> <localleader>im Ipublic static void main(String[] args){<cr>}<esc>ko
-    autocmd FileType java iabbrev <buffer> print System.out.println()<left>;
+    autocmd FileType java iabbrev <buffer> print System.out.println();<left><left>
 augroup END
 "}}}
 " vim {{{
@@ -132,9 +125,22 @@ augroup END
 "{{{ csv
 augroup filetype_csv
     autocmd!
-    autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn
+    autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn<cr>
+    autocmd FileType csv nnoremap <buffer> <localleader>uc :%UnarrangeColumn<cr>
+    autocmd FileType csv nnoremap <buffer> <localleader>nr :NewRecord<cr>
 augroup END
 "}}}
+"}}}
+"{{{ Map Leaders and German Keyboard Layout
+let mapleader = ","
+let maplocalleader = "ü"
+
+nmap ö [
+nmap ä ]
+omap ö [
+omap ä ]
+xmap ö [
+xmap ä ]
 "}}}
 "Mappings {{{
 " move lines down and up
@@ -175,8 +181,8 @@ noremap <leader>W :match<cr>
 nnoremap <leader>; mqA;<esc>`q
 
 "use very magic regex for searching
-"nnoremap / /\v
-"nnoremap ? ?\v
+nnoremap / /\v
+nnoremap ? ?\v
 "
 "clear searched stuff with leader space
 nnoremap <leader><space> :nohlsearch<cr>
