@@ -19,7 +19,7 @@ function! s:QuteOperator(type)
     else
         return
     endif
-    echom @@
+    echom shellescape(@@)
     silent execute "!qutebrowser " . shellescape(@@) . " 2>/dev/null &"
     redraw!
     let @@ = saved_unnamed_register

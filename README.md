@@ -1,21 +1,23 @@
 # vi-fi
 ## Description
-My rapdidly evolving vi[m]-fi[les].
+My rapidly evolving vi[m]-fi[les].
 Have fun.
 
 ## Contribution
-- plugins/grep-operator.vim
-- plugins/qutebrowser.vim
+- Nomadic vimrc mode (invokable with -u), even including plugins, and correct vimrc access mappings.
+- plugins/grep-operator.vim (based on steve losh's book)
+- plugins/qutebrowser.vim (own idea)
 
 ## Installation
-1. Clone the repository <$ git clone http://www.github.com/blub123muh/vi-fi.git>
-2. Run the install script in order to install all the Plugins and create appropriate symlinks (use -f to _OVERWRITE_ old .vimrc and .vim) <$ ./install.sh>. You can also just try the vi-fi vimrc (with all plugins) by running <vim -u vimrc>
-3. Enjoy.
-
-## Homepage
-Coming soon.
+1. Clone the repository
+    git clone http://www.github.com/blub123muh/vi-fi.git
+2. Try it.
+    'vim -u vifi/vimrc'
+2. Enjoy [and optionally create symlinks].
+    bash vifi/install.sh
 
 ## Maintainer
-Lukas Galke <vi-fi@lpag.de>
-
+Lukas Galke\
+<vi-fi@lpag.de>\
+<http://lpag.de>
 

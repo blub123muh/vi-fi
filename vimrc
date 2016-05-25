@@ -2,14 +2,13 @@
 " A rapidly evolving vim.rc file
 " Maintainer:	Lukas Galke <vi-fi@lpag.de>
 " Homepage:     http://lpag.de/
-" Author:       Lukas Galke <vi-fi@lpag.de>
 set nocompatible "be iMproved
 "}}}
 " Nomadic mode {{{
 " Enables sourcing with 'vim -u' with all Plugs
 " Retrieve path to _this_ file (with any symlinks resolved)
-let s:vifi_vimrc = resolve(expand('<sfile>:p'))
-let s:vifi_vimfiles = fnamemodify(s:vifi_vimrc, ':h') . '/vimfiles'
+let g:vifi_vimrc = resolve(expand('<sfile>:p'))
+let s:vifi_vimfiles = fnamemodify(g:vifi_vimrc, ':h') . '/vimfiles'
 let &runtimepath.= ',' . s:vifi_vimfiles
 " }}}
 " vim-plug {{{
@@ -18,7 +17,7 @@ if empty(glob(s:vifi_vimfiles . '/autoload/plug.vim'))
     " Download plug.vim
     silent execute "!curl -fLo " . s:vifi_vimfiles . "/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
     " Install all the rest
-    autocmd VimEnter * PlugInstall | execute "source " . s:vifi_vimrc
+    autocmd VimEnter * PlugInstall | execute "source " . g:vifi_vimrc
 endif
 
 call plug#begin(s:vifi_vimfiles . '/plugged')
@@ -36,6 +35,8 @@ Plug 'wannesm/wmgraphviz.vim'
 " Experimental
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'suan/vim-instant-markdown'
+Plug 'scrooloose/nerdcommenter'
 
 " Colorschemes
 Plug 'xolox/vim-misc'
@@ -76,9 +77,24 @@ set laststatus=2 " ALWAYS display status line
 "set statusline+=%= " switch to the right side
 "set statusline+=%l/%L " display current/max line number
 "}}}
+"}}}
+" Plugin specific settings{{{
 " vim-latex {{{
 let g:tex_flavor='latex'
 let g:Tex_DefaultTargetFormat='pdf'
+let g:Tex_ViewRule_pdf='okular'
+" }}}
+" instant-markdown {{{
+let g:instant_markdown_autostart = 0
+augroup markdown
+    autocmd!
+    silent execute "!command -v instant-markdown-d >/dev/null 2>&1"
+    if v:shell_error == 0
+        autocmd FileType markdown nnoremap <buffer> <localleader>li :InstantMarkdownPreview<cr>
+    else
+        echom "Instant markdown disabled; if u need it: npm -g install instant-markdown-d"
+    endif
+augroup end
 " }}}
 "}}}
 " FileType specific settings {{{
@@ -143,7 +159,14 @@ xmap ö [
 xmap ä ]
 "}}}
 "Mappings {{{
-" move lines down and up
+" no ex mode
+map Q <nop>
+
+" jk to exit insert mode
+inoremap jk <esc>
+inoremap <esc> <nop>
+
+"move lines down and up
 nnoremap <leader>- ddp
 nnoremap <leader>_ ddkP
 
@@ -152,8 +175,13 @@ inoremap <leader><c-u> <esc>viwUi
 nnoremap <leader><c-u> viwU
 
 " access vimrc
-nnoremap <leader>ev :vsplit $MYVIMRC<cr>
-nnoremap <leader>sv :source $MYVIMRC<cr>
+"nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+"nnoremap <leader>sv :source $MYVIMRC<cr>
+
+" access THIS vimrc
+nnoremap <leader>ev :execute "rightbelow split " . g:vifi_vimrc<cr>
+nnoremap <leader>sv :execute "source" . g:vifi_vimrc<cr>
+
 
 " make H and L more useful
 nnoremap H 0
@@ -211,10 +239,4 @@ if !exists(":DiffOrig")
     command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
                 \ | wincmd p | diffthis
 endif
-"}}}
-"{{{ Unmappings
-" jk to exit insert mode
-map Q <nop>
-inoremap jk <esc>
-inoremap <esc> <nop>
 "}}}
