@@ -3,7 +3,7 @@
 My rapidly evolving vi[m]-fi[les].
 Have fun.
 
-## Contribution
+## Contributions
 - Nomadic vimrc mode (invokable with -u), even including plugins, and correct vimrc access mappings.
 - plugins/grep-operator.vim (based on steve losh's book)
 - plugins/qutebrowser.vim (own idea)

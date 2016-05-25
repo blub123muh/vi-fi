@@ -1,7 +1,7 @@
 " <c-l> solves coloring issue
 vnoremap <leader>q :<c-u>call <SID>QuteOperator(visualmode())<cr>
 nnoremap <leader>q :set operatorfunc=<SID>QuteOperator<cr>g@
-nnoremap <leader>qq :call <SID>QuteOperator("repeat")<cr>
+nnoremap <leader>qq :call <SID>QuteOperator("double")<cr>
 nnoremap <leader>sq :call <SID>QuteOperator("none")<cr>
 
 function! s:QuteOperator(type)
@@ -12,7 +12,7 @@ function! s:QuteOperator(type)
     elseif a:type ==# 'char'
         " move to begin mark enter visual mode, move to end mark, yank
         execute "normal! `[v`]y"
-    elseif a:type ==# 'repeat'
+    elseif a:type ==# 'double'
         execute "normal! yy"
     elseif a:type ==# 'none'
         let @@ = ""
