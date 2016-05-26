@@ -4,79 +4,126 @@
 " Homepage:     http://lpag.de/
 set nocompatible "be iMproved
 "}}}
-" Nomadic mode {{{
+" vifi connect {{{
 " Enables sourcing with 'vim -u' with all Plugs
 " Retrieve path to _this_ file (with any symlinks resolved)
-let g:vifi_vimrc = resolve(expand('<sfile>:p'))
-let s:vifi_vimfiles = fnamemodify(g:vifi_vimrc, ':h') . '/vimfiles'
-let &runtimepath.= ',' . s:vifi_vimfiles
+if !exists('g:vifi_connected')
+    " Always be robust to multiple sourcing.
+    let g:vifi_connected = 1
+
+    if !exists('g:vifi_relpath')
+        " Use something else than vimfiles or .vim,
+        " so that we will not clutter someone else's vimfiles directory.
+        let g:vifi_relpath = 'vifi'
+    end
+
+    if !exists('g:vifi_plugin_manager')
+        " The plugin manager, which will be automatically installed
+        let g:vifi_plugin_manager = 'vim-plug'
+    end
+
+    if !exists('g:vifi_sep')
+        " This is your systems seperator in paths.
+        let g:vifi_sep = '/'
+    end
+
+    if !exists('g:vifi_pathsep')
+        " This is the seperator of _multiple_ paths in your runtimepath.
+        let g:vifi_pathsep = ','
+    end
+    
+
+    " Retrieve (resolved) path to THIS file.
+    let g:vifi_vimrc = resolve(expand('<sfile>:p'))
+    " Append your desired relative path for your vimfiles.
+    let g:vifi_vimfiles = resolve(fnamemodify(g:vifi_vimrc, ':h') . g:vifi_sep . g:vifi_relpath)
+    " Also keep track of the after directory, just in case.
+    let g:vifi_vimfiles_after = g:vifi_vimfiles . g:vifi_sep . 'after'
+    " Finally, we modify the runtimepath.
+    let &rtp = g:vifi_vimfiles . g:vifi_pathsep . &rtp . g:vifi_pathsep . g:vifi_vimfiles_after
+    " Now, you can call your favorite plugin manager with
+    " plug#begin(g:vifi_vimfiles . '/plugged')
+    " or access this (out of place) vimrc in a mapping
+    " nnoremap <leader>sv :execute "source" . g:vifi_vimrc<cr>
+    " But most important: Your vimrc is now properly invokable with 'vim -u'!
+
+    " Additionally, support is offered for several plugin managers.
+    if g:vifi_plugin_manager ==# 'vim-plug'
+        if empty(glob(g:vifi_vimfiles . '/autoload/plug.vim'))
+            " Download plug.vim
+            silent execute "!curl -fLo " . g:vifi_vimfiles . "/autoload/plug.vim --create-dirs "
+                        \. "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+            " Install all the rest
+            autocmd VimEnter * PlugInstall | execute "source " . g:vifi_vimrc
+        endif
+    endif
+endif
 " }}}
 " vim-plug {{{
-" Check for existence of plug.vim in autoload
-if empty(glob(s:vifi_vimfiles . '/autoload/plug.vim'))
-    " Download plug.vim
-    silent execute "!curl -fLo " . s:vifi_vimfiles . "/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
-    " Install all the rest
-    autocmd VimEnter * PlugInstall | execute "source " . g:vifi_vimrc
-endif
-
-call plug#begin(s:vifi_vimfiles . '/plugged')
-"Put all your plugins here"
+call plug#begin(g:vifi_vimfiles . '/plugged')
+" Tpopes plugins are neat.
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-unimpaired'
+
+" Syntax checking.
 Plug 'scrooloose/syntastic'
+" Nice statusline.
+Plug 'vim-airline/vim-airline'
+" And some nice git indicators
 Plug 'airblade/vim-gitgutter'
+
+" Some filetype specific ones
 Plug 'vim-latex/vim-latex'
 Plug 'chrisbra/csv.vim'
 Plug 'wannesm/wmgraphviz.vim'
 
-" Experimental
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+""Experimental
 Plug 'suan/vim-instant-markdown'
 Plug 'scrooloose/nerdcommenter'
 
-" Colorschemes
-Plug 'xolox/vim-misc'
-Plug 'xolox/vim-colorscheme-switcher'
-Plug 'tomasr/molokai'
-Plug 'altercation/vim-colors-solarized'
-Plug 'sheerun/vim-wombat-scheme'
+""" Colorschemes
+"Plug 'vim-airline/vim-airline-themes'
+"Plug 'xolox/vim-misc'
+"Plug 'xolox/vim-colorscheme-switcher'
+"Plug 'tomasr/molokai'
+"Plug 'altercation/vim-colors-solarized'
+"Plug 'sheerun/vim-wombat-scheme'
 Plug 'sjl/badwolf'
 
 call plug#end()
 " }}}
 "Basic Settings {{{
-"indenting {{{
-"set tabstop=8
+filetype plugin indent on
+syntax on
+" no ex mode
+map Q <nop>
+
+" indenting
+set tabstop=8
 set softtabstop=4
 set shiftwidth=4
 set expandtab
-"}}}
-"numbers{{{
+
+" numbers
 set number
 set relativenumber
-"}}}
-"colors {{{
+
+" colors
 set background=dark
 silent! colorscheme badwolf
-"}}}
-"searching and replacing{{{
+
+" searching and replacing
 set hlsearch
 set incsearch
 set gdefault
-"}}}
-" statusline {{{
-set noruler	" show the cursor position all the time
+
+" statusline
 set showcmd	" display incomplete commands
 set laststatus=2 " ALWAYS display status line
-"set statusline=%f " Path
-"set statusline+=%{fugitive#statusline()} "vim fugitive
-"set statusline+=%= " switch to the right side
-"set statusline+=%l/%L " display current/max line number
-"}}}
+set noruler	
 "}}}
 " Plugin specific settings{{{
 " vim-latex {{{
@@ -86,43 +133,30 @@ let g:Tex_ViewRule_pdf='okular'
 " }}}
 " instant-markdown {{{
 let g:instant_markdown_autostart = 0
+
 augroup markdown
+    " Unfortunately, the instant-markdown plugin requires
+    " the npm package instant-markdown-d to be installed
     autocmd!
     silent execute "!command -v instant-markdown-d >/dev/null 2>&1"
     if v:shell_error == 0
         autocmd FileType markdown nnoremap <buffer> <localleader>li :InstantMarkdownPreview<cr>
-    else
-        echom "Instant markdown disabled; if u need it: npm -g install instant-markdown-d"
     endif
 augroup end
 " }}}
-"}}}
+" }}}
 " FileType specific settings {{{
-" comments {{{
-augroup comments
-    autocmd!
-    autocmd FileType sh,c,python nnoremap <buffer> <localleader>c I#<esc>
-    autocmd FileType tex,erlang nnoremap <buffer> <localleader>c I%<esc>
-    autocmd FileType vim nnoremap <buffer> <localleader>c I"<esc>
-    autocmd FileType java nnoremap <buffer> <localleader>c I//<esc>
-augroup END
-"}}}
 " python {{{
 augroup filetype_python
     autocmd!
     autocmd FileType python setlocal foldmethod=marker
-    " some convenient abbreviations for python
-    autocmd FileType python :iabbrev <buffer> iff if :<left>
-    autocmd FileType python :iabbrev <buffer> print3 from __future__ import print_function<cr>
-    autocmd FileType python :iabbrev <buffer> bin3 #!/usr/bin/env python3<cr># -*- coding=utf8 -*-
-    autocmd FileType python :iabbrev <buffer> INEM if __name__ == '__main__':<cr>main()<esc>
 augroup END
 "}}}
 " java {{{
 augroup filetype_java
     autocmd!
-    autocmd FileType java nnoremap <buffer> <localleader>im Ipublic static void main(String[] args){<cr>}<esc>ko
-    autocmd FileType java iabbrev <buffer> print System.out.println();<left><left>
+    " i want pythonic prints everywhere.
+    autocmd FileType java iabbrev <buffer> print System.out.println);<left><left>
 augroup END
 "}}}
 " vim {{{
@@ -159,12 +193,12 @@ xmap ö [
 xmap ä ]
 "}}}
 "Mappings {{{
-" no ex mode
-map Q <nop>
+
+"Use Netrw, not NERDTREE
+nnoremap <leader>tn :17Lex<cr>
 
 " jk to exit insert mode
 inoremap jk <esc>
-inoremap <esc> <nop>
 
 "move lines down and up
 nnoremap <leader>- ddp
@@ -174,14 +208,9 @@ nnoremap <leader>_ ddkP
 inoremap <leader><c-u> <esc>viwUi
 nnoremap <leader><c-u> viwU
 
-" access vimrc
-"nnoremap <leader>ev :vsplit $MYVIMRC<cr>
-"nnoremap <leader>sv :source $MYVIMRC<cr>
-
 " access THIS vimrc
 nnoremap <leader>ev :execute "rightbelow split " . g:vifi_vimrc<cr>
 nnoremap <leader>sv :execute "source" . g:vifi_vimrc<cr>
-
 
 " make H and L more useful
 nnoremap H 0
@@ -216,7 +245,7 @@ nnoremap ? ?\v
 nnoremap <leader><space> :nohlsearch<cr>
 
 "}}}
-" Rescue curser position {{{
+" Rescue curser position and DiffOrig {{{
 " restores curser position
 " fixed version from
 " http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
