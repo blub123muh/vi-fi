@@ -114,6 +114,7 @@ set relativenumber
 " colors
 set background=dark
 silent! colorscheme badwolf
+set colorcolumn=80,100
 
 " searching and replacing
 set hlsearch
