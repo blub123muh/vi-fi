@@ -12,9 +12,9 @@ function! s:GrepOperator(type)
     else
         return
     endif
-    "note that grep! somehow breaks coloring. very strange.
-    silent execute "grep -R " . shellescape(@@) . " ."
+    silent execute "grep! -R " . shellescape(@@) . " ."
     copen
+    redraw!
 
     let @@ = saved_unnamed_register
 endfunction

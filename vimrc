@@ -31,7 +31,6 @@ if !exists('g:vifi_connected')
         " This is the seperator of _multiple_ paths in your runtimepath.
         let g:vifi_pathsep = ','
     end
-    
 
     " Retrieve (resolved) path to THIS file.
     let g:vifi_vimrc = resolve(expand('<sfile>:p'))
@@ -68,8 +67,10 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-unimpaired'
 
-" Syntax checking.
+" Syntax checking and comments.
 Plug 'scrooloose/syntastic'
+Plug 'scrooloose/nerdcommenter'
+
 " Nice statusline.
 Plug 'vim-airline/vim-airline'
 " And some nice git indicators
@@ -82,16 +83,15 @@ Plug 'wannesm/wmgraphviz.vim'
 
 ""Experimental
 Plug 'suan/vim-instant-markdown'
-Plug 'scrooloose/nerdcommenter'
 
 """ Colorschemes
-"Plug 'vim-airline/vim-airline-themes'
 "Plug 'xolox/vim-misc'
 "Plug 'xolox/vim-colorscheme-switcher'
 "Plug 'tomasr/molokai'
 "Plug 'altercation/vim-colors-solarized'
 "Plug 'sheerun/vim-wombat-scheme'
 Plug 'sjl/badwolf'
+Plug 'vim-airline/vim-airline-themes'
 
 call plug#end()
 " }}}
@@ -133,7 +133,6 @@ let g:Tex_ViewRule_pdf='okular'
 " }}}
 " instant-markdown {{{
 let g:instant_markdown_autostart = 0
-
 augroup markdown
     " Unfortunately, the instant-markdown plugin requires
     " the npm package instant-markdown-d to be installed
@@ -141,6 +140,9 @@ augroup markdown
     silent execute "!command -v instant-markdown-d >/dev/null 2>&1"
     if v:shell_error == 0
         autocmd FileType markdown nnoremap <buffer> <localleader>li :InstantMarkdownPreview<cr>
+    else
+        autocmd FileType markdown nnoremap <buffer> <localleader>li
+                    \:echom "Package instant-markdown-d (npm) not installed."<cr>
     endif
 augroup end
 " }}}

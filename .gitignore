@@ -2,5 +2,5 @@
 tags
 tags-te
 *.swp
-vimfiles/plugged/**
-vimfiles/autoload/plug.vim
+vifi/plugged/**
+vifi/autoload/plug.vim
