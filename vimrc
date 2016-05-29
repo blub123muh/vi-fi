@@ -61,28 +61,30 @@ endif
 " vim-plug {{{
 call plug#begin(g:vifi_vimfiles . '/plugged')
 " Tpopes plugins are neat.
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-fugitive'
 
-" Syntax checking and comments.
-Plug 'scrooloose/syntastic'
-Plug 'scrooloose/nerdcommenter'
-
-" Nice statusline.
-Plug 'vim-airline/vim-airline'
-" And some nice git indicators
 Plug 'airblade/vim-gitgutter'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
-" Some filetype specific ones
-Plug 'vim-latex/vim-latex'
-Plug 'chrisbra/csv.vim'
-Plug 'wannesm/wmgraphviz.vim'
+Plug 'sjl/badwolf'
+" Syntax checking and comments.
+if system("uname -a | grep arm")
+    echom "Disabling syntastic and nerdcommenter on ARM architecture"
+    Plug 'scrooloose/syntastic'
+    Plug 'scrooloose/nerdcommenter'
+    Plug 'vim-latex/vim-latex'
+    "Experimental
+    Plug 'chrisbra/csv.vim'
+    Plug 'wannesm/wmgraphviz.vim'
+    Plug 'suan/vim-instant-markdown'
+endif
 
-""Experimental
-Plug 'suan/vim-instant-markdown'
+
 
 """ Colorschemes
 "Plug 'xolox/vim-misc'
@@ -90,8 +92,6 @@ Plug 'suan/vim-instant-markdown'
 "Plug 'tomasr/molokai'
 "Plug 'altercation/vim-colors-solarized'
 "Plug 'sheerun/vim-wombat-scheme'
-Plug 'sjl/badwolf'
-Plug 'vim-airline/vim-airline-themes'
 
 call plug#end()
 " }}}
