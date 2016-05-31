@@ -1,5 +1,5 @@
 " Preamble {{{
-" A rapidly evolving vim.rc file
+" A rapidly evolving vimrc file
 " Source:       http://github.com/blub123muh/vi-fi.git
 " Maintainer:	Lukas Galke <vi-fi@lpag.de>
 " Homepage:     http://lpag.de/
@@ -70,6 +70,9 @@ Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-jdaddy'
+Plug 'tpope/vim-scriptease'
+Plug 'tpope/vim-sleuth'
 
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-airline/vim-airline'
@@ -91,16 +94,6 @@ Plug 'chrisbra/csv.vim'
 Plug 'wannesm/wmgraphviz.vim'
 Plug 'suan/vim-instant-markdown'
 "endif
-
-
-
-""" Colorschemes
-"Plug 'xolox/vim-misc'
-"Plug 'xolox/vim-colorscheme-switcher'
-"Plug 'tomasr/molokai'
-"Plug 'altercation/vim-colors-solarized'
-"Plug 'sheerun/vim-wombat-scheme'
-
 call plug#end()
 " }}}
 "Basic Settings {{{
@@ -121,7 +114,7 @@ set undoreload=10000
 set history=1000
 set lazyredraw
 set title
-set list
+set nolist
 set linebreak
 set backspace=indent,eol,start
 set splitbelow
@@ -141,12 +134,9 @@ syntax on
 set background=dark
 silent! colorscheme badwolf
 set colorcolumn=+1
-
-" searching and replacing
-
 " statusline
-set showcmd	" display incomplete commands
-set ruler	
+set showcmd " display incomplete commands
+set ruler
 " no ex mode
 map Q <nop>
 "}}}
@@ -184,63 +174,59 @@ augroup markdown
 augroup end
 " }}}
 " }}}
-" FileType specific settings {{{
-" python {{{
-augroup filetype_python
-    autocmd!
-    autocmd FileType python setlocal foldmethod=marker
-augroup END
-"}}}
-" java {{{
-augroup filetype_java
-    autocmd!
-    " i want pythonic prints everywhere.
-    autocmd FileType java iabbrev <buffer> print System.out.println);<left><left>
-augroup END
-"}}}
-" vim {{{
-augroup filetype_vim
-    autocmd!
-    autocmd FileType vim setlocal foldmethod=marker
-augroup END
-"}}}
-"{{{ text
-augroup filetype_text
-    autocmd!
-    " For all text files set 'textwidth' to 78 characters.
-    autocmd FileType text setlocal textwidth=78
-augroup END
-"}}}
-"{{{ csv
-augroup filetype_csv
-    autocmd!
-    autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn<cr>
-    autocmd FileType csv nnoremap <buffer> <localleader>uc :%UnarrangeColumn<cr>
-    autocmd FileType csv nnoremap <buffer> <localleader>nr :NewRecord<cr>
-augroup END
-"}}}
+"  Autocmds {{{
+if has("autocmd")
+    augroup filetype_python
+        autocmd!
+        autocmd FileType python setlocal foldmethod=marker 
+        autocmd FileType python setlocal textwidth=100
+    augroup END
+    augroup filetype_java
+        autocmd!
+        " i want pythonic prints everywhere.
+        autocmd FileType java iabbrev <buffer> print System.out.println);<left><left>
+    augroup END
+    augroup filetype_vim
+        autocmd!
+        autocmd FileType vim setlocal foldmethod=marker
+    augroup END
+    augroup filetype_text
+        autocmd!
+        " For all text files set 'textwidth' to 78 characters.
+        autocmd FileType text setlocal textwidth=78
+    augroup END
+    augroup filetype_csv
+        autocmd!
+        autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn<cr>
+        autocmd FileType csv nnoremap <buffer> <localleader>uc :%UnarrangeColumn<cr>
+        autocmd FileType csv nnoremap <buffer> <localleader>nr :NewRecord<cr>
+    augroup END
+endif
 "}}}
 "{{{ Map Leaders, German Keyboard Layout, helptag navigation
 let mapleader = ","
-let maplocalleader = "ü"
+let maplocalleader = "ß"
+"nmap ö [
+"nmap ä ]
+"omap ö [
+"omap ä ]
+"xmap ö [
+"xmap ä ]
 
-nmap ö [
-nmap ä ]
-omap ö [
-omap ä ]
-xmap ö [
-xmap ä ]
-
-" for the help files
-nnoremap ]h <C-]>
-nnoremap [h <C-T>
+"" for the help files
+"nnoremap ]h <C-]>
+"nnoremap [h <C-T>
+"nnoremap öö [[
+"nnoremap öä []
+"nnoremap äö ][
+"nnoremap ää ]]
 "}}}
 "Convenience Mappings {{{
 "Use Netrw, not NERDTREE
 nnoremap <leader>tn :17Lex<cr>
 
-" jk to exit insert mode
-inoremap jk <esc>
+" ctrl+c to exit insert mode
+inoremap <esc> <nop>
 
 "move lines down and up
 nnoremap <leader>- ddp
@@ -254,7 +240,9 @@ nnoremap <leader><c-u> viwU
 nnoremap <leader>ev :split $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 
-" make H and L more useful
+" make jk, H and L more useful
+nnoremap j gj
+nnoremap k gk
 nnoremap H 0
 nnoremap L $
 
@@ -273,12 +261,13 @@ onoremap al{ :<c-u> normal! F}va{<cr>
 nnoremap <leader>op :execute "rightbelow split " . bufname('#')<cr>
 
 " highlight trailing spaces
-noremap <leader>w :match Error /\v +$/<cr>
-noremap <leader>W :match<cr>
+nnoremap <leader>w :match Error /\v +$/<cr>
+nnoremap <leader>W :match<cr>
 " toggle invisible characters
-noremap <leader>i :set list!<cr>
+nnoremap <leader>w :set wrap!<cr>
+nnoremap <leader>i :set list!<cr>
 " toggle line numbers
-noremap <leader>n :setlocal number! relativenumber!<cr>
+nnoremap <leader>n :setlocal number! relativenumber!<cr>
 
 " end of line semicolon; return
 nnoremap <leader>; mqA;<esc>`q

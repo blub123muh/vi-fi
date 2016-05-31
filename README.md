@@ -110,6 +110,5 @@ Let me check this file right now, with 'üli'.
 
 ## Maintainer
 Lukas Galke\
-<vi-fi@lpag.de>\
-<http://lpag.de>
-
+vi-fi@lpag.de\
+http://lpag.de
