@@ -1,8 +1,3 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =6
-let g:netrw_dirhist_1='/home/lpag/.vim/deprecated_dotvim/syntax'
-let g:netrw_dirhist_2='/home/lpag/.vim/deprecated_dotvim'
-let g:netrw_dirhist_3='/home/lpag/.vim/deprecated_dotvim/ftplugin'
-let g:netrw_dirhist_4='/home/lpag/.vim/deprecated_dotvim'
-let g:netrw_dirhist_5='/home/lpag/.vim/deprecated_dotvim/autoload'
-let g:netrw_dirhist_6='/home/lpag/git/kd-mp/Documentation'
+let g:netrw_dirhist_cnt =1
+let g:netrw_dirhist_1='/home/lpag/git/papers/2016/2016-metadata-vs-fulltext'

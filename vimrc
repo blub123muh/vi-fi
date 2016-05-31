@@ -1,5 +1,6 @@
-" Header {{{
+" Preamble {{{
 " A rapidly evolving vim.rc file
+" Source:       http://github.com/blub123muh/vi-fi.git
 " Maintainer:	Lukas Galke <vi-fi@lpag.de>
 " Homepage:     http://lpag.de/
 set nocompatible "be iMproved
@@ -45,6 +46,8 @@ if !exists('g:vifi_connected')
     " or access this (out of place) vimrc in a mapping
     " nnoremap <leader>sv :execute "source" . g:vifi_vimrc<cr>
     " But most important: Your vimrc is now properly invokable with 'vim -u'!
+    let $MYVIMRC=g:vifi_vimrc
+    "TODO maybe extend on this
 
     " Additionally, support is offered for several plugin managers.
     if g:vifi_plugin_manager ==# 'vim-plug'
@@ -66,6 +69,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-abolish'
 
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-airline/vim-airline'
@@ -73,16 +77,20 @@ Plug 'vim-airline/vim-airline-themes'
 
 Plug 'sjl/badwolf'
 " Syntax checking and comments.
-if system("uname -a | grep arm")
-    echom "Disabling syntastic and nerdcommenter on ARM architecture"
-    Plug 'scrooloose/syntastic'
-    Plug 'scrooloose/nerdcommenter'
-    Plug 'vim-latex/vim-latex'
-    "Experimental
-    Plug 'chrisbra/csv.vim'
-    Plug 'wannesm/wmgraphviz.vim'
-    Plug 'suan/vim-instant-markdown'
-endif
+" Expensive?
+Plug 'scrooloose/syntastic'
+Plug 'scrooloose/nerdcommenter'
+" Replace with tpope/vim-commenter?
+Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'vim-latex/vim-latex'
+" This alternative seems to be more lightweight
+Plug 'lervag/vimtex'
+" Filetype specific
+Plug 'raichoo/haskell-vim'
+Plug 'chrisbra/csv.vim'
+Plug 'wannesm/wmgraphviz.vim'
+Plug 'suan/vim-instant-markdown'
+"endif
 
 
 
@@ -97,11 +105,28 @@ call plug#end()
 " }}}
 "Basic Settings {{{
 filetype plugin indent on
-syntax on
-" no ex mode
-map Q <nop>
-
+" utf8!
+set encoding=utf-8
+" We usually have fast terminal connections
+set ttyfast
 " indenting
+set autoindent
+set visualbell
+" always display status line
+set backup
+set laststatus=2
+" store undos
+set undofile
+set undoreload=10000
+set history=1000
+set lazyredraw
+set title
+set list
+set linebreak
+set backspace=indent,eol,start
+set splitbelow
+set splitright
+ 
 set tabstop=8
 set softtabstop=4
 set shiftwidth=4
@@ -112,19 +137,30 @@ set number
 set relativenumber
 
 " colors
+syntax on
 set background=dark
 silent! colorscheme badwolf
-set colorcolumn=80,100
+set colorcolumn=+1
 
 " searching and replacing
-set hlsearch
-set incsearch
-set gdefault
 
 " statusline
 set showcmd	" display incomplete commands
-set laststatus=2 " ALWAYS display status line
-set noruler	
+set ruler	
+" no ex mode
+map Q <nop>
+"}}}
+" Searching and Movement {{{
+set ignorecase
+set smartcase
+set incsearch
+set showmatch
+set hlsearch
+set gdefault
+
+set scrolloff=3
+set sidescroll=1
+set sidescrolloff=10
 "}}}
 " Plugin specific settings{{{
 " vim-latex {{{
@@ -184,7 +220,7 @@ augroup filetype_csv
 augroup END
 "}}}
 "}}}
-"{{{ Map Leaders and German Keyboard Layout
+"{{{ Map Leaders, German Keyboard Layout, helptag navigation
 let mapleader = ","
 let maplocalleader = "ü"
 
@@ -194,9 +230,12 @@ omap ö [
 omap ä ]
 xmap ö [
 xmap ä ]
-"}}}
-"Mappings {{{
 
+" for the help files
+nnoremap ]h <C-]>
+nnoremap [h <C-T>
+"}}}
+"Convenience Mappings {{{
 "Use Netrw, not NERDTREE
 nnoremap <leader>tn :17Lex<cr>
 
@@ -212,8 +251,8 @@ inoremap <leader><c-u> <esc>viwUi
 nnoremap <leader><c-u> viwU
 
 " access THIS vimrc
-nnoremap <leader>ev :execute "rightbelow split " . g:vifi_vimrc<cr>
-nnoremap <leader>sv :execute "source" . g:vifi_vimrc<cr>
+nnoremap <leader>ev :split $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>
 
 " make H and L more useful
 nnoremap H 0
@@ -236,6 +275,10 @@ nnoremap <leader>op :execute "rightbelow split " . bufname('#')<cr>
 " highlight trailing spaces
 noremap <leader>w :match Error /\v +$/<cr>
 noremap <leader>W :match<cr>
+" toggle invisible characters
+noremap <leader>i :set list!<cr>
+" toggle line numbers
+noremap <leader>n :setlocal number! relativenumber!<cr>
 
 " end of line semicolon; return
 nnoremap <leader>; mqA;<esc>`q
@@ -263,12 +306,4 @@ augroup resCur
     autocmd!
     autocmd BufWinEnter * call ResCur() | normal! zv
 augroup END
-
-" Convenient command to see the difference between the current buffer and the
-" file it was loaded from, thus the changes you made.
-" Only define it when not defined already.
-if !exists(":DiffOrig")
-    command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
-                \ | wincmd p | diffthis
-endif
 "}}}
