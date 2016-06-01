@@ -6,6 +6,13 @@
 set nocompatible "be iMproved
 "}}}
 " vifi connect {{{
+
+"let $MYVIMRC = resolve(expand('<sfile>:p'))
+"let s:vifi = call pathogen#join(resolve($MYVIMRC, ':h'), 'vifi')
+"call pathogen#surround(s:vifi)
+"execute "source " . s:vifi . "/plugged/pathogen/autoload/pathogen.vim"
+
+
 " Enables sourcing with 'vim -u' with all Plugs
 " Retrieve path to _this_ file (with any symlinks resolved)
 if !exists('g:vifi_connected')
@@ -56,7 +63,6 @@ if !exists('g:vifi_connected')
             silent execute "!curl -fLo " . g:vifi_vimfiles . "/autoload/plug.vim --create-dirs "
                         \. "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
             " Install all the rest
-            " autocmd VimEnter * PlugInstall | execute "source " . g:vifi_vimrc
             autocmd VimEnter * PlugInstall | source $MYVIMRC
         endif
     endif
@@ -78,6 +84,7 @@ Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-vividchalk'
 Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-pathogen'
 
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-airline/vim-airline'
@@ -162,18 +169,6 @@ set sidescrolloff=10
 " Plugin settings{{{
 let g:syntastic_python_python_exec = '/usr/bin/python3'
 let g:instant_markdown_autostart = 0
-augroup markdown
-    " Unfortunately, the instant-markdown plugin requires
-    " the npm package instant-markdown-d to be installed
-    autocmd!
-    silent execute "!command -v instant-markdown-d >/dev/null 2>&1"
-    if v:shell_error == 0
-        autocmd FileType markdown nnoremap <buffer> <localleader>li :InstantMarkdownPreview<cr>
-    else
-        autocmd FileType markdown nnoremap <buffer> <localleader>li
-                    \:echom "Package instant-markdown-d (npm) not installed."<cr>
-    endif
-augroup end
 " }}}
 " Mappings {{{
 let mapleader = ","
@@ -272,6 +267,18 @@ if has("autocmd")
         autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn<cr>
         autocmd FileType csv nnoremap <buffer> <localleader>uc :%UnarrangeColumn<cr>
         autocmd FileType csv nnoremap <buffer> <localleader>nr :NewRecord<cr>
+    augroup END
+    augroup ft_markdown
+        " Unfortunately, the instant-markdown plugin requires
+        " the npm package instant-markdown-d to be installed
+        autocmd!
+        silent execute "!command -v instant-markdown-d >/dev/null 2>&1"
+        if v:shell_error == 0
+            autocmd FileType markdown nnoremap <buffer> <localleader>li :InstantMarkdownPreview<cr>
+        else
+            autocmd FileType markdown nnoremap <buffer> <localleader>li
+                        \:echom "Package instant-markdown-d (npm) not installed."<cr>
+        endif
     augroup END
     " Rescue curser position and DiffOrig {{{
     " restores curser position
