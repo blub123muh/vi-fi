@@ -67,12 +67,14 @@ call plug#begin(g:vifi_vimfiles . '/plugged')
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-vinegar'
-Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-jdaddy'
 Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-commentary'
 
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-airline/vim-airline'
@@ -82,8 +84,6 @@ Plug 'sjl/badwolf'
 " Syntax checking and comments.
 " Expensive?
 Plug 'scrooloose/syntastic'
-Plug 'scrooloose/nerdcommenter'
-" Replace with tpope/vim-commenter?
 Plug 'ctrlpvim/ctrlp.vim'
 "Plug 'vim-latex/vim-latex'
 " This alternative seems to be more lightweight
@@ -97,7 +97,6 @@ Plug 'suan/vim-instant-markdown'
 call plug#end()
 " }}}
 "Basic Settings {{{
-filetype plugin indent on
 " utf8!
 set encoding=utf-8
 " We usually have fast terminal connections
@@ -129,6 +128,12 @@ set expandtab
 set number
 set relativenumber
 
+set wildmenu
+set wildmode=longest:full,full
+set wildignore+=tags,.*.un~,*.pyc
+
+set foldmethod=marker
+
 " colors
 syntax on
 set background=dark
@@ -139,12 +144,11 @@ set showcmd " display incomplete commands
 set ruler
 " no ex mode
 map Q <nop>
-"}}}
-" Searching and Movement {{{
+
+set showmatch
 set ignorecase
 set smartcase
 set incsearch
-set showmatch
 set hlsearch
 set gdefault
 
@@ -152,13 +156,7 @@ set scrolloff=3
 set sidescroll=1
 set sidescrolloff=10
 "}}}
-" Plugin specific settings{{{
-" vim-latex {{{
-let g:tex_flavor='latex'
-let g:Tex_DefaultTargetFormat='pdf'
-let g:Tex_ViewRule_pdf='okular'
-" }}}
-" instant-markdown {{{
+" Plugin settings{{{
 let g:instant_markdown_autostart = 0
 augroup markdown
     " Unfortunately, the instant-markdown plugin requires
@@ -173,39 +171,11 @@ augroup markdown
     endif
 augroup end
 " }}}
-" }}}
-"  Autocmds {{{
-if has("autocmd")
-    augroup filetype_python
-        autocmd!
-        autocmd FileType python setlocal foldmethod=marker 
-        autocmd FileType python setlocal textwidth=100
-    augroup END
-    augroup filetype_java
-        autocmd!
-        " i want pythonic prints everywhere.
-        autocmd FileType java iabbrev <buffer> print System.out.println);<left><left>
-    augroup END
-    augroup filetype_vim
-        autocmd!
-        autocmd FileType vim setlocal foldmethod=marker
-    augroup END
-    augroup filetype_text
-        autocmd!
-        " For all text files set 'textwidth' to 78 characters.
-        autocmd FileType text setlocal textwidth=78
-    augroup END
-    augroup filetype_csv
-        autocmd!
-        autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn<cr>
-        autocmd FileType csv nnoremap <buffer> <localleader>uc :%UnarrangeColumn<cr>
-        autocmd FileType csv nnoremap <buffer> <localleader>nr :NewRecord<cr>
-    augroup END
-endif
-"}}}
-"{{{ Map Leaders, German Keyboard Layout, helptag navigation
+" Mappings {{{
 let mapleader = ","
 let maplocalleader = "ß"
+
+" german keyboard layout
 "nmap ö [
 "nmap ä ]
 "omap ö [
@@ -220,21 +190,16 @@ let maplocalleader = "ß"
 "nnoremap öä []
 "nnoremap äö ][
 "nnoremap ää ]]
-"}}}
-"Convenience Mappings {{{
 "Use Netrw, not NERDTREE
 nnoremap <leader>tn :17Lex<cr>
 
 " ctrl+c to exit insert mode
 inoremap <esc> <nop>
+inoremap jk <esc>
 
 "move lines down and up
 nnoremap <leader>- ddp
 nnoremap <leader>_ ddkP
-
-" <c-u> uppercase word
-inoremap <leader><c-u> <esc>viwUi
-nnoremap <leader><c-u> viwU
 
 " access THIS vimrc
 nnoremap <leader>ev :split $MYVIMRC<cr>
@@ -243,7 +208,7 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
 " make jk, H and L more useful
 nnoremap j gj
 nnoremap k gk
-nnoremap H 0
+nnoremap H ^
 nnoremap L $
 
 " inside/around next/last parentheses
@@ -257,12 +222,10 @@ onoremap al( :<c-u> normal! F)va(<cr>
 onoremap an{ :<c-u> normal! f{va{<cr>
 onoremap al{ :<c-u> normal! F}va{<cr>
 
-" open last buffer in splint
-nnoremap <leader>op :execute "rightbelow split " . bufname('#')<cr>
-
 " highlight trailing spaces
 nnoremap <leader>w :match Error /\v +$/<cr>
 nnoremap <leader>W :match<cr>
+
 " toggle invisible characters
 nnoremap <leader>w :set wrap!<cr>
 nnoremap <leader>i :set list!<cr>
@@ -280,19 +243,51 @@ nnoremap ? ?\v
 nnoremap <leader><space> :nohlsearch<cr>
 
 "}}}
-" Rescue curser position and DiffOrig {{{
-" restores curser position
-" fixed version from
-" http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
-function! ResCur()
-    if line("'\"") <= line("$")
-        normal! g`"
-        return 1
-    endif
-endfunction
+"  Autocmds {{{
+if has("autocmd")
+    filetype plugin indent on
+    augroup filetype_python
+        autocmd!
+        autocmd FileType python setlocal foldmethod=marker 
+        autocmd FileType python setlocal textwidth=100
+    augroup END
+    augroup filetype_java
+        autocmd!
+        " i want pythonic prints everywhere.
+        " just type print(
+        autocmd FileType java iabbrev <buffer> print
+                    \System.out.println);<left><left>
+    augroup END
+    augroup filetype_vim
+        autocmd!
+        autocmd FileType vim setlocal foldmethod=marker
+    augroup END
+    augroup filetype_text
+        autocmd!
+        " For all text files set 'textwidth' to 78 characters.
+        autocmd FileType text setlocal textwidth=78
+    augroup END
+    augroup filetype_csv
+        autocmd!
+        autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn<cr>
+        autocmd FileType csv nnoremap <buffer> <localleader>uc :%UnarrangeColumn<cr>
+        autocmd FileType csv nnoremap <buffer> <localleader>nr :NewRecord<cr>
+    augroup END
+    " Rescue curser position and DiffOrig {{{
+    " restores curser position
+    " fixed version from
+    " http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
+    function! ResCur()
+        if line("'\"") <= line("$")
+            normal! g`"
+            return 1
+        endif
+    endfunction
 
-augroup resCur
-    autocmd!
-    autocmd BufWinEnter * call ResCur() | normal! zv
-augroup END
+    augroup resCur
+        autocmd!
+        autocmd BufWinEnter * call ResCur() | normal! zv
+    augroup END
+endif
+"}}}
 "}}}
