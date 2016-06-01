@@ -1,8 +1,8 @@
 *~
-.netrwhist
-.netrwhist~
+.*~
 tags
 tags-te
 *.swp
 vifi/plugged/**
 vifi/autoload/plug.vim
+vifi/*netrwhist*

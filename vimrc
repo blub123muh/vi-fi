@@ -56,7 +56,8 @@ if !exists('g:vifi_connected')
             silent execute "!curl -fLo " . g:vifi_vimfiles . "/autoload/plug.vim --create-dirs "
                         \. "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
             " Install all the rest
-            autocmd VimEnter * PlugInstall | execute "source " . g:vifi_vimrc
+            " autocmd VimEnter * PlugInstall | execute "source " . g:vifi_vimrc
+            autocmd VimEnter * PlugInstall | source $MYVIMRC
         endif
     endif
 endif
@@ -75,6 +76,8 @@ Plug 'tpope/vim-jdaddy'
 Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-vividchalk'
+Plug 'tpope/vim-eunuch'
 
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-airline/vim-airline'
@@ -137,7 +140,7 @@ set foldmethod=marker
 " colors
 syntax on
 set background=dark
-silent! colorscheme badwolf
+silent! colorscheme vividchalk
 set colorcolumn=+1
 " statusline
 set showcmd " display incomplete commands
@@ -157,6 +160,7 @@ set sidescroll=1
 set sidescrolloff=10
 "}}}
 " Plugin settings{{{
+let g:syntastic_python_python_exec = '/usr/bin/python3'
 let g:instant_markdown_autostart = 0
 augroup markdown
     " Unfortunately, the instant-markdown plugin requires
@@ -225,6 +229,7 @@ onoremap al{ :<c-u> normal! F}va{<cr>
 " highlight trailing spaces
 nnoremap <leader>w :match Error /\v +$/<cr>
 nnoremap <leader>W :match<cr>
+nnoremap <leader>t :%s/\v +$//
 
 " toggle invisible characters
 nnoremap <leader>w :set wrap!<cr>
@@ -243,12 +248,11 @@ nnoremap ? ?\v
 nnoremap <leader><space> :nohlsearch<cr>
 
 "}}}
-"  Autocmds {{{
+" Autocmds {{{
 if has("autocmd")
     filetype plugin indent on
     augroup filetype_python
         autocmd!
-        autocmd FileType python setlocal foldmethod=marker 
         autocmd FileType python setlocal textwidth=100
     augroup END
     augroup filetype_java
@@ -257,10 +261,6 @@ if has("autocmd")
         " just type print(
         autocmd FileType java iabbrev <buffer> print
                     \System.out.println);<left><left>
-    augroup END
-    augroup filetype_vim
-        autocmd!
-        autocmd FileType vim setlocal foldmethod=marker
     augroup END
     augroup filetype_text
         autocmd!
