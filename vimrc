@@ -1,11 +1,11 @@
-" Preamble {{{
+" Section: Preamble {{{
 " A rapidly evolving vimrc file
 " Source:       http://github.com/blub123muh/vi-fi.git
 " Maintainer:	Lukas Galke <vi-fi@lpag.de>
 " Homepage:     http://lpag.de/
 set nocompatible "be iMproved
 "}}}
-" vifi connect {{{
+" Section: vifi connect {{{
 
 "let $MYVIMRC = resolve(expand('<sfile>:p'))
 "let s:vifi = call pathogen#join(resolve($MYVIMRC, ':h'), 'vifi')
@@ -68,7 +68,7 @@ if !exists('g:vifi_connected')
     endif
 endif
 " }}}
-" vim-plug {{{
+" Section: Plugins {{{
 call plug#begin(g:vifi_vimfiles . '/plugged')
 " Tpopes plugins are neat.
 Plug 'tpope/vim-surround'
@@ -95,18 +95,19 @@ Plug 'sjl/badwolf'
 " Expensive?
 Plug 'scrooloose/syntastic'
 Plug 'ctrlpvim/ctrlp.vim'
-"Plug 'vim-latex/vim-latex'
-" This alternative seems to be more lightweight
-Plug 'lervag/vimtex'
 " Filetype specific
+Plug 'lervag/vimtex'
 Plug 'raichoo/haskell-vim'
 Plug 'chrisbra/csv.vim'
 Plug 'wannesm/wmgraphviz.vim'
 Plug 'suan/vim-instant-markdown'
+Plug 'JuliaLang/julia-vim'
 "endif
-call plug#end()
+call plug#end() "so this calls filetype plugin indent on????
+" additional pathogen infection for testing local plugins
+"execute pathogen#infect(g:vifi_vimfiles . '/bundle/{}')
 " }}}
-"Basic Settings {{{
+"Section: Basic Settings {{{
 " utf8!
 set encoding=utf-8
 " We usually have fast terminal connections
@@ -121,17 +122,22 @@ set laststatus=2
 set undofile
 set undoreload=10000
 set history=1000
+set backspace=indent,eol,start
 set lazyredraw
 set title
+
+set textwidth=78
+set nowrap
 set nolist
+
 set linebreak
-set backspace=indent,eol,start
+set breakindent
+
 set splitbelow
 set splitright
- 
+
 set tabstop=8
 set softtabstop=4
-set shiftwidth=4
 set expandtab
 
 " numbers
@@ -142,7 +148,6 @@ set wildmenu
 set wildmode=longest:full,full
 set wildignore+=tags,.*.un~,*.pyc
 
-set foldmethod=marker
 
 " colors
 syntax on
@@ -165,32 +170,52 @@ set gdefault
 set scrolloff=3
 set sidescroll=1
 set sidescrolloff=10
+
+let g:tex_flavor = 'latex'
 "}}}
-" Plugin settings{{{
+" Section: Plugin options{{{
+" Warning 1: Command terminated with space
+" Warning 8: wrong length of dash
+let g:syntasic_tex_checker = "chktex"
+let g:syntastic_tex_chktex_args = "-n1 -n8"
 let g:syntastic_python_python_exec = '/usr/bin/python3'
+
+" no callbacks without +clientserver
+let g:vimtex_latex_callback = 0 
+" okular is my preferred pdf viewer
+let g:vimtex_view_general_viewer = 'okular'
+let g:vimtex_view_general_options = '--unique @pdf\#src:@line@tex'
+let g:vimtex_view_general_options_latexmk = '--unique'
+" FOLD ALL THE THINGIES
+let g:vimtex_fold_enabled = 1
+let g:vimtex_fold_comments = 1
+
+" ehm, no?
 let g:instant_markdown_autostart = 0
 " }}}
-" Mappings {{{
+" Section: Mappings {{{
 let mapleader = ","
 let maplocalleader = "ß"
 
-" german keyboard layout
-"nmap ö [
-"nmap ä ]
-"omap ö [
-"omap ä ]
-"xmap ö [
-"xmap ä ]
+" German keyboard layout
+nmap ö [
+nmap ä ]
+omap ö [
+omap ä ]
+xmap ö [
+xmap ä ]
 
 "" for the help files
-"nnoremap ]h <C-]>
-"nnoremap [h <C-T>
-"nnoremap öö [[
-"nnoremap öä []
-"nnoremap äö ][
-"nnoremap ää ]]
+nmap äh <C-]>
+nmap öh <C-T>
+"" Section movements
+nmap öö [[
+nmap öä []
+nmap äö ][
+nmap ää ]]
+
 "Use Netrw, not NERDTREE
-nnoremap <leader>tn :17Lex<cr>
+nnoremap <leader>l :17Lex<cr>
 
 " ctrl+c to exit insert mode
 inoremap <esc> <nop>
@@ -204,11 +229,12 @@ nnoremap <leader>_ ddkP
 nnoremap <leader>ev :split $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 
-" make jk, H and L more useful
+" make jk, H and L more useful on indented lines and while wrapping
 nnoremap j gj
 nnoremap k gk
 nnoremap H ^
 nnoremap L $
+
 
 " inside/around next/last parentheses
 onoremap in( :<c-u> normal! f(vi(<cr>
@@ -222,15 +248,15 @@ onoremap an{ :<c-u> normal! f{va{<cr>
 onoremap al{ :<c-u> normal! F}va{<cr>
 
 " highlight trailing spaces
-nnoremap <leader>w :match Error /\v +$/<cr>
-nnoremap <leader>W :match<cr>
-nnoremap <leader>t :%s/\v +$//
+" nnoremap <leader>w :match Error /\v +$/<cr>
+" nnoremap <leader>W :match<cr>
+nnoremap <leader>W :%s/\v +$//<cr>
+nnoremap <leader>= mqgg=G`q
+nnoremap <leader>fl :echom foldlevel('.')<cr>
+" Toggle Help/Text Filetypes
+nnoremap <leader>h :let &ft = (&ft==#"help" ? "text" :
+            \(&ft==#"text" ? "help" : &ft))<cr>
 
-" toggle invisible characters
-nnoremap <leader>w :set wrap!<cr>
-nnoremap <leader>i :set list!<cr>
-" toggle line numbers
-nnoremap <leader>n :setlocal number! relativenumber!<cr>
 
 " end of line semicolon; return
 nnoremap <leader>; mqA;<esc>`q
@@ -243,9 +269,23 @@ nnoremap ? ?\v
 nnoremap <leader><space> :nohlsearch<cr>
 
 "}}}
-" Autocmds {{{
+"Section: Commands {{{
+" }}}
+"Section: Autocmds {{{
 if has("autocmd")
     filetype plugin indent on
+
+    augroup latexSurround
+        autocmd!
+        autocmd FileType tex call s:latexSurround()
+    augroup END
+
+    function! s:latexSurround()
+        let b:surround_{char2nr("e")}
+                    \ = "\\begin{\1environment: \1}\n\t\r\n\\end{\1\1}"
+        let b:surround_{char2nr("c")} = "\\\1command: \1{\r}"
+    endfunction
+
     augroup filetype_python
         autocmd!
         autocmd FileType python setlocal textwidth=100
