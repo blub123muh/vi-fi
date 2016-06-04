@@ -132,6 +132,7 @@ set nolist
 
 set linebreak
 set breakindent
+"set showbreak=any idea?
 
 set splitbelow
 set splitright
