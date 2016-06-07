@@ -70,9 +70,6 @@
 [submodule "vifi/bundle/badwolf"]
 	path = vifi/bundle/badwolf
 	url = http://github.com/sjl/badwolf.git
-[submodule "vifi/bundle/moonshine-vim"]
-	path = vifi/bundle/moonshine-vim
-	url = http://github.com/KKPMW/moonshine-vim.git
 [submodule "vifi/thisnotappearOK"]
 	path = vifi/thisnotappearOK
 	url = http://github.com/tpope/vim-pathogen
