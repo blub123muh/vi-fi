@@ -93,6 +93,7 @@ Plug 'vim-airline/vim-airline-themes'
 
 " Syntax checking and CtrlP
 Plug 'scrooloose/syntastic'
+Plug 'myint/syntastic-extras'
 Plug 'ctrlpvim/ctrlp.vim'
 
 " Filetype specific
@@ -191,11 +192,13 @@ let g:tex_flavor = 'latex'
 "}}}
 " Section: Plugin options{{{
 
+" Syntastic
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 " experimental
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
+" loc list just clutters...
+" let g:syntastic_auto_loc_list = 1
 
 " Warning 1: Command terminated with space
 " Warning 8: wrong length of dash
@@ -206,22 +209,30 @@ let g:syntastic_tex_chktex_args = "-n1 -n8"
 " let g:syntastic_python_checkers = ["flake8"]
 let g:syntastic_python_python_exec = '/usr/bin/python3'
 
-" no callbacks without +clientserver
+" Syntastic Extras
+let g:syntastic_javascript_checkers = ['json-tool']
+let g:syntastic_gitcommit_checkers = ['language_check']
+let g:syntastic_python_checkers = ['pyflakes_with_warnings']
+let g:syntastic_yaml_checkers = ['pyyaml']
+
+
+" Vimtex
 let g:vimtex_latexmk_continuous = 0
 let g:vimtex_latexmk_background = 0
 let g:vimtex_latexmk_callback = 0
 
-" okular is my preferred pdf viewer
 let g:vimtex_view_general_viewer = 'okular'
 let g:vimtex_view_general_options = '--unique @pdf\#src:@line@tex'
 let g:vimtex_view_general_options_latexmk = '--unique'
-" FOLD ALL THE THINGIES
+
 let g:vimtex_fold_enabled = 1
 let g:vimtex_fold_comments = 1
 let g:vimtex_indent_enabled = 1
 let g:vimtex_indent_bib_enabled = 1
 
+" VRC
 let g:vrc_allow_get_request_body = 1
+" let g:vrc_output_buffer_name = '__VRC_OUTPUT.json'
 
 " ehm, no?
 let g:instant_markdown_autostart = 0
@@ -430,16 +441,9 @@ if has("autocmd")
         " Unfortunately, the instant-markdown plugin requires
         " the npm package instant-markdown-d to be installed
         autocmd!
-        silent execute "!command -v instant-markdown-d >/dev/null 2>&1"
-        if v:shell_error == 0
-            autocmd FileType markdown
+        autocmd FileType markdown
                         \nnoremap <buffer> <localleader>ll
                         \:InstantMarkdownPreview<cr>
-        else
-            autocmd FileType markdown
-                        \nnoremap <buffer> <localleader>ll
-                        \:echom "Package instant-markdown-d not installed"<cr>
-        endif
     augroup END
     " Rescue curser position and DiffOrig {{{
     " restores curser position
