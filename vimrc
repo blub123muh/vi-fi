@@ -86,35 +86,47 @@ Plug 'tpope/vim-vividchalk'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-pathogen'
 
+" Git Indicators and fancy statusline
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-Plug 'sjl/badwolf'
-" Syntax checking and comments.
-" Expensive?
+" Syntax checking and CtrlP
 Plug 'scrooloose/syntastic'
 Plug 'ctrlpvim/ctrlp.vim'
+
 " Filetype specific
 Plug 'lervag/vimtex'
+Plug 'hynek/vim-python-pep8-indent'
+"This is too heavy considering we have syntastic already
+"Plug 'klen/python-mode'
 Plug 'raichoo/haskell-vim'
 Plug 'chrisbra/csv.vim'
 Plug 'wannesm/wmgraphviz.vim'
 Plug 'suan/vim-instant-markdown'
 Plug 'JuliaLang/julia-vim'
+
+" REST console, sounds very promising for elasticsearch
+Plug 'diepm/vim-rest-console'
+
+"Colorscheme
+Plug 'sjl/badwolf'
+Plug 'jnurmine/Zenburn'
+Plug 'KKPMW/moonshine-vim'
 "endif
 call plug#end() "so this calls filetype plugin indent on????
 " additional pathogen infection for testing local plugins
-"execute pathogen#infect(g:vifi_vimfiles . '/bundle/{}')
+" execute pathogen#infect(g:vifi_vimfiles . '/bundle/{}')
 " }}}
 "Section: Basic Settings {{{
 " utf8!
 set encoding=utf-8
-" We usually have fast terminal connections
+set visualbell
 set ttyfast
 " indenting
 set autoindent
-set visualbell
+set shiftround
+set smarttab
 " always display status line
 set backup
 set laststatus=2
@@ -126,7 +138,6 @@ set backspace=indent,eol,start
 set lazyredraw
 set title
 
-set textwidth=78
 set nowrap
 set nolist
 
@@ -147,14 +158,18 @@ set relativenumber
 
 set wildmenu
 set wildmode=longest:full,full
-set wildignore+=tags,.*.un~,*.pyc
+set wildignore+=tags,.*.un~,*.pyc,*.o
 
+" handy for vinegar and so on
+set autowrite
+set autoread
 
 " colors
 syntax on
 set background=dark
 silent! colorscheme vividchalk
 set colorcolumn=+1
+
 " statusline
 set showcmd " display incomplete commands
 set ruler
@@ -175,14 +190,27 @@ set sidescrolloff=10
 let g:tex_flavor = 'latex'
 "}}}
 " Section: Plugin options{{{
+
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+" experimental
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+
 " Warning 1: Command terminated with space
 " Warning 8: wrong length of dash
-let g:syntasic_tex_checker = "chktex"
+let g:syntastic_tex_checkers = ["chktex"]
 let g:syntastic_tex_chktex_args = "-n1 -n8"
+
+" Try all checkers
+" let g:syntastic_python_checkers = ["flake8"]
 let g:syntastic_python_python_exec = '/usr/bin/python3'
 
 " no callbacks without +clientserver
-let g:vimtex_latex_callback = 0 
+let g:vimtex_latexmk_continuous = 0
+let g:vimtex_latexmk_background = 0
+let g:vimtex_latexmk_callback = 0
+
 " okular is my preferred pdf viewer
 let g:vimtex_view_general_viewer = 'okular'
 let g:vimtex_view_general_options = '--unique @pdf\#src:@line@tex'
@@ -190,15 +218,22 @@ let g:vimtex_view_general_options_latexmk = '--unique'
 " FOLD ALL THE THINGIES
 let g:vimtex_fold_enabled = 1
 let g:vimtex_fold_comments = 1
+let g:vimtex_indent_enabled = 1
+let g:vimtex_indent_bib_enabled = 1
+
+let g:vrc_allow_get_request_body = 1
 
 " ehm, no?
 let g:instant_markdown_autostart = 0
 " }}}
 " Section: Mappings {{{
 let mapleader = ","
-let maplocalleader = "ß"
+let maplocalleader = "ü"
 
 " German keyboard layout
+" Searching with ß. should feel very natural along with the usual ?
+map ß /
+
 nmap ö [
 nmap ä ]
 omap ö [
@@ -210,23 +245,29 @@ xmap ä ]
 nmap äh <C-]>
 nmap öh <C-T>
 "" Section movements
-nmap öö [[
-nmap öä []
-nmap äö ][
-nmap ää ]]
+map öö [[
+map öä []
+map äö ][
+map ää ]]
 
-"Use Netrw, not NERDTREE
+" By T. <the> pope
+if exists(":nohls")
+    nnoremap <silent> <C-L> :nohls<CR><C-L>
+end
+inoremap <C-C> <Esc>`^
+
+" Netrw toggle
 nnoremap <leader>l :17Lex<cr>
 
 " ctrl+c to exit insert mode
 inoremap <esc> <nop>
-inoremap jk <esc>
+" inoremap jk <esc>
 
 "move lines down and up
 nnoremap <leader>- ddp
 nnoremap <leader>_ ddkP
 
-" access THIS vimrc
+" access vimrc
 nnoremap <leader>ev :split $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 
@@ -236,15 +277,14 @@ nnoremap k gk
 nnoremap H ^
 nnoremap L $
 
-
 " inside/around next/last parentheses
 onoremap in( :<c-u> normal! f(vi(<cr>
 onoremap il( :<c-u> normal! F)vi(<cr>
-onoremap in{ :<c-u> normal! f{vi{<cr>
-onoremap il{ :<c-u> normal! F}vi{<cr>
-
 onoremap an( :<c-u> normal! f(va(<cr>
 onoremap al( :<c-u> normal! F)va(<cr>
+
+onoremap in{ :<c-u> normal! f{vi{<cr>
+onoremap il{ :<c-u> normal! F}vi{<cr>
 onoremap an{ :<c-u> normal! f{va{<cr>
 onoremap al{ :<c-u> normal! F}va{<cr>
 
@@ -255,28 +295,104 @@ nnoremap <leader>W :%s/\v +$//<cr>
 nnoremap <leader>= mqgg=G`q
 nnoremap <leader>fl :echom foldlevel('.')<cr>
 " Toggle Help/Text Filetypes
-nnoremap <leader>h :let &ft = (&ft==#"help" ? "text" :
+nnoremap <leader>ht :let &ft = (&ft==#"help" ? "text" :
             \(&ft==#"text" ? "help" : &ft))<cr>
-
 
 " end of line semicolon; return
 nnoremap <leader>; mqA;<esc>`q
-
 "use very magic regex for searching
-nnoremap / /\v
-nnoremap ? ?\v
-"
-"clear searched stuff with leader space
-nnoremap <leader><space> :nohlsearch<cr>
-
-"}}}
-"Section: Commands {{{
+" nnoremap / /\v
+" nnoremap ? ?\v
+" or maybe not
 " }}}
-"Section: Autocmds {{{
+" Section: Commands {{{
+" let s:vifi_interface = "~/git/vi-fi/vifi/bundle"
+function! s:interface(path)
+    let s:vifi_interface = resolve(fnamemodify(a:path, ':p'))
+    if !isdirectory(s:vifi_interface)
+        " call mkdir(s:vifi_interface, p)
+    end
+endfunction
+
+function! s:connect(...)
+    " Maybe provide a bang version for non-github urls at some point
+    for url in a:000
+        echom "Connecting to " . url
+        let l:target = "http://github.com/" . url . ".git"
+        let l:result = system('cd ' . s:vifi_interface
+                    \. ' && git submodule add -f '
+                    \. shellescape(l:target))
+        echom l:result
+    endfor
+endfunction
+
+function! s:netstat(...)
+    " We need s:vifi_interface as argument for git submodule status
+    " because we dont not want to list any other submodules
+    let l:result = systemlist('cd ' . s:vifi_interface .
+                \' && git submodule status ' . s:vifi_interface)
+    call map(l:result, 'split(v:val)[1]')
+    return l:result
+endfunction
+
+function! s:reconnect(...)
+    let submodules = len(a:000) ? a:000 : s:netstat()
+    echon 'Reconnecting...\n'
+    for submodule in a:000
+        let l:result = system('cd ' . s:vifi_interface
+                    \. ' && git submodule update --remote --merge '
+                    \. submodule)
+        echom l:result
+    endfor
+endfunction
+
+function! s:disconnect(...)
+    for submodule in a:000
+        echom 'Disconnecting ' . submodule
+        let l:result = system('cd ' . s:vifi_interface
+                    \. ' && rm -Rf ' . submodule
+                    \. ' && git rm -r ' . submodule)
+        echom l:result
+    endfor
+endfunction
+
+function! s:broadcast(cmd)
+    " FIXME this function does not respect the interface
+    echon 'Broadcasting ' . shellescape(a:cmd) . '...\n'
+    let l:result = systemlist('cd ' . s:vifi_interface
+                \. ' && git submodule foreach '
+                \. shellescape(a:cmd))
+    echon join(l:result, "\n")
+endfunction
+
+
+let $MYVIMRC = resolve(expand('<sfile>:p'))
+call <SID>interface(fnamemodify($MYVIMRC, ':h') . '/vifi/bundle/')
+command! -bar -nargs=+ VifiConnect :call s:connect(<f-args>)
+command! -bar -nargs=0 VifiNetstat :echon join(s:netstat(),"\n")
+command! -bar -nargs=+ -complete=customlist,s:netstat VifiDisconnect :call s:disconnect(<f-args>)
+command! -bar -nargs=* -complete=customlist,s:netstat VifiReconnect :call s:reconnect(<f-args>)
+command! -bar -nargs=1 VifiBroadcast :call s:broadcast(<q-args>)
+" }}}
+" Section: Autocmds {{{
 if has("autocmd")
     filetype plugin indent on
 
+    augroup ft_vim
+        autocmd!
+        autocmd Filetype vim setlocal textwidth=78
+        autocmd Filetype vim setlocal foldmethod=marker
+    augroup END
+
+    augroup ft_help
+        autocmd!
+        " I like this idea of tpope/scriptease to remap K for help navigation.
+        " I like to use it in helpfiles aswell (just for tag navigation)
+        autocmd FileType help nmap <buffer> K <C-]>
+    augroup END
+
     augroup latexSurround
+        " Modify vim-surround to support vimtex
         autocmd!
         autocmd FileType tex call s:latexSurround()
     augroup END
@@ -287,23 +403,24 @@ if has("autocmd")
         let b:surround_{char2nr("c")} = "\\\1command: \1{\r}"
     endfunction
 
-    augroup filetype_python
+    augroup ft_python
         autocmd!
-        autocmd FileType python setlocal textwidth=100
+        " Python PEPs allow a little more textwidth
+        autocmd FileType python setlocal textwidth=79
     augroup END
-    augroup filetype_java
+    augroup ft_java
         autocmd!
         " i want pythonic prints everywhere.
         " just type print(
         autocmd FileType java iabbrev <buffer> print
                     \System.out.println);<left><left>
     augroup END
-    augroup filetype_text
+    augroup ft_text
         autocmd!
         " For all text files set 'textwidth' to 78 characters.
         autocmd FileType text setlocal textwidth=78
     augroup END
-    augroup filetype_csv
+    augroup ft_csv
         autocmd!
         autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn<cr>
         autocmd FileType csv nnoremap <buffer> <localleader>uc :%UnarrangeColumn<cr>
@@ -315,10 +432,13 @@ if has("autocmd")
         autocmd!
         silent execute "!command -v instant-markdown-d >/dev/null 2>&1"
         if v:shell_error == 0
-            autocmd FileType markdown nnoremap <buffer> <localleader>li :InstantMarkdownPreview<cr>
+            autocmd FileType markdown
+                        \nnoremap <buffer> <localleader>ll
+                        \:InstantMarkdownPreview<cr>
         else
-            autocmd FileType markdown nnoremap <buffer> <localleader>li
-                        \:echom "Package instant-markdown-d (npm) not installed."<cr>
+            autocmd FileType markdown
+                        \nnoremap <buffer> <localleader>ll
+                        \:echom "Package instant-markdown-d not installed"<cr>
         endif
     augroup END
     " Rescue curser position and DiffOrig {{{

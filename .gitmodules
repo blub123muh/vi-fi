@@ -1,0 +1,78 @@
+[submodule "vifi/bundle/vim-surround"]
+	path = vifi/bundle/vim-surround
+	url = http://github.com/tpope/vim-surround.git
+[submodule "vifi/bundle/vim-repeat"]
+	path = vifi/bundle/vim-repeat
+	url = http://github.com/tpope/vim-repeat.git
+[submodule "vifi/bundle/vim-fugitive"]
+	path = vifi/bundle/vim-fugitive
+	url = http://github.com/tpope/vim-fugitive.git
+[submodule "vifi/bundle/vim-rhubarb"]
+	path = vifi/bundle/vim-rhubarb
+	url = http://github.com/tpope/vim-rhubarb.git
+[submodule "vifi/bundle/vim-unimpaired"]
+	path = vifi/bundle/vim-unimpaired
+	url = http://github.com/tpope/vim-unimpaired.git
+[submodule "vifi/bundle/vim-jdaddy"]
+	path = vifi/bundle/vim-jdaddy
+	url = http://github.com/tpope/vim-jdaddy.git
+[submodule "vifi/bundle/vim-scriptease"]
+	path = vifi/bundle/vim-scriptease
+	url = http://github.com/tpope/vim-scriptease.git
+[submodule "vifi/bundle/vim-sleuth"]
+	path = vifi/bundle/vim-sleuth
+	url = http://github.com/tpope/vim-sleuth.git
+[submodule "vifi/bundle/vim-commentary"]
+	path = vifi/bundle/vim-commentary
+	url = http://github.com/tpope/vim-commentary.git
+[submodule "vifi/bundle/vim-vividchalk"]
+	path = vifi/bundle/vim-vividchalk
+	url = http://github.com/tpope/vim-vividchalk.git
+[submodule "vifi/bundle/vim-eunuch"]
+	path = vifi/bundle/vim-eunuch
+	url = http://github.com/tpope/vim-eunuch.git
+[submodule "vifi/bundle/vim-pathogen"]
+	path = vifi/bundle/vim-pathogen
+	url = http://github.com/tpope/vim-pathogen.git
+[submodule "vifi/bundle/syntastic"]
+	path = vifi/bundle/syntastic
+	url = http://github.com/scrooloose/syntastic.git
+[submodule "vifi/bundle/ctrlp.vim"]
+	path = vifi/bundle/ctrlp.vim
+	url = http://github.com/ctrlpvim/ctrlp.vim.git
+[submodule "vifi/bundle/vim-gitgutter"]
+	path = vifi/bundle/vim-gitgutter
+	url = http://github.com/airblade/vim-gitgutter.git
+[submodule "vifi/bundle/vimtex"]
+	path = vifi/bundle/vimtex
+	url = http://github.com/lervag/vimtex.git
+[submodule "vifi/bundle/vim-python-pep8-indent"]
+	path = vifi/bundle/vim-python-pep8-indent
+	url = http://github.com/hynek/vim-python-pep8-indent.git
+[submodule "vifi/bundle/haskell-vim"]
+	path = vifi/bundle/haskell-vim
+	url = http://github.com/raichoo/haskell-vim.git
+[submodule "vifi/bundle/csv.vim"]
+	path = vifi/bundle/csv.vim
+	url = http://github.com/chrisbra/csv.vim.git
+[submodule "vifi/bundle/wmgraphviz.vim"]
+	path = vifi/bundle/wmgraphviz.vim
+	url = http://github.com/wannesm/wmgraphviz.vim.git
+[submodule "vifi/bundle/vim-instant-markdown"]
+	path = vifi/bundle/vim-instant-markdown
+	url = http://github.com/suan/vim-instant-markdown.git
+[submodule "vifi/bundle/julia-vim"]
+	path = vifi/bundle/julia-vim
+	url = http://github.com/JuliaLang/julia-vim.git
+[submodule "vifi/bundle/vim-rest-console"]
+	path = vifi/bundle/vim-rest-console
+	url = http://github.com/diepm/vim-rest-console.git
+[submodule "vifi/bundle/badwolf"]
+	path = vifi/bundle/badwolf
+	url = http://github.com/sjl/badwolf.git
+[submodule "vifi/bundle/moonshine-vim"]
+	path = vifi/bundle/moonshine-vim
+	url = http://github.com/KKPMW/moonshine-vim.git
+[submodule "vifi/thisnotappearOK"]
+	path = vifi/thisnotappearOK
+	url = http://github.com/tpope/vim-pathogen
