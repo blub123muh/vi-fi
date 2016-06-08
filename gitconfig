@@ -1,0 +1,15 @@
+[user]
+	email = git@lpag.de
+	name = Lukas Galke
+[push]
+	default = simple
+[core]
+	editor = vim
+[alias]
+	la = log --oneline --decorate --all --graph
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+
+; vim: set ft=gitconfig:

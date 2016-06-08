@@ -22,7 +22,7 @@ if !exists('g:vifi_connected')
     if !exists('g:vifi_relpath')
         " Use something else than vimfiles or .vim,
         " so that we will not clutter someone else's vimfiles directory.
-        let g:vifi_relpath = 'vifi'
+        let g:vifi_relpath = 'vim'
     end
 
     if !exists('g:vifi_plugin_manager')
@@ -85,15 +85,15 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-vividchalk'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-pathogen'
+Plug 'tpope/vim-flagship'
 
 " Git Indicators and fancy statusline
 Plug 'airblade/vim-gitgutter'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+"Plug 'vim-airline/vim-airline'
+"Plug 'vim-airline/vim-airline-themes'
 
 " Syntax checking and CtrlP
 Plug 'scrooloose/syntastic'
-Plug 'myint/syntastic-extras'
 Plug 'ctrlpvim/ctrlp.vim'
 
 " Filetype specific
@@ -129,19 +129,17 @@ set autoindent
 set shiftround
 set smarttab
 " always display status line
-set backup
 set laststatus=2
+set showtabline=2
 " store undos
-set undofile
-set undoreload=10000
+if exists('+undofile')
+    set undofile
+end
 set history=1000
-set backspace=indent,eol,start
+set backspace=2
 set lazyredraw
 set title
-
-set nowrap
-set nolist
-
+set virtualedit=block
 set linebreak
 set breakindent
 "set showbreak=any idea?
@@ -174,20 +172,12 @@ set colorcolumn=+1
 " statusline
 set showcmd " display incomplete commands
 set ruler
-" no ex mode
-map Q <nop>
 
 set showmatch
 set ignorecase
 set smartcase
 set incsearch
 set hlsearch
-set gdefault
-
-set scrolloff=3
-set sidescroll=1
-set sidescrolloff=10
-
 let g:tex_flavor = 'latex'
 "}}}
 " Section: Plugin options{{{
@@ -208,13 +198,6 @@ let g:syntastic_tex_chktex_args = "-n1 -n8"
 " Try all checkers
 " let g:syntastic_python_checkers = ["flake8"]
 let g:syntastic_python_python_exec = '/usr/bin/python3'
-
-" Syntastic Extras
-let g:syntastic_javascript_checkers = ['json-tool']
-let g:syntastic_gitcommit_checkers = ['language_check']
-let g:syntastic_python_checkers = ['pyflakes_with_warnings']
-let g:syntastic_yaml_checkers = ['pyyaml']
-
 
 " Vimtex
 let g:vimtex_latexmk_continuous = 0
@@ -288,20 +271,6 @@ nnoremap k gk
 nnoremap H ^
 nnoremap L $
 
-" inside/around next/last parentheses
-onoremap in( :<c-u> normal! f(vi(<cr>
-onoremap il( :<c-u> normal! F)vi(<cr>
-onoremap an( :<c-u> normal! f(va(<cr>
-onoremap al( :<c-u> normal! F)va(<cr>
-
-onoremap in{ :<c-u> normal! f{vi{<cr>
-onoremap il{ :<c-u> normal! F}vi{<cr>
-onoremap an{ :<c-u> normal! f{va{<cr>
-onoremap al{ :<c-u> normal! F}va{<cr>
-
-" highlight trailing spaces
-" nnoremap <leader>w :match Error /\v +$/<cr>
-" nnoremap <leader>W :match<cr>
 nnoremap <leader>W :%s/\v +$//<cr>
 nnoremap <leader>= mqgg=G`q
 nnoremap <leader>fl :echom foldlevel('.')<cr>
@@ -389,60 +358,39 @@ command! -bar -nargs=1 VifiBroadcast :call s:broadcast(<q-args>)
 if has("autocmd")
     filetype plugin indent on
 
-    augroup ft_vim
-        autocmd!
+    augroup FT_options
         autocmd Filetype vim setlocal textwidth=78
         autocmd Filetype vim setlocal foldmethod=marker
-    augroup END
 
-    augroup ft_help
-        autocmd!
         " I like this idea of tpope/scriptease to remap K for help navigation.
         " I like to use it in helpfiles aswell (just for tag navigation)
         autocmd FileType help nmap <buffer> K <C-]>
-    augroup END
 
-    augroup latexSurround
         " Modify vim-surround to support vimtex
-        autocmd!
         autocmd FileType tex call s:latexSurround()
-    augroup END
 
-    function! s:latexSurround()
-        let b:surround_{char2nr("e")}
-                    \ = "\\begin{\1environment: \1}\n\t\r\n\\end{\1\1}"
-        let b:surround_{char2nr("c")} = "\\\1command: \1{\r}"
-    endfunction
+        function! s:latexSurround()
+            let b:surround_{char2nr("e")}
+                        \ = "\\begin{\1environment: \1}\n\t\r\n\\end{\1\1}"
+            let b:surround_{char2nr("c")} = "\\\1command: \1{\r}"
+        endfunction
 
-    augroup ft_python
-        autocmd!
         " Python PEPs allow a little more textwidth
         autocmd FileType python setlocal textwidth=79
-    augroup END
-    augroup ft_java
-        autocmd!
-        " i want pythonic prints everywhere.
+        " i want pythonic prints everywhere. even in java
         " just type print(
         autocmd FileType java iabbrev <buffer> print
                     \System.out.println);<left><left>
-    augroup END
-    augroup ft_text
-        autocmd!
         " For all text files set 'textwidth' to 78 characters.
         autocmd FileType text setlocal textwidth=78
-    augroup END
-    augroup ft_csv
-        autocmd!
+        " csv maps
         autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn<cr>
         autocmd FileType csv nnoremap <buffer> <localleader>uc :%UnarrangeColumn<cr>
         autocmd FileType csv nnoremap <buffer> <localleader>nr :NewRecord<cr>
-    augroup END
-    augroup ft_markdown
         " Unfortunately, the instant-markdown plugin requires
         " the npm package instant-markdown-d to be installed
-        autocmd!
         autocmd FileType markdown
-                        \nnoremap <buffer> <localleader>ll
+                        \nnoremap <buffer> <localleader>li
                         \:InstantMarkdownPreview<cr>
     augroup END
     " Rescue curser position and DiffOrig {{{

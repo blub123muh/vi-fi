@@ -4,4 +4,5 @@ vim -u $VIFI_BASE/vimrc +PlugInstall +qall
 
 echo "[vi-fi] Creating symlinks (force with -f)"
 ln -snv "$@" $VIFI_BASE/vimrc ~/.vimrc
-ln -snv "$@" $VIFI_BASE/vifi ~/.vim
+ln -snv "$@" $VIFI_BASE/vim ~/.vim
+ln -snv "$@" $VIFI_BASE/gitconfig ~/.gitconfig

@@ -3,6 +3,6 @@
 tags
 tags-te
 *.swp
-vifi/plugged/**
-vifi/autoload/plug.vim
-vifi/*netrwhist*
+vim/plugged/**
+vim/autoload/plug.vim
+vim/*netrwhist*
