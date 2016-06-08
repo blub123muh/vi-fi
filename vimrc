@@ -85,7 +85,11 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-vividchalk'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-pathogen'
+Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-flagship'
+Plug 'tpope/vim-speeddating'
+Plug 'guns/vim-sexp'
+Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
 " Git Indicators and fancy statusline
 Plug 'airblade/vim-gitgutter'
@@ -116,14 +120,11 @@ Plug 'jnurmine/Zenburn'
 Plug 'KKPMW/moonshine-vim'
 "endif
 call plug#end() "so this calls filetype plugin indent on????
-" additional pathogen infection for testing local plugins
-" execute pathogen#infect(g:vifi_vimfiles . '/bundle/{}')
 " }}}
 "Section: Basic Settings {{{
 " utf8!
 set encoding=utf-8
 set visualbell
-set ttyfast
 " indenting
 set autoindent
 set shiftround
@@ -143,9 +144,6 @@ set virtualedit=block
 set linebreak
 set breakindent
 "set showbreak=any idea?
-
-set splitbelow
-set splitright
 
 set tabstop=8
 set softtabstop=4
