@@ -67,9 +67,11 @@ set visualbell
 set autoindent
 set shiftround
 set smarttab
+set tabstop=8
+" Note that shiftwidth is handled by sleuth
+set softtabstop=4
+set expandtab
 " always display status line
-set laststatus=2
-set showtabline=2
 " store undos
 if exists('+undofile')
   set undofile
@@ -77,17 +79,22 @@ end
 set history=1000
 set backspace=2
 set lazyredraw
-set title
 set virtualedit=block
+
+"display options
+set laststatus=2
+set showtabline=2
+set title
 set linebreak
 set breakindent
 let &showbreak = '+++ '
 set list
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-set tabstop=8
-" Note that shiftwidth is handled by sleuth
-set softtabstop=4
-set expandtab
+
+
+" scrolling
+set scrolloff=1
+set sidescrolloff=5
 
 " numbers
 set number
