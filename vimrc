@@ -58,6 +58,7 @@ Plug 'KKPMW/moonshine-vim'
 call plug#end() "so this calls filetype plugin indent on????
 " }}}
 "Section: Basic Settings {{{
+set iskeyword+=.
 " utf8!
 set encoding=utf-8
 set visualbell
