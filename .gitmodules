@@ -1,6 +1,6 @@
-[submodule "vim/vifi/vim-sensible"]
-	path = vim/vifi/vim-sensible
-	url = http://github.com/tpope/vim-sensible.git
 [submodule "vim/shouldnotmatter"]
 	path = vim/shouldnotmatter
 	url = https://github.com/tpope/vim-sensible
+[submodule "vim/vifi/vim-sensible"]
+	path = vim/vifi/vim-sensible
+	url = http://github.com/tpope/vim-sensible.git
