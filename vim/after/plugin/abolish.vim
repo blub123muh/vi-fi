@@ -3,6 +3,6 @@ if !exists(':Abolish')
     finish
 endif
 
-" Abolish questio{n,nn}ar{y,ies} questio{nn}air{e,es}
-
-Abolish question{airy,airies,nairy,naries,ary,aries,nary,naries} question{naire,naires}
+Abolish question{,n}a{,i}r{e,es,y,ies} question{n}a{i}r{e,es}
+" Abolish question{aire,aires,airy,airies,ary,aries,nairy,naries,nary,naries} question{naire,naires}
+Abolish {,H}CFBM25 BM25{,H}C
