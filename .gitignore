@@ -4,5 +4,4 @@ tags
 tags-te
 *.swp
 vim/plugged/**
-vim/autoload/plug.vim
 vim/*netrwhist*
