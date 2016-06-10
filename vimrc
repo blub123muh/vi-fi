@@ -27,6 +27,7 @@ Plug 'tpope/vim-flagship'
 Plug 'tpope/vim-speeddating'
 Plug 'guns/vim-sexp'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
+Plug 'shumphrey/fugitive-gitlab.vim'
 
 " Git Indicators and fancy statusline
 Plug 'airblade/vim-gitgutter'
@@ -47,7 +48,7 @@ Plug 'wannesm/wmgraphviz.vim'
 Plug 'suan/vim-instant-markdown'
 Plug 'JuliaLang/julia-vim'
 
-" REST console, sounds very promising for elasticsearch
+" REST console, very useful for elasticsearch and other REST APIs
 Plug 'diepm/vim-rest-console'
 
 "Colorscheme
@@ -84,6 +85,7 @@ let &showbreak = '+++ '
 set list
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 set tabstop=8
+" Note that shiftwidth is handled by sleuth
 set softtabstop=4
 set expandtab
 
@@ -120,7 +122,9 @@ set incsearch
 set hlsearch
 let g:tex_flavor = 'latex'
 "}}}
-" Section: Plugin options{{{
+filetype off
+execute pathogen#infect('vifi/{}')
+" Section: Plugin Options{{{
 " Syntastic
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
@@ -134,7 +138,7 @@ let g:syntastic_always_populate_loc_list = 0
 let g:syntastic_tex_checkers = ["chktex"]
 let g:syntastic_tex_chktex_args = "-n1 -n8"
 
-" Try all checkers
+" Python Checkers
 let g:syntastic_python_checkers = ["pyflakes", "python"]
 let g:syntastic_python_python_exec = '/usr/bin/python3'
 
@@ -155,6 +159,8 @@ let g:vimtex_indent_bib_enabled = 1
 " VRC
 let g:vrc_allow_get_request_body = 1
 " let g:vrc_output_buffer_name = '__VRC_OUTPUT.json'
+"
+let g:fugitive_gitlab_domains = ['git.informatik.uni-kiel.de']
 
 " ehm, no?
 let g:instant_markdown_autostart = 0
@@ -228,8 +234,8 @@ call vifi#interface('~/.vim/vifi')
 if has("autocmd")
   filetype plugin indent on
   augroup flagship_customization
-    autocmd User Flags call Hoist("window", "SyntasticStatuslineFlag", {'hl' : 'Todo'})
-    " autocmd User Flags call Hoist("window", "SyntasticStatuslineFlag")
+    " autocmd User Flags call Hoist("window", "SyntasticStatuslineFlag", {'hl' : 'Todo'})
+    autocmd User Flags call Hoist("window", {'hl':'Todo'}, "SyntasticStatuslineFlag")
   augroup END
 
   augroup FT_options
@@ -250,7 +256,7 @@ if has("autocmd")
     endfunction
 
     " Python PEPs allow a little more textwidth
-    autocmd FileType python setlocal textwidth=79
+    autocmd FileType python setlocal textwidth=80
     " i want pythonic prints everywhere. even in java
     " just type print(
     autocmd FileType java iabbrev <buffer> print
