@@ -6,3 +6,4 @@ echo "[vi-fi] Creating symlinks (force with -f)"
 ln -snv "$@" $VIFI_BASE/vimrc ~/.vimrc
 ln -snv "$@" $VIFI_BASE/vim ~/.vim
 ln -snv "$@" $VIFI_BASE/gitconfig ~/.gitconfig
+ln -snv "$@" $VIFI_BASE/zshrc ~/.zshrc
