@@ -231,6 +231,9 @@ nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
 " nnoremap L $
 " Splitjoin seems to make sense:
 " map S to split and J to join?
+"
+nnoremap S :SplitjoinSplit<CR>
+nnoremap J :SplitjoinJoin<CR>
 
 
 nnoremap cof :let &foldcolumn = (&foldcolumn ? 0 : 4)<CR>

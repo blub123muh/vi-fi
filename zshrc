@@ -12,4 +12,5 @@ zstyle :compinstall filename '/home/lpag/.zshrc'
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
-PS1="%![%n@%m]%~%# "
+autoload -Uz colors && colors
+PROMPT="%![%n@%m]%~%# "
