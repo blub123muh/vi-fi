@@ -1,7 +1,7 @@
 " Section: Preamble {{{
 " A rapidly evolving vimrc file
 " Source:       http://github.com/blub123muh/vi-fi.git
-" Maintainer:	Lukas Galke <vi-fi@lpag.de>
+" Maintainer:   Lukas Galke <vi-fi@lpag.de>
 " Homepage:     http://lpag.de/
 set nocompatible "be iMproved
 "}}}
@@ -54,6 +54,7 @@ Plug 'chrisbra/csv.vim'
 Plug 'wannesm/wmgraphviz.vim'
 Plug 'suan/vim-instant-markdown'
 Plug 'JuliaLang/julia-vim'
+Plug 'tmux-plugins/vim-tmux'
 
 " REST console, very useful for elasticsearch and other REST APIs
 Plug 'diepm/vim-rest-console'
@@ -62,6 +63,7 @@ Plug 'diepm/vim-rest-console'
 Plug 'sjl/badwolf'
 Plug 'jnurmine/Zenburn'
 Plug 'KKPMW/moonshine-vim'
+Plug 'tomasr/molokai'
 "endif
 call plug#end() "so this calls filetype plugin indent on????
 " }}}
@@ -128,9 +130,9 @@ set wildignore+=tags,.*.un~,*.pyc,*.o,*.hi
 set autowrite
 set autoread
 
-" colors
+" chco
 syntax on
-set background=dark
+set background=light
 silent! colorscheme vividchalk
 set colorcolumn=+1
 
@@ -268,7 +270,9 @@ if has("autocmd")
 
   augroup ft_options
     autocmd!
-    autocmd Filetype vim setlocal tw=78 fdm=marker
+    autocmd FileType vim setlocal tw=78 fdm=marker
+
+    autocmd FileType zsh let b:dispatch = "source %"
 
     " I like this idea of tpope/scriptease to remap K for help navigation.
     " I like to use it in helpfiles aswell (just for tag navigation)
