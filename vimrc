@@ -39,7 +39,10 @@ Plug 'airblade/vim-gitgutter'
 
 " Syntax checking and CtrlP
 Plug 'scrooloose/syntastic'
+" Hit Ctrl P for all the navigation
 Plug 'ctrlpvim/ctrlp.vim'
+" REST console, very useful for elasticsearch and other REST APIs
+Plug 'diepm/vim-rest-console'
 
 " Filetype specific
 Plug 'lervag/vimtex'
@@ -47,8 +50,8 @@ Plug 'lervag/vimtex'
 Plug 'hynek/vim-python-pep8-indent'
 "This is too heavy considering we have syntastic already
 "Plug 'klen/python-mode'
-"Plug 'vim-erlang/vim-erlang-runtime'
-"Plug 'vim-erlang/erlang-motions.vim'
+Plug 'vim-erlang/vim-erlang-runtime'
+Plug 'vim-erlang/erlang-motions.vim'
 Plug 'raichoo/haskell-vim'
 Plug 'chrisbra/csv.vim'
 Plug 'wannesm/wmgraphviz.vim'
@@ -56,8 +59,6 @@ Plug 'suan/vim-instant-markdown'
 Plug 'JuliaLang/julia-vim'
 Plug 'tmux-plugins/vim-tmux'
 
-" REST console, very useful for elasticsearch and other REST APIs
-Plug 'diepm/vim-rest-console'
 
 "Colorscheme
 Plug 'sjl/badwolf'
@@ -148,8 +149,12 @@ set hlsearch
 let g:tex_flavor = 'latex'
 "}}}
 filetype off
-execute pathogen#infect('vifi/{}')
+" vifi not sourced atm
+call vifi#interface('~/.vim/vifi')
+execute pathogen#infect('src/{}')
 " Section: Plugin Options{{{
+" Builtin Python syntax highlighting
+let g:python_highlight_all = 1
 " Syntastic
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
@@ -237,8 +242,9 @@ nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
 nnoremap S :SplitjoinSplit<CR>
 nnoremap J :SplitjoinJoin<CR>
 
-
-nnoremap cof :let &foldcolumn = (&foldcolumn ? 0 : 4)<CR>
+" IN CSV FILES: Why does :Tabularize open fold column?
+"               It does not, csv.vim does it. evil evil
+" nnoremap cof :let &foldcolumn = (&foldcolumn ? 0 : 4)<CR>
 
 nnoremap <leader>dt :%s/\v +$//<CR>
 nnoremap <leader>= mqgg=G`q
@@ -251,7 +257,13 @@ nnoremap <leader>ht :let &ft = (&ft==#"help" ? "text" :
 nnoremap <leader>; mqA;<esc>`q
 " }}}
 " Section: Commands {{{
-call vifi#interface('~/.vim/vifi')
+function! s:or_else(fun, default) abort
+  if exists(a:fun)
+    return a:fun
+  else
+    return a:default
+  endif
+endfunction
 " }}}
 " Section: Autocmds {{{
 if has("autocmd")
@@ -294,7 +306,7 @@ if has("autocmd")
     " csv maps
     autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn<CR>
           \| nnoremap <buffer> <localleader>uc :%UnArrangeColumn<CR>
-          \| nnoremap <buffer> <localleader>nr :NewRecord<CR>
+          \| nnoremap <buffer> o :CSVNewRecord<CR>
     " Unfortunately, the instant-markdown plugin requires
     " the npm package instant-markdown-d to be installed
     autocmd FileType markdown
