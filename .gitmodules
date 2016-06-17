@@ -1,3 +1,0 @@
-[submodule "vim/shouldnotmatter"]
-	path = vim/shouldnotbreak/
-	url = https://github.com/tpope/vim-sensible
