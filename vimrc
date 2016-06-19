@@ -27,6 +27,10 @@ Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-vividchalk'
 Plug 'tpope/vim-flagship'
 Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-tbone'
+Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-afterimage'
+Plug 'tpope/vim-obsession'
 
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'godlygeek/tabular'
@@ -51,6 +55,7 @@ Plug 'hynek/vim-python-pep8-indent'
 "This is too heavy considering we have syntastic already
 "Plug 'klen/python-mode'
 Plug 'vim-erlang/vim-erlang-runtime'
+Plug 'vim-erlang/vim-erlang-skeletons'
 Plug 'vim-erlang/erlang-motions.vim'
 Plug 'raichoo/haskell-vim'
 Plug 'chrisbra/csv.vim'
@@ -125,15 +130,19 @@ set relativenumber
 " wild menu is cool
 set wildmenu
 set wildmode=longest:full,full
-set wildignore+=tags,.*.un~,*.pyc,*.o,*.hi
+set wildignore+=tags,.*.un~,*.pyc,*.o,*.hi,*.beam
 
 " handy for vinegar and so on
 set autowrite
 set autoread
 
+"experimental
+set timeoutlen=1200
+set ttimeoutlen=50
+
 " chco
 syntax on
-set background=light
+set background=dark
 silent! colorscheme vividchalk
 set colorcolumn=+1
 
@@ -155,6 +164,14 @@ execute pathogen#infect('src/{}')
 " Section: Plugin Options{{{
 " Builtin Python syntax highlighting
 let g:python_highlight_all = 1
+let g:sexp_filetypes = 'erlang'
+
+" Splitjoin
+let g:splitjoin_normalize_whitespace = 1
+let g:splitjoin_align = 1
+let g:splitjoin_split_mapping = "gS"
+let g:splitjoin_join_mapping = "gJ"
+
 " Syntastic
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
@@ -198,7 +215,6 @@ let g:instant_markdown_autostart = 0
 " Section: Mappings {{{
 let mapleader = ","
 let maplocalleader = "\\"
-
 " German keyboard layout
 " Searching with ß. should feel very natural along with the usual ?
 map ß /
@@ -236,15 +252,6 @@ nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
 " nnoremap k gk
 " nnoremap H ^
 " nnoremap L $
-" Splitjoin seems to make sense:
-" map S to split and J to join?
-"
-nnoremap S :SplitjoinSplit<CR>
-nnoremap J :SplitjoinJoin<CR>
-
-" IN CSV FILES: Why does :Tabularize open fold column?
-"               It does not, csv.vim does it. evil evil
-" nnoremap cof :let &foldcolumn = (&foldcolumn ? 0 : 4)<CR>
 
 nnoremap <leader>dt :%s/\v +$//<CR>
 nnoremap <leader>= mqgg=G`q
@@ -270,9 +277,9 @@ if has("autocmd")
   filetype plugin indent on
   augroup my_flagship
     autocmd!
-    autocmd User Flags call Hoist("window", {'hl':'Todo'}, "SyntasticStatuslineFlag")
-  augroup END
-  augroup auto_scanning
+    autocmd User Flags call Hoist("window", 0, {'hl':'Todo'}, "SyntasticStatuslineFlag")
+    autocmd User Flags call Hoist("buffer", 0, {'hl':'Special'}, "ObsessionStatus")
+  augroup guess_dispatch
     autocmd!
     autocmd BufReadPost * if getline(1) =~# '^#!'
           \ | let b:dispatch = getline(1)[2:-1] . ' %'
@@ -306,7 +313,7 @@ if has("autocmd")
     " csv maps
     autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn<CR>
           \| nnoremap <buffer> <localleader>uc :%UnArrangeColumn<CR>
-          \| nnoremap <buffer> o :CSVNewRecord<CR>
+    autocmd FileType csv nnoremap <buffer> o :<C-U>execute "CSVNewRecord ". v:count1<CR>
     " Unfortunately, the instant-markdown plugin requires
     " the npm package instant-markdown-d to be installed
     autocmd FileType markdown
