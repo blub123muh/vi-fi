@@ -35,7 +35,7 @@ function! s:reconnect(...) abort
     " Unfortunately, git submodule update interface is not location
     " dependant, therefore this WILL affect your other plugins
     let l:result = system('git -C '. s:vifi_interface 
-          \. ' submodule update --remote --merge '
+          \. ' submodule update --remote --rebase '
           \. submodule)
     echon l:result
   endfor

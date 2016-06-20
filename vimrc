@@ -72,6 +72,10 @@ Plug 'KKPMW/moonshine-vim'
 Plug 'tomasr/molokai'
 "endif
 call plug#end() "so this calls filetype plugin indent on????
+filetype off
+" vifi not sourced atm
+call vifi#interface('~/.vim/vifi')
+execute pathogen#infect('src/{}', 'vifi/{}')
 " }}}
 "Section: Basic Settings {{{
 " utf8!
@@ -131,6 +135,7 @@ set relativenumber
 set wildmenu
 set wildmode=longest:full,full
 set wildignore+=tags,.*.un~,*.pyc,*.o,*.hi,*.beam
+set wildignore+=*.aux,*.out,*.toc
 
 " handy for vinegar and so on
 set autowrite
@@ -157,20 +162,16 @@ set incsearch
 set hlsearch
 let g:tex_flavor = 'latex'
 "}}}
-filetype off
-" vifi not sourced atm
-call vifi#interface('~/.vim/vifi')
-execute pathogen#infect('src/{}')
 " Section: Plugin Options{{{
 " Builtin Python syntax highlighting
 let g:python_highlight_all = 1
-let g:sexp_filetypes = 'erlang'
+" let g:sexp_filetypes = 'erlang'
 
 " Splitjoin
 let g:splitjoin_normalize_whitespace = 1
 let g:splitjoin_align = 1
-let g:splitjoin_split_mapping = "gS"
-let g:splitjoin_join_mapping = "gJ"
+let g:splitjoin_split_mapping = "S"
+let g:splitjoin_join_mapping = "J"
 
 " Syntastic
 let g:syntastic_check_on_open = 1
@@ -264,11 +265,15 @@ nnoremap <leader>ht :let &ft = (&ft==#"help" ? "text" :
 nnoremap <leader>; mqA;<esc>`q
 " }}}
 " Section: Commands {{{
-function! s:or_else(fun, default) abort
-  if exists(a:fun)
-    return a:fun
+function! s:or_else(cmd, default) abort
+  if exists(":" . a:cmd) && !v:count
+    let tick = b:changedtick
+    exe a:cmd
+    if tick == b:changedtick
+      execute 'normal! ' . a:default
+    endif
   else
-    return a:default
+    execute 'normal!' . v:count . a:default
   endif
 endfunction
 " }}}
@@ -278,7 +283,7 @@ if has("autocmd")
   augroup my_flagship
     autocmd!
     autocmd User Flags call Hoist("window", 0, {'hl':'Todo'}, "SyntasticStatuslineFlag")
-    autocmd User Flags call Hoist("buffer", 0, {'hl':'Special'}, "ObsessionStatus")
+    " autocmd User Flags call Hoist("buffer", 0, {'hl':'Special'}, "ObsessionStatus")
   augroup guess_dispatch
     autocmd!
     autocmd BufReadPost * if getline(1) =~# '^#!'
