@@ -31,11 +31,12 @@ Plug 'tpope/vim-tbone'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-afterimage'
 Plug 'tpope/vim-obsession'
+Plug 'tpope/vim-projectionist'
 
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'godlygeek/tabular'
-Plug 'guns/vim-sexp'
-Plug 'tpope/vim-sexp-mappings-for-regular-people'
+" Plug 'guns/vim-sexp'
+" Plug 'tpope/vim-sexp-mappings-for-regular-people'
 Plug 'shumphrey/fugitive-gitlab.vim'
 
 " Git Indicators and fancy statusline
@@ -170,11 +171,11 @@ let g:python_highlight_all = 1
 " Splitjoin
 let g:splitjoin_normalize_whitespace = 1
 let g:splitjoin_align = 1
-let g:splitjoin_split_mapping = "S"
-let g:splitjoin_join_mapping = "J"
+let g:splitjoin_split_mapping = "gS"
+let g:splitjoin_join_mapping = "gJ"
 
 " Syntastic
-let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 " experimental
 let g:syntastic_always_populate_loc_list = 0
@@ -240,7 +241,9 @@ inoremap <C-U> <C-G>u<C-U>
 inoremap <C-C> <Esc>`^
 inoremap <Esc> <nop>
 
+nnoremap <F8> :Make<CR>
 nnoremap <F9> :Dispatch<CR>
+nnoremap <F10> :Start<CR>
 
 " access files
 nnoremap <leader>ev :split $MYVIMRC<CR>
@@ -283,7 +286,8 @@ if has("autocmd")
   augroup my_flagship
     autocmd!
     autocmd User Flags call Hoist("window", 0, {'hl':'Todo'}, "SyntasticStatuslineFlag")
-    " autocmd User Flags call Hoist("buffer", 0, {'hl':'Special'}, "ObsessionStatus")
+  augroup END
+
   augroup guess_dispatch
     autocmd!
     autocmd BufReadPost * if getline(1) =~# '^#!'
@@ -294,13 +298,21 @@ if has("autocmd")
 
   augroup ft_options
     autocmd!
+    autocmd FileType erlang  let  b:endwise_addition = 'end'
+          \ | let  b:endwise_words = 'fun,receive'
+          \ | let b:endwise_syngroups = 'erlangKeyword'
+    autocmd FileType julia let b:endwise_addition = 'end'
+          \ | let b:endwise_words =  'function,for'
+          \ | let b:endwise_syngroups = 'juliaRepeat,JuliaRepeatBlock'
+
     autocmd FileType vim setlocal tw=78 fdm=marker
 
     autocmd FileType zsh let b:dispatch = "source %"
 
     " I like this idea of tpope/scriptease to remap K for help navigation.
     " I like to use it in helpfiles aswell (just for tag navigation)
-    autocmd FileType help nmap <buffer> K <C-]>
+    autocmd FileType help setlocal keywordprg=:help
+    autocmd FileType help nnoremap <silent><buffer> q :q<CR>
 
     " Modify vim-surround to support vimtex
     autocmd FileType tex
@@ -313,6 +325,7 @@ if has("autocmd")
     " i want pythonic prints everywhere. even in java
     " just type print(
     autocmd FileType java iabbrev <buffer> print System.out.println);<left><left>
+    autocmd FileType java setlocal foldmethod=syntax
     " For all text files set 'textwidth' to 78 characters.
     autocmd FileType text setlocal textwidth=78
     " csv maps
