@@ -68,8 +68,6 @@ Plug 'tmux-plugins/vim-tmux'
 
 "Colorscheme
 Plug 'sjl/badwolf'
-Plug 'jnurmine/Zenburn'
-Plug 'KKPMW/moonshine-vim'
 Plug 'tomasr/molokai'
 "endif
 call plug#end() "so this calls filetype plugin indent on????
@@ -249,6 +247,7 @@ nnoremap <F10> :Start<CR>
 nnoremap <leader>ev :split $MYVIMRC<CR>
 nnoremap <leader>sv :source $MYVIMRC<CR>
 nnoremap <leader>ea :Vsplit after/plugin/abolish.vim<CR>
+nnoremap <leader>eq :split ~/.config/qutebrowser/keys.conf<CR>
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
 
 " make jk, H and L more useful on indented lines and while wrapping
@@ -302,8 +301,8 @@ if has("autocmd")
           \ | let  b:endwise_words = 'fun,receive'
           \ | let b:endwise_syngroups = 'erlangKeyword'
     autocmd FileType julia let b:endwise_addition = 'end'
-          \ | let b:endwise_words =  'function,for'
-          \ | let b:endwise_syngroups = 'juliaRepeat,JuliaRepeatBlock'
+          \ | let b:endwise_words =  'function,for,if'
+          \ | let b:endwise_syngroups = 'juliaConditional,juliaConditionalBlock,juliaRepeat,JuliaRepeatBlock'
 
     autocmd FileType vim setlocal tw=78 fdm=marker
 
