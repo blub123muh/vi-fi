@@ -12,3 +12,4 @@ Abolish comparis{,i}on compar{i}son
 " to hypothesize
 Abolish hypot{,h,hes}i{s,z}e{,s,d} hypot{hes}i{z}e{}
 Abolish simil{ari,air,airi}t{y,ies} simil{ari}t{}
+Abolish artific{,i}ally artific{i}ally

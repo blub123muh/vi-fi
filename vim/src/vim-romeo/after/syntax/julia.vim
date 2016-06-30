@@ -125,7 +125,7 @@ syn keyword juliaHypothesisTestsBuiltin pvalue
 " }}}
 " Parametric Tests {{{
 syn keyword juliaHypothesisTestsBuiltin BTest
-syn keyword juliaHypothesisTestsBuiltin TTest
+syn keyword juliaHypothesisTestsBuiltin OneSampleTTest EqualVarianceTTest UnequalVarianceTTest
 syn keyword juliaHypothesisTestsBuiltin PowerDivergenceTest ChisqTest MultinomialLRT
 " }}}
 " Nonparametric Tests {{{
@@ -167,31 +167,49 @@ syn keyword juliaDistributionsBuiltin succprob failprob
 syn keyword juliaDistributionsBuiltin scale location
 syn keyword juliaDistributionsBuiltin shape rate ncategories ntrials dof
 
-syn keyword juliaDistributionsBuiltin var std median modes mode skewness
-syn keyword juliaDistributionsBuiltin kurtosis isplatykurtic isleptokurtic
-" }}}
-" }}}1
-" Linking...{{{
-syn cluster juliaKeywordItems add=juliaDataFramesBuiltin,juliaBuiltin,juliaHypothesisTestsBuiltin,juliaDistributionsBuiltin
-syn cluster juliaExpressions add=juliaDataFramesColIdentifier
+syn   keyword          juliaDistributionsBuiltin   var                std             median          modes   mode   skewness
+syn   keyword          juliaDistributionsBuiltin   kurtosis           isplatykurtic   isleptokurtic
+"     }}}
+"     }}}1
+"Linking...{{{1
 
-syn cluster juliaTypesItems add=juliaDataFramesTypes,juliaDistributionsTypes,juliaStatsBaseTypes
-hi def link juliaStatsBaseTypes Type
-hi def link juliaDataFramesTypes Type
-hi def link juliaDistributionsTypes Type
+syn cluster juliaKeywordItems add=juliaBuiltin
 
 hi def link juliaBuiltin Function
-hi def link juliaDataFramesBuiltin Function
-hi def link juliaHypothesisTestsBuiltin Function
-hi def link juliaDataFramesColIdentifier Special
 
-hi def link juliaDataFramesInlineDelim String
-hi def link juliaDataFramesInlineCSV Constant
-hi def link juliaDataFramesInlineCSV2 Constant
-hi def link juliaDataFramesInlineWSV Constant
-hi def link juliaDataFramesInlineTSV Constant
-hi def link juliaDataFramesInlineCSVSep Special
-hi def link juliaDataFramesInlineCSV2Sep Special
-hi def link juliaDataFramesInlineWSVSep Special
-hi def link juliaDataFramesInlineWSV2Sep Special
-" }}}
+
+syn   cluster   juliaTypesItems     add=juliaDataFramesTypes
+syn   cluster   juliaKeywordItems   add=juliaDataFramesBuiltin
+syn   cluster   juliaExpressions    add=juliaDataFramesColIdentifier
+
+hi def link juliaDataFramesInlineDelim     String
+hi def link juliaDataFramesInlineCSV       Constant
+hi def link juliaDataFramesInlineCSV2      Constant
+hi def link juliaDataFramesInlineWSV       Constant
+hi def link juliaDataFramesInlineTSV       Constant
+hi def link juliaDataFramesInlineCSVSep    Special
+hi def link juliaDataFramesInlineCSV2Sep   Special
+hi def link juliaDataFramesInlineWSVSep    Special
+hi def link juliaDataFramesInlineWSV2Sep   Special
+
+hi   def   link   juliaDataFramesTypes           Type
+hi   def   link   juliaDataFramesBuiltin         Function
+hi   def   link   juliaDataFramesColIdentifier   Special
+
+
+syn   cluster   juliaTypesItems     add=juliaStatsBaseTypes
+syn   cluster   juliaKeywordItems   add=juliaStatsBaseBuiltin
+hi    def       link                juliaStatsBaseTypes         Type
+hi    def       link                juliaStatsBaseBuiltin       Function
+
+
+syn   cluster   juliaKeywordItems   add=juliaHypothesisTestsBuiltin
+hi    def       link                juliaHypothesisTestsBuiltin       Function
+
+
+syn   cluster   juliaTypesItems     add=juliaDistributionsTypes
+syn   cluster   juliaKeywordItems   add=juliaDistributionsBuiltin
+hi    def       link                juliaDistributionsTypes         Type
+hi    def       link                juliaDistributionsBuiltin       Function
+
+" }}}1

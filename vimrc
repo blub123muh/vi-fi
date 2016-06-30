@@ -35,35 +35,42 @@ Plug 'tpope/vim-projectionist'
 
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'godlygeek/tabular'
-" Plug 'guns/vim-sexp'
-" Plug 'tpope/vim-sexp-mappings-for-regular-people'
-Plug 'shumphrey/fugitive-gitlab.vim'
+Plug 'tpope/vim-sexp-mappings-for-regular-people' | Plug 'guns/vim-sexp'
+Plug 'shumphrey/fugitive-gitlab.vim' | Plug 'tpope/vim-fugitive'
 
-" Git Indicators and fancy statusline
-Plug 'airblade/vim-gitgutter'
-
-" Syntax checking and CtrlP
-Plug 'scrooloose/syntastic'
-" Hit Ctrl P for all the navigation
 Plug 'ctrlpvim/ctrlp.vim'
-" REST console, very useful for elasticsearch and other REST APIs
-Plug 'diepm/vim-rest-console'
+Plug 'scrooloose/syntastic'
+Plug 'jceb/vim-orgmode'
+
+if has("python")
+  if v:version >= 704
+    Plug 'vim-pandoc/vim-pandoc'
+    Plug 'vim-pandoc/vim-pandoc-syntax'
+  endif
+  if has("conceal")
+    Plug 'fmoralesc/vim-pad'
+  endif
+endif
+
+" Plug 'airblade/vim-gitgutter'
 
 " Filetype specific
+Plug 'diepm/vim-rest-console'
 Plug 'lervag/vimtex'
 " Indentation of pymode
 Plug 'hynek/vim-python-pep8-indent'
+Plug 'tmhedberg/SimpylFold'
 "This is too heavy considering we have syntastic already
-"Plug 'klen/python-mode'
+" Plug 'klen/python-mode'
 Plug 'vim-erlang/vim-erlang-runtime'
 Plug 'vim-erlang/vim-erlang-skeletons'
 Plug 'vim-erlang/erlang-motions.vim'
 Plug 'raichoo/haskell-vim'
 Plug 'chrisbra/csv.vim'
 Plug 'wannesm/wmgraphviz.vim'
-Plug 'suan/vim-instant-markdown'
 Plug 'JuliaLang/julia-vim'
 Plug 'tmux-plugins/vim-tmux'
+Plug 'freitass/todo.txt-vim'
 
 
 "Colorscheme
@@ -127,8 +134,8 @@ set scrolloff=1
 set sidescrolloff=5
 
 " numbers
-set number
-set relativenumber
+set nonumber
+set norelativenumber
 
 " wild menu is cool
 set wildmenu
@@ -162,9 +169,22 @@ set hlsearch
 let g:tex_flavor = 'latex'
 "}}}
 " Section: Plugin Options{{{
+let g:notes_directories = ['~/Notes']
+highlight default link TodoPriorityD Type
+
+let g:pad#dir = '~/notes'
+let g:pad#local_dir = 'notes'
+
+if v:version >= 704 && has("python")
+  let g:pad#default_format = 'pandoc'
+else
+  let g:pad#default_format = 'markdown'
+endif
+
 " Builtin Python syntax highlighting
 let g:python_highlight_all = 1
 " let g:sexp_filetypes = 'erlang'
+" let g:pymode_python = 'python3'
 
 " Splitjoin
 let g:splitjoin_normalize_whitespace = 1
@@ -186,7 +206,7 @@ let g:syntastic_tex_checkers = ["chktex"]
 let g:syntastic_tex_chktex_args = "-n1 -n8"
 
 " Python Checkers
-let g:syntastic_python_checkers = ["pyflakes", "python"]
+let g:syntastic_python_checkers = ["pyflakes", "python", "pep8"]
 let g:syntastic_python_python_exec = '/usr/bin/python3'
 
 " Vimtex
@@ -211,6 +231,9 @@ let g:fugitive_gitlab_domains = ['git.informatik.uni-kiel.de']
 
 " ehm, no?
 let g:instant_markdown_autostart = 0
+
+let g:csv_autocmd_arrange = 1
+let g:csv_autocmd_arrange = 1024 * 1024
 " }}}
 " Section: Mappings {{{
 let mapleader = ","
@@ -230,6 +253,7 @@ map äö ][
 map ää ]]
 " we can safely remap +
 " but to what :<
+nnoremap <Space> za
 
 " By T. <the> Pope
 if exists(":nohls")
@@ -253,11 +277,12 @@ nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
 " make jk, H and L more useful on indented lines and while wrapping
 " nnoremap j gj
 " nnoremap k gk
-" nnoremap H ^
-" nnoremap L $
+nnoremap H ^
+nnoremap L $
 
 nnoremap <leader>dt :%s/\v +$//<CR>
 nnoremap <leader>= mqgg=G`q
+
 nnoremap <leader>fc :echom foldlevel('.')<CR>
 " Toggle Help/Text Filetypes;
 nnoremap <leader>ht :let &ft = (&ft==#"help" ? "text" :
@@ -297,21 +322,22 @@ if has("autocmd")
 
   augroup ft_options
     autocmd!
-    autocmd FileType erlang  let  b:endwise_addition = 'end'
+    autocmd FileType todo set cursorline
+    autocmd FileType erlang let b:endwise_addition = 'end'
           \ | let  b:endwise_words = 'fun,receive'
           \ | let b:endwise_syngroups = 'erlangKeyword'
+    autocmd FileType erlang let b:dispatch="erlc %"
+
     autocmd FileType julia let b:endwise_addition = 'end'
-          \ | let b:endwise_words =  'function,for,if'
-          \ | let b:endwise_syngroups = 'juliaConditional,juliaConditionalBlock,juliaRepeat,JuliaRepeatBlock'
+          \ | let b:endwise_words =  'if,for,function'
+          \ | let b:endwise_syngroups = 'juliaConditional,juliaConditionalBlock,juliaRepeat,JuliaRepeatBlock,juliaBlKeyword,juliaFunctionBlock'
 
     autocmd FileType vim setlocal tw=78 fdm=marker
 
-    autocmd FileType zsh let b:dispatch = "source %"
+    autocmd FileType zsh,sh let b:dispatch = "source %"
 
-    " I like this idea of tpope/scriptease to remap K for help navigation.
-    " I like to use it in helpfiles aswell (just for tag navigation)
     autocmd FileType help setlocal keywordprg=:help
-    autocmd FileType help nnoremap <silent><buffer> q :q<CR>
+          \| nnoremap <silent><buffer> q :q<CR>
 
     " Modify vim-surround to support vimtex
     autocmd FileType tex
@@ -320,7 +346,7 @@ if has("autocmd")
           \ "\\begin{\1environment: \1}\n\t\r\n\\end{\1\1}"
 
     " Python PEPs allow a little more textwidth
-    autocmd FileType python setlocal textwidth=100
+    autocmd FileType python setlocal textwidth=79
     " i want pythonic prints everywhere. even in java
     " just type print(
     autocmd FileType java iabbrev <buffer> print System.out.println);<left><left>
@@ -328,15 +354,10 @@ if has("autocmd")
     " For all text files set 'textwidth' to 78 characters.
     autocmd FileType text setlocal textwidth=78
     " csv maps
-    autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn<CR>
-          \| nnoremap <buffer> <localleader>uc :%UnArrangeColumn<CR>
+    autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn!<CR>
+    autocmd FileType csv nnoremap <buffer> <localleader>uc :%UnArrangeColumn<CR>
     autocmd FileType csv nnoremap <buffer> o :<C-U>execute "CSVNewRecord ". v:count1<CR>
-    " Unfortunately, the instant-markdown plugin requires
-    " the npm package instant-markdown-d to be installed
-    autocmd FileType markdown
-          \nnoremap <buffer> <localleader>ll
-          \:InstantMarkdownPreview<CR>
-    autocmd FileType erlang let b:dispatch="erlc %"
+    autocmd FileType csv setlocal cursorline
     autocmd FileType haskell let b:dispatch="ghc %"
   augroup END
 endif
