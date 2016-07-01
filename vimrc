@@ -40,7 +40,11 @@ Plug 'shumphrey/fugitive-gitlab.vim' | Plug 'tpope/vim-fugitive'
 
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/syntastic'
+" I dont need any orgmode for document conversion as i use markdown+pandoc
 Plug 'jceb/vim-orgmode'
+" Instead i try this
+" Plug 'dhruvasagar/vim-dotoo'
+" ok did not work
 
 if has("python")
   if v:version >= 704
@@ -52,6 +56,7 @@ if has("python")
   endif
 endif
 
+" git gutter is clutter
 " Plug 'airblade/vim-gitgutter'
 
 " Filetype specific
@@ -72,11 +77,8 @@ Plug 'JuliaLang/julia-vim'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'freitass/todo.txt-vim'
 
-
-"Colorscheme
 Plug 'sjl/badwolf'
 Plug 'tomasr/molokai'
-"endif
 call plug#end() "so this calls filetype plugin indent on????
 filetype off
 " vifi not sourced atm
@@ -169,6 +171,9 @@ set hlsearch
 let g:tex_flavor = 'latex'
 "}}}
 " Section: Plugin Options{{{
+
+let g:pandoc#folding#fdc = 0
+
 let g:notes_directories = ['~/Notes']
 highlight default link TodoPriorityD Type
 
@@ -322,7 +327,7 @@ if has("autocmd")
 
   augroup ft_options
     autocmd!
-    autocmd FileType todo set cursorline
+    autocmd FileType todo setlocal cursorline
     autocmd FileType erlang let b:endwise_addition = 'end'
           \ | let  b:endwise_words = 'fun,receive'
           \ | let b:endwise_syngroups = 'erlangKeyword'

@@ -1,0 +1,10 @@
+(A) 2016-06-30 Look into vim-maven, i guess vim-projectionist is enough @projects
+(A) 2016-07-01 vim orgmode derivates are notok, better implement some todo toggling for markdown.
+(B) 2016-06-30 Decide for one of UltiSnips, snipMate, XPTemplate  @snippets
+(B) 2016-06-30 Decide whether we need SuperTab or YouCompleteMe @autocomplete
+(B) 2016-07-01 Think about local leader and leader mappings to + and ü
+(C) 2016-06-30 Is Pandoc + vim-pandoc [+ vim-pad] nice enough for documents and notes? @documents @notes
+(C) 2016-06-30 Probably write a shell (or even vim) script to find and gather todo.txt files @contrib
+(D) 2016-06-30 Dont forget vim-romeo @contrib
+(Z) 2016-06-30 Evaluate whether you spent more time on vim than on actually doing something due:2042-10-10
+x 2016-07-01 2016-06-30 Assert that todo.txt is enough for organization, else try some orgmode deviation @todos
