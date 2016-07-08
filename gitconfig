@@ -5,6 +5,7 @@
 	default = simple
 [core]
 	editor = vim
+	excludesfile = /home/lpag/.gitignore
 [alias]
 	la = log --oneline --decorate --all --graph
 	co = checkout
