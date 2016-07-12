@@ -1,108 +1,97 @@
 " File: .vimrc
 " Author: Lukas Galke
+" Email: vim@lpag.de
 " Description: A rapidly evolving vimrc file
 
-set nocompatible "be iMproved
-"}}}
 " Section: Plugins {{{
-call plug#begin('~/.vim/plugged')
+set nocompatible "be iMproved
+set rtp+=~/.vim/bundle/Vundle.vim
+filetype off
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
 " Tpopes plugins are neat.
-Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-vinegar'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-rhubarb'
-Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-jdaddy'
-Plug 'tpope/vim-scriptease'
-Plug 'tpope/vim-sleuth'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-pathogen'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-speeddating'
-Plug 'tpope/vim-vividchalk'
-Plug 'tpope/vim-flagship'
-Plug 'tpope/vim-dispatch'
-Plug 'tpope/vim-tbone'
-Plug 'tpope/vim-markdown'
-Plug 'tpope/vim-afterimage'
-Plug 'tpope/vim-obsession'
-Plug 'tpope/vim-projectionist'
-Plug 'tpope/vim-sexp-mappings-for-regular-people' | Plug 'guns/vim-sexp'
-Plug 'shumphrey/fugitive-gitlab.vim' | Plug 'tpope/vim-fugitive'
+Plugin 'tpope/vim-sensible'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'tpope/vim-vinegar'
+Plugin 'tpope/vim-rhubarb'
+Plugin 'tpope/vim-abolish'
+Plugin 'tpope/vim-jdaddy'
+Plugin 'tpope/vim-scriptease'
+Plugin 'tpope/vim-sleuth'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-pathogen'
+Plugin 'tpope/vim-eunuch'
+Plugin 'tpope/vim-endwise'
+Plugin 'tpope/vim-speeddating'
+Plugin 'tpope/vim-vividchalk'
+Plugin 'tpope/vim-flagship'
+Plugin 'tpope/vim-dispatch'
+Plugin 'tpope/vim-tbone'
+Plugin 'tpope/vim-markdown'
+Plugin 'tpope/vim-afterimage'
+Plugin 'tpope/vim-obsession'
+Plugin 'tpope/vim-projectionist'
+Plugin 'guns/vim-sexp'
+Plugin 'tpope/vim-sexp-mappings-for-regular-people'
+Plugin 'shumphrey/fugitive-gitlab.vim'
 
 " Essentials
-Plug 'AndrewRadev/splitjoin.vim'
-Plug 'godlygeek/tabular'
-Plug 'vim-scripts/SyntaxComplete'
+Plugin 'AndrewRadev/splitjoin.vim'
+Plugin 'godlygeek/tabular'
+Plugin 'vim-scripts/SyntaxComplete'
+Plugin 'mtth/Scratch.vim'
 
 " Syntax checking
-Plug 'scrooloose/syntastic'
-" Plug 'klen/python-mode'
+Plugin 'scrooloose/syntastic'
+" Plugin 'klen/python-mode'
 
 " Fuzzy Finder
-Plug 'ctrlpvim/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 
 " Snippets
-" Breaks Ctrl P and conflicts with flagship
-" Plug 'drmingdrmer/xptemplate'
-if has("python") || has("python3")
-  Plug 'SirVer/ultisnips'
-else
-  Plug 'garbas/vim-snipmate'
-endif
-Plug 'honza/vim-snippets'
+Plugin 'drmingdrmer/xptemplate'
 
-Plug 'mhinz/vim-signify'
-
+Plugin 'mhinz/vim-signify'
 " Document Conversion and Notes
-if has("python")
-  if v:version >= 704
-    Plug 'vim-pandoc/vim-pandoc' | Plug 'vim-pandoc/vim-pandoc-syntax'
-  endif
-  if has("conceal")
-    Plug 'fmoralesc/vim-pad'
-  endif
-endif
+Plugin 'vim-pandoc/vim-pandoc'
+Plugin 'vim-pandoc/vim-pandoc-syntax'
+Plugin 'fmoralesc/vim-pad'
 
-
-Plug 'dhruvasagar/vim-table-mode'
-" I dont need any orgmode for document conversion as i use markdown+pandoc
-" Plug 'jceb/vim-orgmode'
-" Instead i try this
-" Plug 'dhruvasagar/vim-dotoo'
-" ok did not work
+" Experimental
+Plugin 'dhruvasagar/vim-table-mode'
+Plugin 'vimwiki/vimwiki'
 
 " Filetype specific
-Plug 'diepm/vim-rest-console'
-Plug 'lervag/vimtex'
-" Indentation of pymode
-Plug 'hynek/vim-python-pep8-indent'
-Plug 'tmhedberg/SimpylFold'
-Plug 'heavenshell/vim-pydocstring'
+Plugin 'diepm/vim-rest-console'
+Plugin 'lervag/vimtex'
 
-Plug 'vim-erlang/vim-erlang-runtime'
-Plug 'vim-erlang/vim-erlang-skeletons'
-Plug 'vim-erlang/erlang-motions.vim'
-Plug 'raichoo/haskell-vim'
-Plug 'chrisbra/csv.vim'
-Plug 'wannesm/wmgraphviz.vim'
-Plug 'JuliaLang/julia-vim'
-Plug 'tmux-plugins/vim-tmux'
-Plug 'freitass/todo.txt-vim'
+" Indentation of pymode
+Plugin 'hynek/vim-python-pep8-indent'
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'heavenshell/vim-pydocstring'
+
+Plugin 'vim-erlang/vim-erlang-runtime'
+Plugin 'vim-erlang/vim-erlang-skeletons'
+Plugin 'vim-erlang/erlang-motions.vim'
+Plugin 'raichoo/haskell-vim'
+Plugin 'chrisbra/csv.vim'
+Plugin 'wannesm/wmgraphviz.vim'
+Plugin 'JuliaLang/julia-vim'
+Plugin 'tmux-plugins/vim-tmux'
+Plugin 'freitass/todo.txt-vim'
 
 "Colschemes
-Plug 'sjl/badwolf'
-Plug 'tomasr/molokai'
-Plug 'nanotech/jellybeans.vim'
-call plug#end() "so this calls filetype plugin indent on????
-filetype off
+Plugin 'sjl/badwolf'
+Plugin 'tomasr/molokai'
+Plugin 'nanotech/jellybeans.vim'
+call vundle#end() "so this calls filetype plugin indent on????
 " vifi not sourced atm
 call vifi#interface('~/.vim/vifi')
 execute pathogen#infect('src/{}', 'vifi/{}')
+filetype plugin indent on
 " }}}
 " Section: Basic Settings {{{ "
 " utf8!
@@ -150,22 +139,28 @@ set directory=/tmp/vim//,.
 
 set list
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+if (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8') && version >= 700
+  let &listchars = "tab:\u21e5\u00b7,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
+  let &fillchars = "vert:\u259a,fold:\u00b7"
+else
+  set listchars=tab:>\ ,trail:-,extends:>,precedes:<
+endif
 
 " scrolling
 set scrolloff=1
 set sidescrolloff=5
 
 " numbers
-set nonumber
-set norelativenumber
+set number
+set relativenumber
 
 " Spells
-set spelllang=en_us,de_de
+set spelllang=en_us
 
 " wild menu is cool
 set wildmenu
 set wildmode=longest:full,full
-set wildignore+=tags,.*.un~,*.pyc,*.o,*.hi,*.beam
+set wildignore+=tags,.*.un~,*.pyc,*.o,*.hi,*.beam,*.class
 set wildignore+=*.aux,*.out,*.toc
 
 " handy for vinegar and so on
@@ -193,7 +188,7 @@ set showtabline=2
 set guioptions-=e
 set title
 
-set statusline=[%n%M\ %t\ ~=\ %Y]%([tw=%{&textwidth}\ sw=%{&shiftwidth}]%)%=%l,%c%V\ %P
+set statusline=[%n%M]\ %t\ ~=\ %Y\ %([tw=%{&textwidth}\ sw=%{&shiftwidth}]%)%=%l,%c%V\ %P
 
 augroup lpag_flagship
   autocmd User Flags call Hoist("buffer", {'hl':['StatusLine','StatusLineNC']}, function('fugitive#statusline'))
@@ -203,24 +198,31 @@ augroup END
 " I am the evil squirrel, I steal colors from the bad wolf
 " :redir @a | :hi StatusLine | :redir END | :put a
 
-function! Fancy_Statusline(...) abort
+function! s:Fesch(...) abort
   "a:1 normal mode bg
   "a:2 insert mode bg
   "a:3 inactive bg
   "a:4 (in-) active fg
   "if no argument given, resets autocmds
+  " clean this up TODO
   augroup fancy_statusline
     autocmd!
     if a:0 >= 4
+      " Force fg color of Status- and Tabline
       exe 'highlight StatusLine ctermfg='.a:4
       exe 'highlight StatusLineNC ctermfg='.a:4
+      exe 'highlight TabLine ctermfg='.a:4
+      exe 'highlight TabLineSel ctermfg='.a:4
     endif
     if a:0 >= 3
+      " Set colors of Statusline and Tabline (active and inactive)
       exe 'highlight StatusLineNC ctermbg='.a:3
+      exe 'highlight TabLine ctermbg='.a:3
+      exe 'highlight TabLineSel ctermbg='.a:1
     endif
     if a:0 >= 2
-      exe 'highlight StatusLine ctermfg=16 ctermbg='.a:1
-      exe 'highlight StatusLineNC ctermfg=16 ctermbg='.a:3
+      " Insert mode color change
+      exe 'highlight StatusLine ctermbg='.a:1
       exe 'autocmd InsertLeave * hi StatusLine ctermbg='.a:1
       exe 'autocmd InsertEnter * hi StatusLine ctermbg='.a:2
     endif
@@ -236,10 +238,12 @@ if &t_Co == 256 && !has('gui_running')
   if has('autocmd')
     augroup colorscheme_extensions
       autocmd!
-      " clear fancy_statusline autocommands
-      autocmd ColorScheme * call Fancy_Statusline()
-      " make statusline fancier
-      autocmd ColorScheme vividchalk call Fancy_Statusline(82, 208, 92, 16)
+      " clear fesch autocommands
+      autocmd ColorScheme * call s:Fesch()
+      " make statusline and tabline more fancy
+      autocmd ColorScheme vividchalk call s:Fesch(82, 208, 92, 16)
+      " 196 badwolf statement
+      " autocmd ColorScheme badwolf call s:Fesch(39, 214)
     augroup END
   endif
 endif
@@ -250,13 +254,43 @@ set colorcolumn=+1
 
 " }}} Statusline and Colors"
 " Section: Plugin Options{{{
+let g:xptemplate_vars='$author=Lukas Galke&$email=vim@lpag.de'
 
-let g:UltiSnipsListSnippets = '<C-k>'
-let g:UltiSnipsSnippetsDir = '~/.vim/UltiSnips'
+" {{{ vim wiki
+" nmap <Leader>wf <Plug>VimwikiFollowLink
+nmap <Leader>we <Plug>VimwikiSplitLink
+let g:vimwiki_folding = 'expr'
+let g:vimwiki_list = [{'path': '~/vimwiki/', 'auto_toc': 1}]
+hi VimwikiHeader1 ctermfg=214, term=bold
+function! VimwikiLinkHandler(link)
+  " Use Vim to open external files with the 'vfile:' scheme.  E.g.:
+  "   1) [[vfile:~/Code/PythonProject/abc123.py]]
+  "   2) [[vfile:./|Wiki Home]]
+  let link = a:link
+  if link =~# '^vfile:'
+    let link = link[1:]
+  else
+    return 0
+  endif
+  let link_infos = vimwiki#base#resolve_link(link)
+  if link_infos.filename == ''
+    echomsg 'Vimwiki Error: Unable to resolve link!'
+    return 0
+  else
+    exe 'tabnew ' . fnameescape(link_infos.filename)
+    return 1
+  endif
+endfunction
+" }}}
+
+" let g:UltiSnipsListSnippets = '<C-k>'
+" let g:UltiSnipsSnippetsDir = '~/.vim/UltiSnips'
 " let g:UltiSnipsUsePythonVersion = 3
-
 let g:pandoc#folding#fdc = 0
-let g:pandoc#formatting#mode = 'ha'
+let g:pandoc#formatting#mode = "hA"
+let g:pandoc#formatting#extra_equalprg = "--atx-headers"
+let g:pandoc#toc#position = "right"
+let g:pandoc#toc#close_after_navigating = 1
 " Markdown compat
 let g:table_mode_corner        = '|'
 " let g:table_mode_corner_corner = '+'
@@ -266,14 +300,9 @@ let g:table_mode_corner        = '|'
 highlight default link TodoPriorityD Type
 
 "Testing
-let g:pad#dir = '~/Documents'
+let g:pad#dir = '~/Notes'
 let g:pad#local_dir = 'notes'
-
-if v:version >= 704 && has("python")
-  let g:pad#default_format = 'pandoc'
-else
-  let g:pad#default_format = 'markdown'
-endif
+let g:pad#default_format = 'pandoc'
 
 " Builtin Python syntax highlighting
 let g:python_highlight_all = 1
@@ -281,12 +310,15 @@ let g:python_highlight_all = 1
 " Splitjoin
 let g:splitjoin_normalize_whitespace = 1
 let g:splitjoin_align = 1
-let g:splitjoin_split_mapping = "gS"
-let g:splitjoin_join_mapping = "gJ"
+let g:splitjoin_split_mapping = "S"
+let g:splitjoin_join_mapping = "J"
 
-" Syntastic
+" Syntastic {{{
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
+" let g:syntastic_mode_map = {
+"       \ "mode": "active",
+"       \ "passive_filetypes": ["python"]}
 " experimental
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_loc_list_height = 5
@@ -298,11 +330,13 @@ let g:syntastic_tex_checkers = ["chktex"]
 let g:syntastic_tex_chktex_args = "-n1 -n8"
 
 " Python Checkers
-let g:syntastic_python_checkers = ['python', 'pyflakes']
+let g:syntastic_python_checkers = ['python', 'flake8']
 let g:syntastic_python_python_exec = '/usr/bin/python3'
+" }}}
 
-" python-mode
+" Python-mode
 " let g:pymode_python = 'python3'
+" the following are the defaults
 " let g:pymode_indent = []
 " let g:pymode_folding = 1
 " let g:pymode_motion = 1
@@ -358,6 +392,7 @@ map ää ]]
 " we can safely remap +
 " but to what :<
 nnoremap <Space> za
+
 nmap <C-I> <Plug>(pydocstring)
 
 " By T. <the> Pope
@@ -365,9 +400,9 @@ if exists(":nohls")
   nnoremap <silent> <C-L> :nohls<CR><C-L>
 end
 
+
 inoremap <C-U> <C-G>u<C-U>
 inoremap <C-C> <Esc>`^
-inoremap <Esc> <nop>
 
 nnoremap <F7> :lcd %:h<CR>
 nnoremap <F8> :Make<CR>
@@ -376,11 +411,10 @@ nnoremap <F10> :Start<CR>
 
 " access files
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
-nnoremap <leader>sv :source $MYVIMRC<CR>
+nnoremap <leader>sv :source $MYVIMRC<CR>:filetype detect<CR>
 nnoremap <leader>ea :Vsplit after/plugin/abolish.vim<CR>
 nnoremap <leader>eq :split ~/.config/qutebrowser/keys.conf<CR>
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
-
 
 " make jk, H and L more useful on indented lines and while wrapping
 " nnoremap j gj
@@ -388,7 +422,7 @@ nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
 nnoremap H ^
 nnoremap L $
 
-nnoremap <leader>dt :%s/\v +$//<CR>
+nnoremap <leader>dt mq:%s/\v +$//<CR>`q
 nnoremap <leader>= mqgg=G`q
 
 nnoremap <leader>fc :echom foldlevel('.')<CR>
@@ -396,7 +430,6 @@ nnoremap <leader>fc :echom foldlevel('.')<CR>
 nnoremap <leader>ht :let &ft = (&ft==#"help" ? "text" :
       \(&ft==#"text" ? "help" : &ft))<CR>
 
-" end of line semicolon; return
 nnoremap <leader>; mqA;<esc>`q
 " }}}
 " Section: Commands {{{
@@ -438,7 +471,7 @@ if has("autocmd")
 
     autocmd FileType vim setlocal tw=78 fdm=marker
 
-    autocmd FileType zsh,sh let b:dispatch = "source %"
+    autocmd FileType sh,zsh let b:dispatch = ". %"
 
     autocmd FileType help setlocal keywordprg=:help
           \| nnoremap <silent><buffer> q :q<CR>
@@ -455,13 +488,15 @@ if has("autocmd")
     autocmd FileType java iabbrev <buffer> print System.out.println);<left><left>
     autocmd FileType java setlocal foldmethod=syntax
     " For all text files set 'textwidth' to 78 characters.
-    autocmd FileType text setlocal textwidth=78
     " csv maps
     autocmd FileType csv nnoremap <buffer> <localleader>ac :%ArrangeColumn!<CR>
     autocmd FileType csv nnoremap <buffer> <localleader>uc :%UnArrangeColumn<CR>
     autocmd FileType csv nnoremap <buffer> o :<C-U>execute "CSVNewRecord ". v:count1<CR>
     autocmd FileType csv setlocal cursorline equalprg=":ArrangeColumn"
     autocmd FileType haskell let b:dispatch="ghc %"
+    autocmd FileType pandoc setlocal sw=4
+          \| let b:dispatch = ':Pandoc pdf -N'
+    autocmd FileType pad setlocal nonumber norelativenumber
     autocmd FileType * if exists("+omnifunc") && &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
   augroup END
 endif
