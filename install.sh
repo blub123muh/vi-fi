@@ -1,5 +1,4 @@
 VIFI_BASE=$( cd $(dirname "$0"); pwd -P)
-
 echo "[vi-fi] Creating symlinks (force with -f)"
 ln -snv "$@" $VIFI_BASE/vimrc ~/.vimrc
 ln -snv "$@" $VIFI_BASE/vim ~/.vim

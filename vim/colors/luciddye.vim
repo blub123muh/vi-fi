@@ -215,9 +215,9 @@ endif
 " {{{ Vimwiki
 highlight VimwikiHeader1 ctermfg=208 cterm=bold
 highlight VimwikiHeader2 ctermfg=47 cterm=bold
-highlight VimwikiHeader3 ctermfg=47 cterm=bold
-highlight VimwikiHeader4 ctermfg=47 cterm=bold
-highlight VimwikiHeader5 ctermfg=47 cterm=bold
-highlight VimwikiHeader6 ctermfg=47 cterm=bold
+highlight VimwikiHeader3 ctermfg=47 cterm=none
+highlight VimwikiHeader4 ctermfg=47 cterm=none
+highlight VimwikiHeader5 ctermfg=47 cterm=none
+highlight VimwikiHeader6 ctermfg=47 cterm=none
 
 " }}}
