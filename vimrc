@@ -165,7 +165,6 @@ set wildignore+=*.aux,*.out,*.toc
 " }}}
 " {{{ Tabs, spaces, wrapping
 set autoindent
-set shiftround
 set smarttab
 set tabstop=8
 " Note that shiftwidth is handled by sleuth
