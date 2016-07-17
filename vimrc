@@ -60,6 +60,12 @@ Plugin 'ctrlpvim/ctrlp.vim'
 " Snippets
 Plugin 'drmingdrmer/xptemplate'
 
+" Ideas from sjl
+Plugin 'mileszs/ack.vim'
+Plugin 'PeterRincker/vim-argumentative'
+Plugin 'ajh17/VimCompletesMe'
+Plugin 'sjl/gundo.vim'
+
 Plugin 'mhinz/vim-signify'
 " Document Conversion and Notes
 Plugin 'vim-pandoc/vim-pandoc'
@@ -271,9 +277,6 @@ set colorcolumn=+1
 " Builtin Python syntax highlighting
 let g:python_highlight_all = 1
 
-
-
-
 " let g:vrc_output_buffer_name = '__VRC_OUTPUT.json'
 "
 let g:fugitive_gitlab_domains = ['git.informatik.uni-kiel.de']
@@ -456,8 +459,8 @@ augroup END
 " FileTypes {{{
 " Markdown {{{
 augroup ft_markdown
-  "TODO
   au FileType markdown iabbrev -> $\rightarrow$
+  au FileType markdown setlocal sw=2 conceallevel=2
   au FileType markdown let b:dispatch="pandoc -f markdown -o %:p:r.pdf %"
 augroup END
 " }}}
@@ -537,6 +540,26 @@ let g:vimtex_fold_enabled = 1
 let g:vimtex_fold_comments = 1
 let g:vimtex_indent_enabled = 1
 let g:vimtex_indent_bib_enabled = 1
+let g:vimtex_format_enabled = 1
+augroup plug_vimtex
+  au!
+  au User VimtexEventInitPost nmap <F4> <plug>(vimtex-cmd-create)
+  au User VimtexEventInitPost imap <F4> <plug>(vimtex-cmd-create)
+augroup END
+augroup VimCompletesMeTex
+  autocmd!
+  autocmd FileType tex let b:vcm_omni_pattern =
+        \ '\v\\%('
+        \ . '\a*cite\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+        \ . '|\a*ref%(\s*\{[^}]*|range\s*\{[^,}]*%(}\{)?)'
+        \ . '|hyperref\s*\[[^]]*'
+        \ . '|includegraphics\*?%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+        \ . '|%(include%(only)?|input)\s*\{[^}]*'
+        \ . '|\a*(gls|Gls|GLS)(pl)?\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+        \ . '|includepdf%(\s*\[[^]]*\])?\s*\{[^}]*'
+        \ . '|includestandalone%(\s*\[[^]]*\])?\s*\{[^}]*'
+        \ . ')'
+augroup END
 " }}}
 " VRC {{{
 let g:vrc_allow_get_request_body = 1
