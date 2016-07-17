@@ -357,6 +357,9 @@ nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
 nnoremap <leader>s vip:!sort<cr>
 vnoremap <leader>s :!sort<cr>
 
+nnoremap <leader>tf :TableFormat<CR>
+vnoremap <leader>tf :TableFormat<CR>
+
 " open pdf
 nnoremap <leader>vp :!okular %:r.pdf<cr>
 
