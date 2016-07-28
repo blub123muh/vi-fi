@@ -4,6 +4,6 @@ tags
 tags-te
 *.swp
 vim/plugged/**
-vim/bundle/**
+vim/bundle/*
 !vim/bundle/Vundle.vim/
 vim/*netrwhist*
