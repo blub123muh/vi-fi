@@ -17,11 +17,11 @@ if !exists('g:checkboxify_triggerchars')
 endif
 
 if !exists('g:checkboxify_unchecked')
-  let g:checkboxify_unchecked = "[ ]"
+  let g:checkboxify_unchecked = "( )"
 endif
 
 if !exists('g:checkboxify_checked')
-  let g:checkboxify_checked = "[x]"
+  let g:checkboxify_checked = "(X)"
 endif
 
 
@@ -31,8 +31,8 @@ function! s:checkboxify(bang,lnum1,lnum2) abort
   let unchecked = exists("b:checkboxify_unchecked") ? b:checkboxify_unchecked : g:checkboxify_unchecked
   let checked = exists("b:checkboxify_checked") ? b:checkboxify_checked : g:checkboxify_checked
   " trigger 
-  let unchecked_regex = '\M^\(\s\*\[*+-]\s\*\)'.unchecked.'\(\s\*\w\.\*\)$'
-  let checked_regex = '\M^\(\s\*\[*+-]\s\*\)'.checked.'\(\s\*\w\.\*\)$'
+  let unchecked_regex = '\M^\(\s\*\[*+-]\s\*\)'.unchecked.'\(\s\*\S\.\*\)$'
+  let checked_regex = '\M^\(\s\*\[*+-]\s\*\)'.checked.'\(\s\*\S\.\*\)$'
   for lnum in range(a:lnum1, a:lnum2)
     let line = getline(lnum)
     if line !~ unchecked_regex && line !~ checked_regex
@@ -56,8 +56,8 @@ function! s:checkbox(type, ...)
     let [lnum1, lnum2] = [line("'["), line("']")]
   endif
   " Todo think about using \S instead of \w
-  let unchecked_regex = '\M^\(\s\*\[*+-]\s\*\)'.unchecked.'\(\s\*\w\.\*\)$'
-  let checked_regex = '\M^\(\s\*\[*+-]\s\*\)'.checked.'\(\s\*\w\.\*\)$'
+  let unchecked_regex = '\M^\(\s\*\[*+-]\s\*\)'.unchecked.'\(\s\*\S\.\*\)$'
+  let checked_regex = '\M^\(\s\*\[*+-]\s\*\)'.checked.'\(\s\*\S\.\*\)$'
   for lnum in range(lnum1, lnum2)
     let line = getline(lnum)
     if line =~ unchecked_regex
