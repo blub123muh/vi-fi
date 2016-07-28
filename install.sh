@@ -6,5 +6,8 @@ ln -snv "$@" $VIFI_BASE/gitconfig ~/.gitconfig
 # ln -snv "$@" $VIFI_BASE/zshrc ~/.zshrc
 ln -snv "$@" $VIFI_BASE/tmux.conf ~/.tmux.conf
 
-echo "[vi-fi] Installing plugins with vim-plug"
-vim -u $VIFI_BASE/vimrc +PlugInstall +qall
+
+git clone https://github.com/VundleVim/Vundle.vim.git $VIFI_BASE/vim/bundle/Vundle.vim
+
+echo "[vi-fi] Installing plugins via Vundle.vim"
+vim -u $VIFI_BASE/vimrc +PluginInstall +qall
