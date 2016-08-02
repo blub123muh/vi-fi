@@ -45,6 +45,24 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'godlygeek/tabular'
 " }}}
+" <Tab>, Completion, and Snippets {{{ "
+" Plugin 'ervandew/supertab'
+
+" if has("lua")
+  " Plugin 'Shougo/neocomplete.vim'
+ " else
+Plugin 'ajh17/VimCompletesMe'
+" endif
+
+if has("python") || has("python3")
+  Plugin 'SirVer/ultisnips'
+else
+  Plugin 'MarcWeber/vim-addon-mw-utils'
+  Plugin 'tomtom/tlib_vim'
+  Plugin 'garbas/vim-snipmate'
+endif
+Plugin 'honza/vim-snippets'
+" }}} Completion and Snippets "
 " Extras {{{
 Plugin 'PeterRincker/vim-argumentative'
 Plugin 'mtth/Scratch.vim'
@@ -54,12 +72,7 @@ Plugin 'mhinz/vim-signify'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'vim-scripts/SyntaxComplete'
-if has("python") || has("python3")
-  Plugin 'SirVer/ultisnips'
-  Plugin 'honza/vim-snippets'
-else
-  Plugin 'drmingdrmer/xptemplate'
-endif
+
 Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax'
 " Plugin 'fmoralesc/vim-pad'
@@ -68,10 +81,11 @@ Plugin 'vim-pandoc/vim-pandoc-syntax'
 Plugin 'diepm/vim-rest-console'
 Plugin 'JalaiAmitahl/maven-compiler.vim'
 " }}}
-" Filetype specific {{{
+" FileType specific {{{
 
 Plugin 'lervag/vimtex'
 
+Plugin 'artur-shaik/vim-javacomplete2'
 Plugin 'hynek/vim-python-pep8-indent'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'heavenshell/vim-pydocstring'
@@ -125,11 +139,6 @@ endif
 " if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
 "   set t_Co=16
 " endif
-set linebreak
-if exists('+breakindent')
-  set breakindent
-  let &showbreak = '+++ '
-endif
 
 if has('conceal')
   " set concealcursor=v
@@ -161,6 +170,7 @@ else
   set listchars=tab:>\ ,trail:-,extends:>,precedes:<
 endif
 
+set shiftround
 " scrolling
 set scrolloff=1
 set sidescrolloff=5
@@ -178,14 +188,27 @@ set wildmode=longest:full,full
 set wildignore+=tags,.*.un~,*.pyc,*.o,*.hi,*.beam,*.class
 set wildignore+=*.aux,*.out,*.toc
 " }}}
-" {{{ Tabs, spaces, wrapping
+" {{{ Tabs, Spaces, Wrapping Basic movement
 set autoindent
 set smarttab
 set tabstop=8
 " Note that shiftwidth is handled by sleuth
 set softtabstop=4
 set expandtab
+
 set wrap
+set linebreak
+if exists('+breakindent')
+  set breakindent
+  let &showbreak = '»'
+endif
+" make jk, H and L more useful on indented lines and while wrapping
+nnoremap j gj
+nnoremap k gk
+nnoremap gj j
+nnoremap gk k
+nnoremap H ^
+nnoremap L $
 " }}}
 " handy for vinegar and so on
 set autowrite
@@ -196,13 +219,11 @@ set timeoutlen=1200
 set ttimeoutlen=50
 
 " round indent to multiples of shiftwidth °_ °
-set shiftround
 set ignorecase
 set smartcase
 set incsearch
 set hlsearch
 syntax on
-let g:tex_flavor = 'latex'
 let g:spellfile_URL = 'http://ftp.vim.org/vim/runtime/spell'
 "}}}
 " Section: Statusline and Colors {{{ "
@@ -258,7 +279,7 @@ augroup END
 " endfunction
 
 set background=dark
-silent! colorscheme vitamins
+silent! colorscheme badwolf
 set colorcolumn=+1
 
 " }}} Statusline and Colors"
@@ -305,7 +326,7 @@ if exists(":nohls")
   nnoremap <silent> <C-L> :nohls<CR><C-L>
 end
 
-inoremap <C-K><C-K> <esc>:help digraph-table<cr>
+inoremap <C-R><C-K> <esc>:help digraph-table<cr>
 
 " start of line
 cnoremap <C-A> <Home>
@@ -334,7 +355,7 @@ noremap <F2> :NERDTreeToggle<CR>
 " make this toggling
 noremap <F5> :Scratch<CR>
 noremap <silent> <F6> :if exists(':Gstatus')<Bar>exe 'Gstatus'<Bar>endif<CR>
-noremap <F7> :lcd %:p:h<CR>
+nmap <silent> <F7> :if exists(':Lcd')<Bar>exe 'Lcd'<Bar>elseif exists(':Cd')<Bar>exe 'Cd'<Bar>else<Bar>lcd %:h<Bar>endif<CR>
 noremap <F8> :Make<CR>
 noremap <F9> :Dispatch<CR>
 noremap <F10> :Start<CR>
@@ -369,20 +390,13 @@ nnoremap <leader>nb /([^)]\{-}([^)]\{-})[^)]\{-})<CR>
 nnoremap <leader>vp :!okular %:r.pdf<cr>
 
 
-" make jk, H and L more useful on indented lines and while wrapping
-nnoremap j gj
-nnoremap k gk
-nnoremap gj j
-nnoremap gk k
-nnoremap H ^
-nnoremap L $
 
 nnoremap <leader>dt mq:%s/\v +$//<CR>`q
 nnoremap <leader>. :<Up><CR>
 nnoremap <leader>= mqgg=G`q
 
 nnoremap <leader>fc :echom foldlevel('.')<CR>
-" Toggle Help/Text Filetypes;
+" Toggle Help/Text FileType;
 nnoremap <leader>ht :let &ft = (&ft==#"help" ? "text" :
       \(&ft==#"text" ? "help" : &ft))<CR>
 
@@ -462,12 +476,16 @@ augroup ft_python
 augroup END
 " }}}
 " Tex {{{
+let g:tex_flavor = 'latex'
 augroup ft_tex
   autocmd!
   autocmd FileType tex
         \ let b:surround_{char2nr("c")} = "\\\1command: \1{\r}"
         \| let b:surround_{char2nr("e")} =
         \ "\\begin{\1environment: \1}\n\t\r\n\\end{\1\1}"
+  autocmd FileType tex inoremap <buffer> & &<Esc>:Tabularize /&<CR>A
+  autocmd FileType tex setlocal tw=100
+  " TODO investigate how to dynamically enter textwidth
 augroup END
 " }}}
 " Markdown {{{
@@ -504,15 +522,23 @@ augroup ft_quickfix
 augroup END
 " }}}
 " {{{ Java
+let java_highlight_java_lang_ids = 1
+" let java_highlight_all = 1 "requires javaid.vim
+" let java_highlight_functions = "style"
+let java_highlight_debug = 1
+let java_minlines = 50
 augroup ft_java
   autocmd!
+  autocmd FileType java setlocal shiftwidth=2
+  autocmd FileType java setlocal omnifunc=javacomplete#Complete
   autocmd FileType java iabbrev <buffer> print System.out.println);<left><left>
+  " autocmd FileType java setlocal foldmethod=marker foldmarker={,}
   autocmd FileType java setlocal foldmethod=syntax foldlevel=1
   autocmd FileType java setlocal makeprg=javac\ %
   " from help=includeexpr
   autocmd FileType java setlocal includeexpr=substitute(v:fname,'\\.','/','g')
-augroup END
-" }}}
+  autocmd FileType java let b:surround_101 = "\r\n}"
+"}}}
 " Haskell {{{
 augroup ft_haskell
   autocmd!
@@ -547,29 +573,63 @@ let g:fugitive_gitlab_domains = ['git.informatik.uni-kiel.de']
 " Splitjoin {{{
 let g:splitjoin_normalize_whitespace = 1
 let g:splitjoin_align = 1
-let g:splitjoin_split_mapping = ""
-let g:splitjoin_join_mapping = ""
+" let g:splitjoin_split_mapping = ""
+" let g:splitjoin_join_mapping = ""
 let g:splitjoin_python_brackets_on_separate_lines = 0
 " Thanks Mr. Pope
 function! s:or_else(cmd, default, ...) abort
+  let result = a:cmd
   if exists(":" . a:cmd) && !v:count
     let tick = b:changedtick
     exe a:cmd
     if tick == b:changedtick
       execute 'normal! ' . a:default
+      let result = a:default
     endif
   else
     execute 'normal!' . v:count . a:default
+    let result = a:default
+  endif
+  if !a:0
+    echom result
   endif
 endfunction
 nnoremap S :call <SID>or_else("SplitjoinSplit","gqq")<CR>
 nnoremap J :call <SID>or_else("SplitjoinJoin","J")<CR>
 " }}}
+" SEXP {{{ "
+let g:sexp_filetypes = 'java'
+
+" }}} SEXP "
+" VimCompletesMe{{{
+augroup VimCompletesMeTex
+  autocmd!
+  autocmd FileType tex let b:vcm_omni_pattern =
+        \ '\v\\%('
+        \ . '\a*cite\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+        \ . '|\a*ref%(\s*\{[^}]*|range\s*\{[^,}]*%(}\{)?)'
+        \ . '|hyperref\s*\[[^]]*'
+        \ . '|includegraphics\*?%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+        \ . '|%(include%(only)?|input)\s*\{[^}]*'
+        \ . '|\a*(gls|Gls|GLS)(pl)?\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+        \ . '|includepdf%(\s*\[[^]]*\])?\s*\{[^}]*'
+        \ . '|includestandalone%(\s*\[[^]]*\])?\s*\{[^}]*'
+        \ . ')'
+augroup END
+" }}}
 " UltiSnips {{{
-let g:UltiSnipsExpandTrigger='<Tab>'
-let g:UltiSnipsListSnippets = '<C-\>'
-let g:UltiSnipsJumpForwardTrigger='<C-j>'
-let g:UltiSnipsJumpBackwardTrigger='<C-k>'
+let g:UltiSnipsExpandTrigger = '<C-J>'
+let g:UltiSnipsListSnippets = '<C-R><C-J>'
+let g:UltiSnipsJumpForwardTrigger= '<C-J>'
+let g:UltiSnipsJumpBackwardTrigger= '<C-K>'
+" }}}
+" Snipmate {{{
+" let g:snipMate = get(g:, 'snipMate', {}) " allow vimrc resourcing
+" let g:snips_author = "Lukas Galke"
+" imap <C-J> <Plug>snipMateNextOrTrigger
+" imap <C-K> <Plug>snipMateBack
+" imap <C-R><C-J> <Plug>snipMateShow
+" vmap <C-J> <Plug>snipMateVisual
 " }}}
 " {{{ XPTemplate
 let g:xptemplate_vars='$author=Lukas Galke&$email=vim@lpag.de'
@@ -588,7 +648,7 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_mode_map = {
       \ "mode": "active",
       \ "active_filetypes" : [],
-      \ "passive_filetypes": ["pandoc", "java"]}
+      \ "passive_filetypes": ["pandoc"]}
 let g:syntastic_auto_jump = 0
 let g:syntastic_always_populate_loc_list = 0
 let g:syntastic_loc_list_height = 5
@@ -630,7 +690,7 @@ let g:vimtex_latexmk_background = 1
 let g:vimtex_latexmk_callback = 0
 
 " glory of the german keyboard
-let g:vimtex_imaps_leader = '`'
+" let g:vimtex_imaps_leader = '`'
 
 let g:vimtex_view_general_viewer = 'okular'
 let g:vimtex_view_general_options = '--unique @pdf\#src:@line@tex'
@@ -644,8 +704,8 @@ let g:vimtex_format_enabled = 1
 augroup vimtex_mappings
   au!
   au User VimtexEventInitPost nmap <F3> <plug>(vimtex-toc-toggle)
-  au User VimtexEventInitPost nmap ¸ <plug>(vimtex-cmd-create)
-  au User VimtexEventInitPost imap ¸ <plug>(vimtex-cmd-create)
+  au User VimtexEventInitPost nmap <F4> <plug>(vimtex-cmd-create)
+  au User VimtexEventInitPost imap <F4> <plug>(vimtex-cmd-create)
 augroup END
 " }}}
 " VRC {{{
@@ -670,4 +730,5 @@ let g:pad#default_format = 'pandoc'
 let g:csv_autocmd_arrange = 1
 let g:csv_autocmd_arrange_size = 1024 * 1024
 
+" }}}
 " }}}
