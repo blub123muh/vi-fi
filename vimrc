@@ -85,7 +85,7 @@ Plugin 'JalaiAmitahl/maven-compiler.vim'
 
 Plugin 'lervag/vimtex'
 
-Plugin 'artur-shaik/vim-javacomplete2'
+" Plugin 'artur-shaik/vim-javacomplete2'
 Plugin 'hynek/vim-python-pep8-indent'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'heavenshell/vim-pydocstring'
@@ -100,6 +100,7 @@ Plugin 'tmux-plugins/vim-tmux'
 Plugin 'freitass/todo.txt-vim'
 " }}}
 " Highly experimental {{{
+" Plugin 'jiangmiao/auto-pairs' USE SURROND :S
 Plugin 'jceb/vim-orgmode'
 " }}}
 " Colorschemes {{{
@@ -235,7 +236,7 @@ set showtabline=2
 set guioptions-=e
 set title
 
-set statusline=[%n%M]\ %<%t\ ~=\ %Y\ %([tw=%{&textwidth}\ sw=%{&shiftwidth}]%)%=%l,%c%V\ %P
+set statusline=[%n%M]\ %<%t\ ~=\ %Y\ %([tw=%{&textwidth}\ ts=%{&tabstop}\ sw=%{&shiftwidth}\ %{&expandtab?'et':'noet'}]%)%=%l,%c%V\ %P
 
 augroup lpag_flagship
   au!
@@ -303,23 +304,20 @@ map ää ]]
 nmap Q gqip
 
 " forward tick is some of the strongest mappings on the german keyboard
-map <C-ä> <C-]>
-nnoremap ´ :%s/
-vnoremap ´ :s/
+nnoremap <C-S> :%s/
+vnoremap <C-S> :s/
 cnoremap ´s \(\)<Left><Left>
 
-" + as : saves shift mnemonic as in 'vim +{cmd}'
+" + as : saves shift, mnemonic as in 'vim +{cmd}'
 nnoremap + :
 vnoremap + :
 
-
-nnoremap gb :edit #<cr>
-
 nnoremap <Space> za
 nnoremap s :w<CR>
-nnoremap <silent> <Leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
-nnoremap <silent> <Leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
-
+nnoremap <silent> <Up> :exe "resize " . (winheight(0) * 3/2)<CR>
+nnoremap <silent> <Down> :exe "resize " . (winheight(0) * 2/3)<CR>
+nnoremap <silent> <Right> :exe "vertical resize " . (winwidth(0) * 3/2)<CR>
+nnoremap <silent> <Left> :exe "vertical resize " . (winwidth(0) * 2/3)<CR>
 
 " By T. <the> Pope
 if exists(":nohls")
@@ -328,24 +326,24 @@ end
 
 inoremap <C-R><C-K> <esc>:help digraph-table<cr>
 
-" start of line
-cnoremap <C-A> <Home>
-" back one character
-cnoremap <C-B> <Left>
-" delete character under cursor
-cnoremap <C-D> <Del>
-" end of line
-cnoremap <C-E> <End>
-" forward one character
-cnoremap <C-F> <Right>
-" recall newer command-line
-cnoremap <C-N> <Down>
-" recall previous (older) command-line
-cnoremap <C-P> <Up>
-" back one word
-cnoremap <Esc> <C-B><S-Left>
-" forward one word
-cnoremap <Esc> <C-F><S-Right>
+" " start of line
+" cnoremap <C-A> <Home>
+" " back one character
+" cnoremap <C-B> <Left>
+" " delete character under cursor
+" cnoremap <C-D> <Del>
+" " end of line
+" cnoremap <C-E> <End>
+" " forward one character
+" cnoremap <C-F> <Right>
+" " recall newer command-line
+" cnoremap <C-N> <Down>
+" " recall previous (older) command-line
+" cnoremap <C-P> <Up>
+" " back one word
+" cnoremap <Esc> <C-B><S-Left>
+" " forward one word
+" cnoremap <Esc> <C-F><S-Right>
 
 
 inoremap <C-U> <C-G>u<C-U>
@@ -353,9 +351,9 @@ inoremap <C-C> <Esc>`^
 
 noremap <F2> :NERDTreeToggle<CR>
 " make this toggling
-noremap <F5> :Scratch<CR>
+noremap <F5> :GundoToggle<CR>
 noremap <silent> <F6> :if exists(':Gstatus')<Bar>exe 'Gstatus'<Bar>endif<CR>
-nmap <silent> <F7> :if exists(':Lcd')<Bar>exe 'Lcd'<Bar>elseif exists(':Cd')<Bar>exe 'Cd'<Bar>else<Bar>lcd %:h<Bar>endif<CR>
+nmap <silent> <F7> :if exists(':Lcd')<Bar>exe 'Lcd'<Bar>elseif exists(':ProjectCD')<Bar>exe 'ProjectCD'<Bar>elseif exists(':Cd')<Bar>exe 'Cd'<Bar>else<Bar>lcd %:h<Bar>endif<CR>
 noremap <F8> :Make<CR>
 noremap <F9> :Dispatch<CR>
 noremap <F10> :Start<CR>
@@ -377,8 +375,10 @@ nnoremap <leader>ps :PluginSearch
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
 
 " Sort lines
-nnoremap <leader>s vip:!sort<cr>
-vnoremap <leader>s :!sort<cr>
+nnoremap <leader>ss vip:sort<cr>
+vnoremap <leader>ss :sort<cr>
+nnoremap <leader>s. vip:sort! rf /\.\d*/<cr>
+vnoremap <leader>s. :sort! rf /\.\d*/<cr>
 
 nnoremap <leader>tf :TableFormat<CR>
 vnoremap <leader>tf :TableFormat<CR>
@@ -386,7 +386,7 @@ vnoremap <leader>tf :TableFormat<CR>
 " find double (nested) brackets
 nnoremap <leader>nb /([^)]\{-}([^)]\{-})[^)]\{-})<CR>
 
-" open pdf
+" view pdf
 nnoremap <leader>vp :!okular %:r.pdf<cr>
 
 
@@ -485,6 +485,8 @@ augroup ft_tex
         \ "\\begin{\1environment: \1}\n\t\r\n\\end{\1\1}"
   autocmd FileType tex inoremap <buffer> & &<Esc>:Tabularize /&<CR>A
   autocmd FileType tex setlocal tw=100
+  autocmd FileType tex :iabbrev <buffer> w2v \emph{word2vec}
+  autocmd FileType tex :iabbrev <buffer> d2v \emph{doc2vec}
   " TODO investigate how to dynamically enter textwidth
 augroup END
 " }}}
@@ -496,9 +498,12 @@ augroup ft_markdown
   autocmd!
   au FileType markdown setlocal makeprg=mdl\ %
   au FileType markdown let b:dispatch="pandoc -f markdown -t latex -o %:p:r.pdf %"
+  au FileType markdown inoremap <buffer> <Bar> <Bar><Esc>:Tabularize/<Bar>/l1<CR>a
 augroup END
 " }}}
 " Pandoc {{{
+augroup ft_pandoc
+  autocmd!
   au FileType pandoc iabbrev <buffer> -> $\rightarrow$
   au FileType pandoc iabbrev <buffer> phi $\phi$
   au FileType pandoc iabbrev <buffer> psi $\psi$
@@ -506,6 +511,8 @@ augroup END
   au FileType pandoc iabbrev <buffer> Psi $\psi$
   au FileType pandoc nnoremap <buffer> <F3> :TOC<CR>
   au FileType pandoc setlocal makeprg=pandoc\ %\ -o\ %:r.pdf\ -sN
+  au FileType pandoc setlocal textwidth=78
+augroup end
 " }}}
 " Julia {{{
 augroup ft_julia
@@ -518,7 +525,7 @@ augroup END
 " Quickfix {{{
 augroup ft_quickfix
   autocmd!
-  au FileType qf setlocal colorcolumn=0 nolist
+  au FileType qf setlocal colorcolumn=0 nolist cursorline
 augroup END
 " }}}
 " {{{ Java
@@ -529,15 +536,13 @@ let java_highlight_debug = 1
 let java_minlines = 50
 augroup ft_java
   autocmd!
-  autocmd FileType java setlocal shiftwidth=2
-  autocmd FileType java setlocal omnifunc=javacomplete#Complete
   autocmd FileType java iabbrev <buffer> print System.out.println);<left><left>
   " autocmd FileType java setlocal foldmethod=marker foldmarker={,}
   autocmd FileType java setlocal foldmethod=syntax foldlevel=1
-  autocmd FileType java setlocal makeprg=javac\ %
   " from help=includeexpr
   autocmd FileType java setlocal includeexpr=substitute(v:fname,'\\.','/','g')
   autocmd FileType java let b:surround_101 = "\r\n}"
+  " autocmd FileType java let formatprg=:JavaFormat
 "}}}
 " Haskell {{{
 augroup ft_haskell
@@ -598,12 +603,13 @@ nnoremap S :call <SID>or_else("SplitjoinSplit","gqq")<CR>
 nnoremap J :call <SID>or_else("SplitjoinJoin","J")<CR>
 " }}}
 " SEXP {{{ "
-let g:sexp_filetypes = 'java'
+" let g:sexp_filetypes = 'java'
 
 " }}} SEXP "
 " VimCompletesMe{{{
 augroup VimCompletesMeTex
   autocmd!
+  " See vimtex help
   autocmd FileType tex let b:vcm_omni_pattern =
         \ '\v\\%('
         \ . '\a*cite\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
@@ -660,7 +666,7 @@ let g:syntastic_auto_loc_list = 0
 
 " Warning 1: Command terminated with space
 " Warning 8: wrong length of dash
-let g:syntastic_tex_checkers = ["chktex"]
+let g:syntastic_tex_checkers = ["chktex", "lacheck"]
 "n1 commands ending in nothing are ok sometimes
 "n8 I KNOW WHAT TYPE OF DASHES I USE
 let g:syntastic_tex_chktex_args = "-n1 -n8"
@@ -671,17 +677,29 @@ let g:syntastic_python_python_exec = '/usr/bin/python3'
 let g:syntastic_python_flake8_exec = '/usr/bin/python3'
 let g:syntastic_python_flake8_args = '-m flake8'
 " }}}
+" eclim {{{ "
+let g:EclimCompletionMethod = 'omnifunc'
+let g:EclimBrowser = 'qutebrowser'
+" }}} eclim "
 " Pandoc {{{
-let g:pandoc#command#autoexec_command = "Pandoc! pdf -sN"
+" let g:pandoc#command#autoexec_on_writes = 1
+" let g:pandoc#command#autoexec_command = "Pandoc! pdf -sN"
+
 let g:pandoc#folding#fold_yaml = 1
+let g:pandoc#folding#fold_fenced_codeblocks = 1
+
 let g:pandoc#filetypes#pandoc_markdown = 0
 let g:pandoc#filetypes#handled = ["pandoc"]
-let g:pandoc#folding#fdc = 0
+
+let g:pandoc#folding#fdc = 1
 let g:pandoc#formatting#mode = "ha"
 let g:pandoc#formatting#equalprg = ''
+
 let g:pandoc#toc#position = "right"
 let g:pandoc#toc#close_after_navigating = 1
+
 let g:pandoc#modules#disabled = ["menu"]
+
 let g:pandoc#syntax#conceal#urls = 1
 "}}}
 " Vimtex {{{
@@ -697,18 +715,18 @@ let g:vimtex_view_general_options = '--unique @pdf\#src:@line@tex'
 let g:vimtex_view_general_options_latexmk = '--unique'
 
 let g:vimtex_fold_enabled = 1
+let g:vimtex_fold_preamble = 1
 let g:vimtex_fold_comments = 1
 let g:vimtex_indent_enabled = 1
 let g:vimtex_indent_bib_enabled = 1
-let g:vimtex_format_enabled = 1
+let g:vimtex_format_enabled = 0
 augroup vimtex_mappings
   au!
   au User VimtexEventInitPost nmap <F3> <plug>(vimtex-toc-toggle)
-  au User VimtexEventInitPost nmap <F4> <plug>(vimtex-cmd-create)
-  au User VimtexEventInitPost imap <F4> <plug>(vimtex-cmd-create)
+  au User VimtexEventInitPost nmap ´ <plug>(vimtex-cmd-create)
+  au User VimtexEventInitPost imap ´ <plug>(vimtex-cmd-create)
 augroup END
-" }}}
-" VRC {{{
+" }}} VRC {{{
 let g:vrc_allow_get_request_body = 1
 " }}}
 " Pad {{{
@@ -726,6 +744,13 @@ let g:pad#default_format = 'pandoc'
 " let g:pymode_doc_bind = 'K'
 " let g:pymode_virtualenv = 1
 " }}}
+" todo.txt {{{ "
+hi! link TodoPriorityA Statement
+hi! link TodoPriorityB Identifier
+hi! link TodoPriorityC Constant
+hi! link TodoContext Type
+hi! link TodoProject String
+" }}} todo.txt "
 " csv {{{
 let g:csv_autocmd_arrange = 1
 let g:csv_autocmd_arrange_size = 1024 * 1024
