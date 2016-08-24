@@ -6,3 +6,5 @@ tags-te
 vim/plugged/**
 vim/bundle/**
 vim/*netrwhist*
+vim/tmp
+*.local

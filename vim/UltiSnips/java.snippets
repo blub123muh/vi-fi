@@ -1,0 +1,43 @@
+snippet scriptplugin
+public class ${1:MyNativeScript}Plugin extends Plugin {
+    @Override
+    public String name() {
+        return "${2:my-native-script}";
+    }
+    @Override
+    public String description() {
+        return "${3:my native script that does something great}";
+    }
+    public void onModule(ScriptModule scriptModule) {
+        scriptModule.registerScript("${4:my_script}", $1Factory.class);
+    }
+
+    public static class $1Factory implements NativeScriptFactory {
+        @Override
+        public ExecutableScript newScript(@Nullable Map<String, Object> params) {
+            return new $1();
+        }
+        @Override
+        public boolean needsScores() {
+            return false;
+        }
+    }
+
+    public static class $1 extends AbstractFloatSearchScript {
+        @Override
+        public float runAsFloat() {
+            ${0:float a = (float) source().get("a");
+            float b = (float) source().get("b");
+            return a * b;}
+        }
+    }
+}
+endsnippet
+
+snippet eslogger
+protected final ESLogger ${1:logger} = Loggers.getLogger(${2:`!p snip.rv = snip.basename or "untitled"`}.class);
+endsnippet
+
+snippet esinfo
+${1:logger}.info("${2:something}");
+endsnippet
