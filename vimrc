@@ -79,7 +79,7 @@ Plugin 'vim-pandoc/vim-pandoc-syntax'
 " }}}
 " Special {{{
 Plugin 'diepm/vim-rest-console'
-Plugin 'JalaiAmitahl/maven-compiler.vim'
+" Plugin 'JalaiAmitahl/maven-compiler.vim'
 " }}}
 " FileType specific {{{
 
@@ -102,6 +102,11 @@ Plugin 'freitass/todo.txt-vim'
 " Highly experimental {{{
 " Plugin 'jiangmiao/auto-pairs' USE SURROND :S
 Plugin 'jceb/vim-orgmode'
+Plugin 'Raimondi/delimitMate'
+" Plugin 'vim-airline/vim-airline'
+" Plugin 'vim-airline/vim-airline-themes'
+Plugin 'majutsushi/tagbar'
+Plugin 'szw/vim-tags'
 " }}}
 " Colorschemes {{{
 Plugin 'sjl/badwolf'
@@ -287,9 +292,10 @@ set colorcolumn=+1
 " Section: Mappings {{{
 let mapleader = ","
 let maplocalleader = "ü"
-" German keyboard layout
+" German Keyboard Layout {{{ "
 " Searching with ß. should feel very natural along with the usual ?
 map ß /
+
 " Its not very handy to move around with altgr
 map ö [
 map ä ]
@@ -301,6 +307,11 @@ map öä []
 map äö ][
 map ää ]]
 
+" + as : saves shift, mnemonic as in 'vim +{cmd}'
+nnoremap + :
+vnoremap + :
+" }}} German Keyboard Layout "
+
 nmap Q gqip
 
 " forward tick is some of the strongest mappings on the german keyboard
@@ -308,16 +319,20 @@ nnoremap <C-S> :%s/
 vnoremap <C-S> :s/
 cnoremap ´s \(\)<Left><Left>
 
-" + as : saves shift, mnemonic as in 'vim +{cmd}'
-nnoremap + :
-vnoremap + :
 
 nnoremap <Space> za
+nnoremap z0 zMzv
+
+
 nnoremap s :w<CR>
-nnoremap <silent> <Up> :exe "resize " . (winheight(0) * 3/2)<CR>
-nnoremap <silent> <Down> :exe "resize " . (winheight(0) * 2/3)<CR>
-nnoremap <silent> <Right> :exe "vertical resize " . (winwidth(0) * 3/2)<CR>
-nnoremap <silent> <Left> :exe "vertical resize " . (winwidth(0) * 2/3)<CR>
+" Resizing {{{ "
+" y = x*3/2 + 1
+" (y-1) * 2/3 = x
+nnoremap <silent> <Up> :exe "resize " . (winheight(0) * 3/2 + 1)<CR>
+nnoremap <silent> <Down> :exe "resize " . ((winheight(0)-1) * 2/3 - 1)<CR>
+nnoremap <silent> <Right> :exe "vertical resize " . (winwidth(0) * 3/2 + 1)<CR>
+nnoremap <silent> <Left> :exe "vertical resize " . ((winwidth(0)-1) * 2/3)<CR>
+" }}} Resizing "
 
 " By T. <the> Pope
 if exists(":nohls")
@@ -346,17 +361,25 @@ inoremap <C-R><C-K> <esc>:help digraph-table<cr>
 " cnoremap <Esc> <C-F><S-Right>
 
 
+" Insert mode {{{ "
 inoremap <C-U> <C-G>u<C-U>
-inoremap <C-C> <Esc>`^
 
+inoremap <C-E> <Esc>A
+inoremap <C-C> <Esc>`^
+" }}} Insert mode "
+
+" F Keys {{{ "
 noremap <F2> :NERDTreeToggle<CR>
-" make this toggling
+" F3 is ft specific TOC
+nnoremap <F4> :TagbarToggle<CR>
 noremap <F5> :GundoToggle<CR>
-noremap <silent> <F6> :if exists(':Gstatus')<Bar>exe 'Gstatus'<Bar>endif<CR>
-nmap <silent> <F7> :if exists(':Lcd')<Bar>exe 'Lcd'<Bar>elseif exists(':ProjectCD')<Bar>exe 'ProjectCD'<Bar>elseif exists(':Cd')<Bar>exe 'Cd'<Bar>else<Bar>lcd %:h<Bar>endif<CR>
+nmap <F6> :if &previewwindow<Bar>pclose<Bar>elseif exists(':Gstatus')<Bar>exe 'Gstatus'<Bar>else<Bar>ls<Bar>endif<CR>
+" include ProjectCD from eclim?
+nmap <silent> <F7> :if exists(':Lcd')<Bar>exe 'Lcd'<Bar>elseif exists(':Cd')<Bar>exe 'Cd'<Bar>else<Bar>lcd %:h<Bar>endif<CR>
 noremap <F8> :Make<CR>
 noremap <F9> :Dispatch<CR>
 noremap <F10> :Start<CR>
+" }}} F Keys "
 
 " Quick Access {{{ "
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
@@ -374,11 +397,12 @@ nnoremap <leader>ps :PluginSearch
 
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
 
-" Sort lines
+" Sorting {{{ "
 nnoremap <leader>ss vip:sort<cr>
 vnoremap <leader>ss :sort<cr>
 nnoremap <leader>s. vip:sort! rf /\.\d*/<cr>
 vnoremap <leader>s. :sort! rf /\.\d*/<cr>
+" }}} Sorting "
 
 nnoremap <leader>tf :TableFormat<CR>
 vnoremap <leader>tf :TableFormat<CR>
@@ -483,10 +507,12 @@ augroup ft_tex
         \ let b:surround_{char2nr("c")} = "\\\1command: \1{\r}"
         \| let b:surround_{char2nr("e")} =
         \ "\\begin{\1environment: \1}\n\t\r\n\\end{\1\1}"
-  autocmd FileType tex inoremap <buffer> & &<Esc>:Tabularize /&<CR>A
+  autocmd FileType tex inoremap <buffer> & &<Esc>:Tabularize /&<CR>f&a
   autocmd FileType tex setlocal tw=100
-  autocmd FileType tex :iabbrev <buffer> w2v \emph{word2vec}
-  autocmd FileType tex :iabbrev <buffer> d2v \emph{doc2vec}
+  autocmd FileType tex iabbrev <buffer> w2v \emph{word2vec}
+  autocmd FileType tex iabbrev <buffer> d2v \emph{doc2vec}
+  autocmd FileType tex iabbrev <buffer> ... \dots
+  autocmd FileType tex nnoremap <buffer> <leader>eb :vs %:r.bib<CR>
   " TODO investigate how to dynamically enter textwidth
 augroup END
 " }}}
@@ -578,8 +604,8 @@ let g:fugitive_gitlab_domains = ['git.informatik.uni-kiel.de']
 " Splitjoin {{{
 let g:splitjoin_normalize_whitespace = 1
 let g:splitjoin_align = 1
-" let g:splitjoin_split_mapping = ""
-" let g:splitjoin_join_mapping = ""
+let g:splitjoin_split_mapping = ""
+let g:splitjoin_join_mapping = ""
 let g:splitjoin_python_brackets_on_separate_lines = 0
 " Thanks Mr. Pope
 function! s:or_else(cmd, default, ...) abort
@@ -602,6 +628,12 @@ endfunction
 nnoremap S :call <SID>or_else("SplitjoinSplit","gqq")<CR>
 nnoremap J :call <SID>or_else("SplitjoinJoin","J")<CR>
 " }}}
+" CtrlP {{{ "
+nnoremap <leader>ts :CtrlPTag<CR>
+let g:ctrlp_show_hidden = 1
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+
+" }}} CtrlP "
 " SEXP {{{ "
 " let g:sexp_filetypes = 'java'
 
@@ -677,10 +709,14 @@ let g:syntastic_python_python_exec = '/usr/bin/python3'
 let g:syntastic_python_flake8_exec = '/usr/bin/python3'
 let g:syntastic_python_flake8_args = '-m flake8'
 " }}}
-" eclim {{{ "
+" Eclim {{{ "
 let g:EclimCompletionMethod = 'omnifunc'
 let g:EclimBrowser = 'qutebrowser'
-" }}} eclim "
+" }}} Eclim "
+" PydocString {{{ "
+nmap <silent> <C-m> <Plug>(pydocstring)
+let g:pydocstring_enable_mapping = 0
+" }}} PydocString "
 " Pandoc {{{
 " let g:pandoc#command#autoexec_on_writes = 1
 " let g:pandoc#command#autoexec_command = "Pandoc! pdf -sN"
@@ -729,6 +765,9 @@ augroup END
 " }}} VRC {{{
 let g:vrc_allow_get_request_body = 1
 " }}}
+" vim-tags {{{ "
+let vim_tags_use_dispatch = 1
+" }}} vim-tags "
 " Pad {{{
 let g:pad#dir = '~/Notes'
 let g:pad#local_dir = 'notes'

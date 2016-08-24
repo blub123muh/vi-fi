@@ -11,3 +11,4 @@ tfidf
 elasticsearch
 Extensibility
 precomputed
+tokenizer
