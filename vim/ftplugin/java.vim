@@ -8,3 +8,5 @@ nnoremap <buffer> <localleader>f :%JavaFormat<cr>
 nnoremap <buffer> <localleader>c :JavaCorrect<cr>
 
 nnoremap <buffer> <localleader>r :JavaRename 
+
+inoremap {<CR> {<cr>}<Esc>ko

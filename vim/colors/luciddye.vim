@@ -180,7 +180,11 @@ call s:hifg("PreProc"        ,"#AAFFFF","LightCyan",47) " 213
 call s:hifg("railsUserMethod","#AACCFF","LightCyan",27)
 call s:hifg("Type"           ,"#AAAA77","Grey",57) " 101
 call s:hifg("railsUserClass" ,"#AAAAAA","Grey",7) " 101
-call s:hifg("Special"        ,"#33AA00","DarkGreen",24) " 7
+"49 pink
+"25 grass
+"60 lime
+"70 rose
+call s:hifg("Special"        ,"#33AA00","DarkGreen",25) " 24, 7
 call s:hifg("Regexp"         ,"#44B4CC","DarkCyan",21) " 74
 call s:hifg("rubyMethod"     ,"#DDE93D","Yellow",77) " 191
 "highlight railsMethod   guifg=#EE1122 ctermfg=1
@@ -215,6 +219,14 @@ endif
 " {{{ java
 hi link javaClassDecl Statement
 hi link javaScopeDecl Identifier
+hi link javaLangObject Identifier
 " }}}
-" markdown {{{ "
-" }}} markdown "
+" todo.txt {{{ "
+hi link TodoPriorityA Statement
+hi link TodoPriorityB Identifier
+hi link TodoPriorityC Constant
+hi link TodoContext String
+hi link TodoProject Type
+" }}} todo.txt "
+" python {{{ "
+" }}} python "

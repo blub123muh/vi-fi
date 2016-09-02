@@ -35,12 +35,12 @@ Plugin 'tpope/vim-afterimage'
 Plugin 'tpope/vim-obsession'
 Plugin 'tpope/vim-projectionist'
 Plugin 'tpope/vim-git'
+Plugin 'tpope/vim-ragtag'
 Plugin 'guns/vim-sexp'
 Plugin 'tpope/vim-sexp-mappings-for-regular-people'
 Plugin 'shumphrey/fugitive-gitlab.vim'
 " }}}
 " Essentials {{{
-Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'godlygeek/tabular'
@@ -51,7 +51,9 @@ Plugin 'godlygeek/tabular'
 " if has("lua")
   " Plugin 'Shougo/neocomplete.vim'
  " else
-Plugin 'ajh17/VimCompletesMe'
+" Plugin 'ajh17/VimCompletesMe'
+Plugin 'erwandew/supertab'
+"maybe Supertab!?
 " endif
 
 if has("python") || has("python3")
@@ -65,13 +67,14 @@ Plugin 'honza/vim-snippets'
 " }}} Completion and Snippets "
 " Extras {{{
 Plugin 'PeterRincker/vim-argumentative'
+Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'mtth/Scratch.vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'sjl/gundo.vim'
 Plugin 'mhinz/vim-signify'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
-Plugin 'vim-scripts/SyntaxComplete'
+" Plugin 'vim-scripts/SyntaxComplete'
 
 Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax'
@@ -79,7 +82,7 @@ Plugin 'vim-pandoc/vim-pandoc-syntax'
 " }}}
 " Special {{{
 Plugin 'diepm/vim-rest-console'
-" Plugin 'JalaiAmitahl/maven-compiler.vim'
+Plugin 'JalaiAmitahl/maven-compiler.vim'
 " }}}
 " FileType specific {{{
 
@@ -88,7 +91,6 @@ Plugin 'lervag/vimtex'
 " Plugin 'artur-shaik/vim-javacomplete2'
 Plugin 'hynek/vim-python-pep8-indent'
 Plugin 'tmhedberg/SimpylFold'
-Plugin 'heavenshell/vim-pydocstring'
 Plugin 'vim-erlang/vim-erlang-runtime'
 Plugin 'vim-erlang/vim-erlang-skeletons'
 Plugin 'vim-erlang/erlang-motions.vim'
@@ -102,11 +104,12 @@ Plugin 'freitass/todo.txt-vim'
 " Highly experimental {{{
 " Plugin 'jiangmiao/auto-pairs' USE SURROND :S
 Plugin 'jceb/vim-orgmode'
-Plugin 'Raimondi/delimitMate'
+" Plugin 'Raimondi/delimitMate'
 " Plugin 'vim-airline/vim-airline'
 " Plugin 'vim-airline/vim-airline-themes'
 Plugin 'majutsushi/tagbar'
 Plugin 'szw/vim-tags'
+Plugin 'dhruvasagar/vim-dotoo'
 " }}}
 " Colorschemes {{{
 Plugin 'sjl/badwolf'
@@ -142,9 +145,6 @@ set foldopen+=jump
 if v:version > 703 || v:version == 703 && has("patch541")
   set formatoptions+=j " Delete comment character when joining commented lines
 endif
-" if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
-"   set t_Co=16
-" endif
 
 if has('conceal')
   " set concealcursor=v
@@ -167,7 +167,7 @@ if !isdirectory(expand(&directory))
     call mkdir(expand(&directory), "p")
 endif
 
-
+" Display related {{{ "
 set list
 if (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8') && version >= 700
   let &listchars = "tab:\u21e5\u00b7,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
@@ -176,7 +176,14 @@ else
   set listchars=tab:>\ ,trail:-,extends:>,precedes:<
 endif
 
-set shiftround
+set wrap
+set linebreak
+if exists('+breakindent')
+  set breakindent
+  let &showbreak = '»'
+endif
+" }}} Display related "
+
 " scrolling
 set scrolloff=1
 set sidescrolloff=5
@@ -194,20 +201,15 @@ set wildmode=longest:full,full
 set wildignore+=tags,.*.un~,*.pyc,*.o,*.hi,*.beam,*.class
 set wildignore+=*.aux,*.out,*.toc
 " }}}
-" {{{ Tabs, Spaces, Wrapping Basic movement
+" {{{ Tabs, Spaces, Basic movement
 set autoindent
 set smarttab
 set tabstop=8
+set shiftround
 " Note that shiftwidth is handled by sleuth
 set softtabstop=4
 set expandtab
 
-set wrap
-set linebreak
-if exists('+breakindent')
-  set breakindent
-  let &showbreak = '»'
-endif
 " make jk, H and L more useful on indented lines and while wrapping
 nnoremap j gj
 nnoremap k gk
@@ -223,14 +225,15 @@ set autoread
 "experimental
 set timeoutlen=1200
 set ttimeoutlen=50
-
-" round indent to multiples of shiftwidth °_ °
+" Searching {{{ "
 set ignorecase
 set smartcase
 set incsearch
 set hlsearch
+" }}} Searching "
 syntax on
 let g:spellfile_URL = 'http://ftp.vim.org/vim/runtime/spell'
+" let g:tex_fast = 'bcmMprsSvV'
 "}}}
 " Section: Statusline and Colors {{{ "
 set showcmd " display incomplete commands
@@ -250,42 +253,9 @@ augroup lpag_flagship
   autocmd User Flags call Hoist("global", "%{&ignorecase ? '[IC]' : ''}")
   " autocmd User Flags call Hoist("buffer", "%{&path}")
 augroup END
-" I am the evil squirrel, I steal colors from the bad wolf
-" :redir @a | :hi StatusLine | :redir END | :put a
-
-" function! s:Fesch(...) abort
-"   "a:1 normal mode bg
-"   "a:2 insert mode bg
-"   "a:3 inactive bg
-"   "a:4 (in-) active fg
-"   "if no argument given, resets autocmds
-"   " clean this up TODO
-"   augroup fancy_statusline
-"     autocmd!
-"     if a:0 >= 4
-"       " Force fg color of Status- and Tabline
-"       exe 'highlight StatusLine ctermfg='.a:4
-"       exe 'highlight StatusLineNC ctermfg='.a:4
-"       exe 'highlight TabLine ctermfg='.a:4
-"       exe 'highlight TabLineSel ctermfg='.a:4
-"     endif
-"     if a:0 >= 3
-"       " Set colors of Statusline and Tabline (active and inactive)
-"       exe 'highlight StatusLineNC ctermbg='.a:3
-"       exe 'highlight TabLine ctermbg='.a:3
-"       exe 'highlight TabLineSel ctermbg='.a:1
-"     endif
-"     if a:0 >= 2
-"       " Insert mode color change
-"       exe 'highlight StatusLine ctermbg='.a:1
-"       exe 'autocmd InsertLeave * hi StatusLine ctermbg='.a:1
-"       exe 'autocmd InsertEnter * hi StatusLine ctermbg='.a:2
-"     endif
-"   augroup END
-" endfunction
 
 set background=dark
-silent! colorscheme badwolf
+silent! colorscheme luciddye
 set colorcolumn=+1
 
 " }}} Statusline and Colors"
@@ -339,31 +309,11 @@ if exists(":nohls")
   nnoremap <silent> <C-L> :nohls<CR><C-L>
 end
 
-inoremap <C-R><C-K> <esc>:help digraph-table<cr>
-
-" " start of line
-" cnoremap <C-A> <Home>
-" " back one character
-" cnoremap <C-B> <Left>
-" " delete character under cursor
-" cnoremap <C-D> <Del>
-" " end of line
-" cnoremap <C-E> <End>
-" " forward one character
-" cnoremap <C-F> <Right>
-" " recall newer command-line
-" cnoremap <C-N> <Down>
-" " recall previous (older) command-line
-" cnoremap <C-P> <Up>
-" " back one word
-" cnoremap <Esc> <C-B><S-Left>
-" " forward one word
-" cnoremap <Esc> <C-F><S-Right>
-
-
 " Insert mode {{{ "
+inoremap <C-R><C-K> <esc>:help digraph-table<cr>
+inoremap <C-J> <Down>
+inoremap <C-K><C-K> <Up>
 inoremap <C-U> <C-G>u<C-U>
-
 inoremap <C-E> <Esc>A
 inoremap <C-C> <Esc>`^
 " }}} Insert mode "
@@ -375,7 +325,7 @@ nnoremap <F4> :TagbarToggle<CR>
 noremap <F5> :GundoToggle<CR>
 nmap <F6> :if &previewwindow<Bar>pclose<Bar>elseif exists(':Gstatus')<Bar>exe 'Gstatus'<Bar>else<Bar>ls<Bar>endif<CR>
 " include ProjectCD from eclim?
-nmap <silent> <F7> :if exists(':Lcd')<Bar>exe 'Lcd'<Bar>elseif exists(':Cd')<Bar>exe 'Cd'<Bar>else<Bar>lcd %:h<Bar>endif<CR>
+map <silent> <F7> :if exists(':Lcd')<Bar>exe 'Lcd'<Bar>elseif exists(':Cd')<Bar>exe 'Cd'<Bar>else<Bar>lcd %:h<Bar>endif<CR>
 noremap <F8> :Make<CR>
 noremap <F9> :Dispatch<CR>
 noremap <F10> :Start<CR>
@@ -481,7 +431,7 @@ augroup misc
         \| nnoremap <silent><buffer> q :q<CR>
   " For all text files set 'textwidth' to 78 characters.
   " csv maps
-  autocmd FileType * if exists("+omnifunc") && &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
+  " autocmd FileType * if exists("+omnifunc") && &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
 augroup END
 "}}}
 " Section: FileType specific {{{
@@ -509,9 +459,9 @@ augroup ft_tex
         \ "\\begin{\1environment: \1}\n\t\r\n\\end{\1\1}"
   autocmd FileType tex inoremap <buffer> & &<Esc>:Tabularize /&<CR>f&a
   autocmd FileType tex setlocal tw=100
-  autocmd FileType tex iabbrev <buffer> w2v \emph{word2vec}
-  autocmd FileType tex iabbrev <buffer> d2v \emph{doc2vec}
-  autocmd FileType tex iabbrev <buffer> ... \dots
+  autocmd FileType tex iabbrev w2v <buffer> \emph{word2vec}
+  autocmd FileType tex iabbrev d2v <buffer> \emph{doc2vec}
+  autocmd FileType tex iabbrev ... <buffer> \dots
   autocmd FileType tex nnoremap <buffer> <leader>eb :vs %:r.bib<CR>
   " TODO investigate how to dynamically enter textwidth
 augroup END
@@ -596,6 +546,27 @@ augroup csv_mappings
   autocmd FileType csv setlocal cursorline equalprg=":ArrangeColumn"
 augroup END
 " }}}
+" scala {{{ "
+augroup ft_scala
+  " this one is which you're most likely to use?
+  autocmd BufRead,BufNewFile scala setfiletype scala
+  autocmd FileType scala setlocal makeprg=scalac\ %
+  autocmd FileType scala let b:dispatch = "scala %"
+  autocmd FileType scala let b:start = "scala"
+augroup end
+" }}} scala "
+" dot {{{ "
+augroup ft_dot
+  " this one is which you're most likely to use?
+  autocmd FileType dot setlocal commentstring=//\ %s
+augroup end
+" }}} dot "
+" ft_bib {{{ "
+augroup ft_bib
+  " this one is which you're most likely to use?
+  autocmd FileType bib let b:dispatch="biber %"
+augroup end
+" }}} ft_bib "
 " }}}
 " Section: Plugin settings {{{
 " Fugitive {{{
@@ -630,14 +601,11 @@ nnoremap J :call <SID>or_else("SplitjoinJoin","J")<CR>
 " }}}
 " CtrlP {{{ "
 nnoremap <leader>ts :CtrlPTag<CR>
+let g:ctrlp_types = ['mru', 'fil']
+let g:ctrlp_extensions = ['tag']
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-
 " }}} CtrlP "
-" SEXP {{{ "
-" let g:sexp_filetypes = 'java'
-
-" }}} SEXP "
 " VimCompletesMe{{{
 augroup VimCompletesMeTex
   autocmd!
@@ -656,8 +624,8 @@ augroup VimCompletesMeTex
 augroup END
 " }}}
 " UltiSnips {{{
-let g:UltiSnipsExpandTrigger = '<C-J>'
-let g:UltiSnipsListSnippets = '<C-R><C-J>'
+let g:UltiSnipsExpandTrigger = '<Tab>'
+let g:UltiSnipsListSnippets = '<C-R><Tab>'
 let g:UltiSnipsJumpForwardTrigger= '<C-J>'
 let g:UltiSnipsJumpBackwardTrigger= '<C-K>'
 " }}}
@@ -692,8 +660,8 @@ let g:syntastic_always_populate_loc_list = 0
 let g:syntastic_loc_list_height = 5
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_id_checkers = 1
-let g:syntastic_error_symbol = "\u2717"
-let g:syntastic_warning_symbol = "\u26A0"
+" let g:syntastic_error_symbol = "\u2717"
+" let g:syntastic_warning_symbol = "\u26A0"
 let g:syntastic_auto_loc_list = 0
 
 " Warning 1: Command terminated with space
@@ -713,10 +681,6 @@ let g:syntastic_python_flake8_args = '-m flake8'
 let g:EclimCompletionMethod = 'omnifunc'
 let g:EclimBrowser = 'qutebrowser'
 " }}} Eclim "
-" PydocString {{{ "
-nmap <silent> <C-m> <Plug>(pydocstring)
-let g:pydocstring_enable_mapping = 0
-" }}} PydocString "
 " Pandoc {{{
 " let g:pandoc#command#autoexec_on_writes = 1
 " let g:pandoc#command#autoexec_command = "Pandoc! pdf -sN"
@@ -764,9 +728,11 @@ augroup vimtex_mappings
 augroup END
 " }}} VRC {{{
 let g:vrc_allow_get_request_body = 1
+let g:vrc_trigger = '<C-j>'
 " }}}
 " vim-tags {{{ "
-let vim_tags_use_dispatch = 1
+let vim_tags_use_vim_dispatch = 1
+let vim_tags_cache_dir = fnamemodify('~/.vim/tmp', ':p')
 " }}} vim-tags "
 " Pad {{{
 let g:pad#dir = '~/Notes'
@@ -784,15 +750,35 @@ let g:pad#default_format = 'pandoc'
 " let g:pymode_virtualenv = 1
 " }}}
 " todo.txt {{{ "
-hi! link TodoPriorityA Statement
-hi! link TodoPriorityB Identifier
-hi! link TodoPriorityC Constant
-hi! link TodoContext Type
-hi! link TodoProject String
+" moved to colors luciddye
+" hi! link TodoPriorityA Statement
+" hi! link TodoPriorityB Identifier
+" hi! link TodoPriorityC Constant
+" hi! link TodoContext String
+" hi! link TodoProject Type
 " }}} todo.txt "
 " csv {{{
 let g:csv_autocmd_arrange = 1
 let g:csv_autocmd_arrange_size = 1024 * 1024
 
 " }}}
+" ragtag {{{ "
+let g:ragtag_global_maps = 1
+" }}} ragtag "
+" supertab {{{ "
+let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabContextDefaultCompletionType = "<c-p>"
+let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
+let g:SuperTabContextDiscoverDiscovery = ["&omnifunc:<c-x><c-o>"]
+" autocmd FileType * 
+"       \ if &omnifunc != '' |
+"       \ call SuperTabChain(&omnifunc, "<c-p>") |
+"       " \ call SuperTabSetDefaultCompletionType("<c-x><c-u>") |
+"       \ endif
+" }}} supertab "
+" delimitmate {{{ "
+let g:delimitMate_jump_expansion = 1
+let g:delimitMate_expand_space = 1
+let g:delimitMate_expand_cr = 1
+" }}} delimitmate "
 " }}}
