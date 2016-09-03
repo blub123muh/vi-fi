@@ -134,7 +134,8 @@ highlight SpellRare     ctermbg=DarkMagenta
 highlight SpellCap      ctermbg=DarkBlue
 highlight SpellLocal    ctermbg=DarkCyan
 
-call s:hibg("Folded"    ,"#110077","DarkBlue",17)
+"49 pink, 96 smooth blue, 119 light violet are nice
+call s:hibg("Folded"    ,"#110077","DarkBlue",96) "17
 call s:hifg("Folded"    ,"#aaddee","LightCyan",63)
 highlight FoldColumn    none
 high link FoldColumn    Folded
@@ -220,6 +221,7 @@ endif
 hi link javaClassDecl Statement
 hi link javaScopeDecl Identifier
 hi link javaLangObject Identifier
+hi link javaParen Special
 " }}}
 " todo.txt {{{ "
 hi link TodoPriorityA Statement

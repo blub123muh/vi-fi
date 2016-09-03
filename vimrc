@@ -52,7 +52,7 @@ Plugin 'godlygeek/tabular'
   " Plugin 'Shougo/neocomplete.vim'
  " else
 " Plugin 'ajh17/VimCompletesMe'
-Plugin 'erwandew/supertab'
+Plugin 'ervandew/supertab'
 "maybe Supertab!?
 " endif
 
