@@ -506,7 +506,7 @@ augroup END
 " }}}
 " {{{ Java
 let java_highlight_java_lang_ids = 1
-" let java_highlight_all = 1 "requires javaid.vim
+let java_highlight_all = 1 "requires javaid.vim
 " let java_highlight_functions = "style"
 let java_highlight_debug = 1
 let java_minlines = 50
@@ -782,3 +782,6 @@ let g:delimitMate_expand_space = 1
 let g:delimitMate_expand_cr = 1
 " }}} delimitmate "
 " }}}
+if filereadable('~/.vimrc.local')
+  source '~/.vimrc.local'
+endif
