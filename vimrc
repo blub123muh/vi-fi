@@ -782,6 +782,6 @@ let g:delimitMate_expand_space = 1
 let g:delimitMate_expand_cr = 1
 " }}} delimitmate "
 " }}}
-if filereadable('~/.vimrc.local')
-  source '~/.vimrc.local'
+if filereadable(expand("~/.vimrc.local"))
+  source ~/.vimrc.local
 endif
