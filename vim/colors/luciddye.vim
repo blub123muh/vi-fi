@@ -185,7 +185,7 @@ call s:hifg("railsUserClass" ,"#AAAAAA","Grey",7) " 101
 "25 grass
 "60 lime
 "70 rose
-call s:hifg("Special"        ,"#33AA00","DarkGreen",25) " 24, 7
+call s:hifg("Special"        ,"#33AA00","DarkGreen",44) " 24, 7
 call s:hifg("Regexp"         ,"#44B4CC","DarkCyan",21) " 74
 call s:hifg("rubyMethod"     ,"#DDE93D","Yellow",77) " 191
 "highlight railsMethod   guifg=#EE1122 ctermfg=1
@@ -222,6 +222,8 @@ hi link javaClassDecl Statement
 hi link javaScopeDecl Identifier
 hi link javaLangObject Identifier
 hi link javaParen Special
+highlight! javaParen1 ctermfg=Yellow
+highlight! javaParen2 ctermfg=Red
 " }}}
 " todo.txt {{{ "
 hi link TodoPriorityA Statement
@@ -230,5 +232,7 @@ hi link TodoPriorityC Constant
 hi link TodoContext String
 hi link TodoProject Type
 " }}} todo.txt "
-" python {{{ "
-" }}} python "
+" pandoc {{{ "
+highlight clear pandocTitleBlock
+highlight link pandocTitleBlock PreProc
+" }}} pandoc "

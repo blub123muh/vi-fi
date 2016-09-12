@@ -340,10 +340,20 @@ nnoremap <leader>ea :Vsplit after/plugin/abolish.vim<CR>
 nnoremap <leader>eq :split ~/.config/qutebrowser/keys.conf<CR>
 nnoremap <leader>ec :Vvsplit colors/luciddye.vim<CR>
 " }}} Quick Access "
+"
+" plugins and ctrlp {{{ "
 nnoremap <leader>pi :PluginInstall<CR>
 nnoremap <leader>pu :PluginUpdate<CR>
 nnoremap <leader>pc :PluginClean<CR>
 nnoremap <leader>ps :PluginSearch
+
+nnoremap <leader>pt :CtrlPTag<CR>
+" }}} plugins and ctrlp "
+"
+" tmux {{{ "
+noremap <leader>ty :Tyank<CR>
+noremap <leader>tp :Tput<CR>
+" }}} tmux "
 
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
 
@@ -375,6 +385,11 @@ nnoremap <leader>ht :let &ft = (&ft==#"help" ? "text" :
       \(&ft==#"text" ? "help" : &ft))<CR>
 
 nnoremap <leader>; mqA;<esc>`q
+
+" tabularize {{{ "
+nnoremap <leader>t& :Tabularize /&<CR>
+nnoremap <leader>t<bar> :Tabularize /&<CR>
+" }}} tabularize "
 " }}}
 " Section: Autocmds {{{
 
@@ -459,11 +474,12 @@ augroup ft_tex
         \ "\\begin{\1environment: \1}\n\t\r\n\\end{\1\1}"
   autocmd FileType tex inoremap <buffer> & &<Esc>:Tabularize /&<CR>f&a
   autocmd FileType tex setlocal tw=100
-  autocmd FileType tex iabbrev w2v <buffer> \emph{word2vec}
-  autocmd FileType tex iabbrev d2v <buffer> \emph{doc2vec}
-  autocmd FileType tex iabbrev ... <buffer> \dots
+  autocmd FileType tex iabbrev <buffer> w2v \emph{word2vec}
+  autocmd FileType tex iabbrev <buffer> d2v \emph{doc2vec}
+  autocmd FileType tex iabbrev <buffer> ... \dots
   autocmd FileType tex nnoremap <buffer> <leader>eb :vs %:r.bib<CR>
-  " TODO investigate how to dynamically enter textwidth
+  " correct cites
+  autocmd FileType tex nnoremap <buffer> <leader>cc :s/\s\\cite/\~\\cite/g<CR>
 augroup END
 " }}}
 " Markdown {{{
@@ -559,6 +575,7 @@ augroup end
 augroup ft_dot
   " this one is which you're most likely to use?
   autocmd FileType dot setlocal commentstring=//\ %s
+  autocmd FileType dot let b:dispatch='dot -Tpng -o %:r.png %'
 augroup end
 " }}} dot "
 " ft_bib {{{ "
@@ -600,7 +617,6 @@ nnoremap S :call <SID>or_else("SplitjoinSplit","gqq")<CR>
 nnoremap J :call <SID>or_else("SplitjoinJoin","J")<CR>
 " }}}
 " CtrlP {{{ "
-nnoremap <leader>ts :CtrlPTag<CR>
 let g:ctrlp_types = ['mru', 'fil']
 let g:ctrlp_extensions = ['tag']
 let g:ctrlp_show_hidden = 1
@@ -628,6 +644,7 @@ let g:UltiSnipsExpandTrigger = '<Tab>'
 let g:UltiSnipsListSnippets = '<C-R><Tab>'
 let g:UltiSnipsJumpForwardTrigger= '<C-J>'
 let g:UltiSnipsJumpBackwardTrigger= '<C-K>'
+inoremap <C-X><C-S> <C-R>=UltiSnips#ExpandSnippet()<CR>
 " }}}
 " Snipmate {{{
 " let g:snipMate = get(g:, 'snipMate', {}) " allow vimrc resourcing
@@ -703,7 +720,7 @@ let g:pandoc#modules#disabled = ["menu"]
 let g:pandoc#syntax#conceal#urls = 1
 "}}}
 " Vimtex {{{
-let g:vimtex_latexmk_continuous = 0
+let g:vimtex_latexmk_continuous = 1
 let g:vimtex_latexmk_background = 1
 let g:vimtex_latexmk_callback = 0
 
