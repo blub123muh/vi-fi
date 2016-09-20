@@ -88,7 +88,6 @@ Plugin 'JalaiAmitahl/maven-compiler.vim'
 
 Plugin 'lervag/vimtex'
 
-" Plugin 'artur-shaik/vim-javacomplete2'
 Plugin 'hynek/vim-python-pep8-indent'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'vim-erlang/vim-erlang-runtime'
@@ -199,7 +198,8 @@ set spelllang=en_us
 set wildmenu
 set wildmode=longest:full,full
 set wildignore+=tags,.*.un~,*.pyc,*.o,*.hi,*.beam,*.class
-set wildignore+=*.aux,*.out,*.toc
+" the following is helpful for GatherTodo
+set wildignore+=\%*,tc*.todo.txt
 " }}}
 " {{{ Tabs, Spaces, Basic movement
 set autoindent
@@ -355,6 +355,8 @@ noremap <leader>ty :Tyank<CR>
 noremap <leader>tp :Tput<CR>
 " }}} tmux "
 
+noremap <leader>gt :GatherTodo<CR>
+
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
 
 " Sorting {{{ "
@@ -472,6 +474,7 @@ augroup ft_tex
         \ let b:surround_{char2nr("c")} = "\\\1command: \1{\r}"
         \| let b:surround_{char2nr("e")} =
         \ "\\begin{\1environment: \1}\n\t\r\n\\end{\1\1}"
+        \| let b:surround_{char2nr("q")} = "``\r''"
   autocmd FileType tex inoremap <buffer> & &<Esc>:Tabularize /&<CR>f&a
   autocmd FileType tex setlocal tw=100
   autocmd FileType tex iabbrev <buffer> w2v \emph{word2vec}
@@ -798,6 +801,9 @@ let g:delimitMate_jump_expansion = 1
 let g:delimitMate_expand_space = 1
 let g:delimitMate_expand_cr = 1
 " }}} delimitmate "
+" orgmode {{{ "
+let g:org_agenda_files = ['~/org/index.org']
+" }}} orgmode "
 " }}}
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local

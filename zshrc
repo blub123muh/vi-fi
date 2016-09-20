@@ -92,6 +92,7 @@ alias ez="vim ~/.zshrc"
 alias et="vim ~/.tmux.conf"
 alias ep="vim ~/.plan/README.markdown"
 alias clearhist="echo '' > ~/.zsh_history && exec $SHELL -l"
+alias boring="vim +GatherTodo"
 
 # Pass <C-S> to vim
 stty stop '' -ixoff

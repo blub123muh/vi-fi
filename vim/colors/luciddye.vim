@@ -113,9 +113,12 @@ highlight SpecialKey    guifg=#404040 ctermfg=8
 highlight Directory     none
 high link Directory     Identifier
 highlight ErrorMsg      guibg=Red ctermbg=DarkRed guifg=NONE ctermfg=NONE
-highlight Search        guifg=NONE ctermfg=NONE gui=none cterm=none
-call s:hibg("Search"    ,"#555555","DarkBlue",81)
-highlight IncSearch     guifg=White guibg=Black ctermfg=White ctermbg=Black
+" highlight Search        guifg=NONE ctermfg=NONE gui=none cterm=none
+" Search colors from badwolf
+highlight IncSearch term=reverse cterm=bold ctermfg=16 ctermbg=39 gui=bold guifg=#000000 guibg=#0a9dff
+highlight Search term=reverse cterm=bold ctermfg=16 ctermbg=221 gui=bold guifg=#000000 guibg=#fade3e
+" call s:hibg("Search"    ,"#555555","DarkBlue",81)
+" highlight IncSearch     guifg=White guibg=Black ctermfg=White ctermbg=Black
 highlight MoreMsg       guifg=#00AA00 ctermfg=Green
 highlight LineNr        guifg=#DDEEFF ctermfg=White
 call s:hibg("LineNr"    ,"#222222","DarkBlue",80)
@@ -125,7 +128,9 @@ highlight Title         guifg=Magenta ctermfg=Magenta
 highlight VisualNOS     gui=none cterm=none
 call s:hibg("Visual"    ,"#555577","LightBlue",83)
 call s:hibg("VisualNOS" ,"#444444","DarkBlue",81)
-call s:hibg("MatchParen","#1100AA","DarkBlue",18)
+" 18
+" call s:hibg("MatchParen","#1100AA","DarkBlue",33)
+highlight MatchParen term=reverse cterm=bold ctermfg=221 ctermbg=235 gui=bold guifg=#fdae3e guibg=#242321
 highlight WarningMsg    guifg=Red ctermfg=Red
 highlight Error         ctermbg=DarkRed
 highlight SpellBad      ctermbg=DarkRed
@@ -137,18 +142,22 @@ highlight SpellLocal    ctermbg=DarkCyan
 "49 pink, 96 smooth blue, 119 light violet are nice
 call s:hibg("Folded"    ,"#110077","DarkBlue",96) "17
 call s:hifg("Folded"    ,"#aaddee","LightCyan",63)
+" highlight Folded ctermbg=92 ctermfg=16 cterm=bold
 highlight FoldColumn    none
 high link FoldColumn    Folded
-highlight DiffAdd       ctermbg=4 guibg=DarkBlue
-highlight DiffChange    ctermbg=5 guibg=DarkMagenta
-highlight DiffDelete    ctermfg=12 ctermbg=6 gui=bold guifg=Blue guibg=DarkCyan
+highlight DiffAdd       ctermbg=42 ctermfg=16 guibg=DarkRed cterm=bold
+highlight DiffChange    ctermbg=208 ctermfg=16 guifg=DarkRed guibg=Yellow cterm=bold
+highlight DiffDelete    ctermbg=220 ctermfg=16 gui=bold guifg=Yellow guibg=DarkRed cterm=bold
 highlight DiffText      ctermbg=DarkRed
 highlight DiffText      cterm=bold ctermbg=9 gui=bold guibg=Red
 
-highlight Pmenu         guifg=White ctermfg=White gui=bold cterm=bold
-highlight PmenuSel      guifg=White ctermfg=White gui=bold cterm=bold
-call s:hibg("Pmenu"     ,"#000099","Blue",18)
-call s:hibg("PmenuSel"  ,"#5555ff","DarkCyan",39)
+" highlight Pmenu         guifg=White ctermfg=White gui=bold cterm=bold
+" highlight PmenuSel      guifg=White ctermfg=White gui=bold cterm=bold
+highlight Pmenu term=reverse cterm=bold ctermfg=16 ctermbg=92 gui=bold guifg=#fdae3e guibg=#242321
+" call s:hibg("Pmenu"     ,"#000099","Blue",25) "18
+highlight PmenuSel term=reverse cterm=bold ctermfg=16 ctermbg=82 gui=bold guifg=#fdae3e guibg=#242321
+" call s:hibg("Pmenu"     ,"#000099","Blue",25) "18
+" call s:hibg("PmenuSel"  ,"#5555ff","DarkCyan",39)
 highlight PmenuSbar     guibg=Grey ctermbg=Grey
 highlight PmenuThumb    guibg=White ctermbg=White
 highlight TabLine       gui=underline cterm=underline
@@ -185,7 +194,7 @@ call s:hifg("railsUserClass" ,"#AAAAAA","Grey",7) " 101
 "25 grass
 "60 lime
 "70 rose
-call s:hifg("Special"        ,"#33AA00","DarkGreen",44) " 24, 7
+call s:hifg("Special"        ,"#33AA00","DarkGreen",25) " 24, 7
 call s:hifg("Regexp"         ,"#44B4CC","DarkCyan",21) " 74
 call s:hifg("rubyMethod"     ,"#DDE93D","Yellow",77) " 191
 "highlight railsMethod   guifg=#EE1122 ctermfg=1
@@ -229,10 +238,31 @@ highlight! javaParen2 ctermfg=Red
 hi link TodoPriorityA Statement
 hi link TodoPriorityB Identifier
 hi link TodoPriorityC Constant
-hi link TodoContext String
+hi link TodoContext Special
 hi link TodoProject Type
+fun s:rainbow(groups, start, ...) abort
+   "first opt arg: interval
+   if a:0 >= 1
+      let inc = a:1
+   else
+      let inc = (&t_Co - a:start) / len(a:groups)
+   endif
+   let cval = a:start
+   for group in a:groups
+      exe "hi ".group." ctermfg=".cval
+      let cval = cval + inc
+   endfor
+endf
+let s:letters=["A","B","C","D","E","F","G","H","I","J","K","L","M","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+let priority_groups = map(s:letters, "'TodoPriority'.v:val")
+call s:rainbow(priority_groups, 1)
+
 " }}} todo.txt "
 " pandoc {{{ "
 highlight clear pandocTitleBlock
 highlight link pandocTitleBlock PreProc
 " }}} pandoc "
+" tex {{{ "
+highlight link texBeginEnd Identifier
+" }}} tex "
+" }}}

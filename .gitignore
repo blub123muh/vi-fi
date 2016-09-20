@@ -6,6 +6,7 @@ tags-te
 vim/plugged/**
 vim/bundle/*
 !vim/bundle/Vundle.vim
+vim/src/*
 vim/*netrwhist*
 vim/tmp
 workbench.xmi
