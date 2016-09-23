@@ -1,9 +1,9 @@
 " Vim color scheme
-" Name:         luciddye.vim
+" Name:         vividwolf.vim
 " Author:       Lukas Galke <vim@lpag.de>
 " Version:      0.1
 
-" Based on vividchalk by Tim Pope
+" Based on vividchalk by Tim Pope and a little bit of badwolf by Steve Losh
 " Distributable under the same terms as Vim itself (see :help license)
 
 if has("gui_running")
@@ -14,7 +14,7 @@ if exists("syntax_on")
    syntax reset
 endif
 
-let colors_name = "luciddye"
+let colors_name = "vividwolf"
 
 " First two functions adapted from inkpot.vim
 
@@ -193,14 +193,15 @@ call s:hifg("railsUserClass" ,"#AAAAAA","Grey",7) " 101
 "49 pink
 "25 grass
 "60 lime
+"65 pink
 "70 rose
-call s:hifg("Special"        ,"#33AA00","DarkGreen",25) " 24, 7
+call s:hifg("Special"        ,"#33AA00","DarkGreen",60) " 24, 7
 call s:hifg("Regexp"         ,"#44B4CC","DarkCyan",21) " 74
 call s:hifg("rubyMethod"     ,"#DDE93D","Yellow",77) " 191
 "highlight railsMethod   guifg=#EE1122 ctermfg=1
 
 function! s:setup_statusline(...)
-   augroup luciddye_insert_toggling
+   augroup vividwolf_insert_toggling
       autocmd!
       if a:0 >= 2
          exe 'autocmd InsertLeave * hi StatusLine ctermbg='.a:1
@@ -217,10 +218,10 @@ if &t_Co == 256 && !has('gui_running')
     highlight TablineSel ctermbg=82 ctermfg=16 cterm=bold
     highlight Tabline ctermbg=92 ctermfg=16 cterm=None
     if has("autocmd")
-       augroup luciddye
+       augroup vividwolf
           au!
           autocmd ColorScheme * call s:setup_statusline()
-          autocmd ColorScheme luciddye call s:setup_statusline(82,208)
+          autocmd ColorScheme vividwolf call s:setup_statusline(82,208)
        augroup END
    endif
 endif
@@ -235,12 +236,12 @@ highlight! javaParen1 ctermfg=Yellow
 highlight! javaParen2 ctermfg=Red
 " }}}
 " todo.txt {{{ "
-hi link TodoPriorityA Statement
-hi link TodoPriorityB Identifier
-hi link TodoPriorityC Constant
+" hi link TodoPriorityA Statement
+" hi link TodoPriorityB Identifier
+" hi link TodoPriorityC Constant
 hi link TodoContext Special
 hi link TodoProject Type
-fun s:rainbow(groups, start, ...) abort
+fun! s:rainbow(groups, start, ...) abort
    "first opt arg: interval
    if a:0 >= 1
       let inc = a:1
@@ -255,7 +256,7 @@ fun s:rainbow(groups, start, ...) abort
 endf
 let s:letters=["A","B","C","D","E","F","G","H","I","J","K","L","M","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 let priority_groups = map(s:letters, "'TodoPriority'.v:val")
-call s:rainbow(priority_groups, 1)
+call s:rainbow(priority_groups, 33)
 
 " }}} todo.txt "
 " pandoc {{{ "
@@ -263,6 +264,10 @@ highlight clear pandocTitleBlock
 highlight link pandocTitleBlock PreProc
 " }}} pandoc "
 " tex {{{ "
-highlight link texBeginEnd Identifier
+highlight link texBeginEndName Identifier
+highlight link PreCondit PreProc
+highlight link texMath PreProc
+" highlight link texRefZone
+
 " }}} tex "
 " }}}

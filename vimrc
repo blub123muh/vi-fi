@@ -46,15 +46,13 @@ Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'godlygeek/tabular'
 " }}}
 " <Tab>, Completion, and Snippets {{{ "
-" Plugin 'ervandew/supertab'
 
-" if has("lua")
-  " Plugin 'Shougo/neocomplete.vim'
- " else
-" Plugin 'ajh17/VimCompletesMe'
-Plugin 'ervandew/supertab'
-"maybe Supertab!?
-" endif
+if has("lua")
+  Plugin 'Shougo/neocomplete.vim'
+else
+  Plugin 'ajh17/VimCompletesMe'
+  " Plugin 'ervandew/supertab'
+endif
 
 if has("python") || has("python3")
   Plugin 'SirVer/ultisnips'
@@ -106,6 +104,7 @@ Plugin 'jceb/vim-orgmode'
 " Plugin 'Raimondi/delimitMate'
 " Plugin 'vim-airline/vim-airline'
 " Plugin 'vim-airline/vim-airline-themes'
+Plugin 'Konfekt/FastFold'
 Plugin 'majutsushi/tagbar'
 Plugin 'szw/vim-tags'
 Plugin 'dhruvasagar/vim-dotoo'
@@ -170,7 +169,9 @@ endif
 set list
 if (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8') && version >= 700
   let &listchars = "tab:\u21e5\u00b7,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
-  let &fillchars = "vert:\u259a,fold:\u00b7"
+  " let &fillchars = "vert:\u259a,fold:\u00b7"
+  " set fillchars=fold:\ ,vert:|
+  let &fillchars="fold:\ ,vert:|"
 else
   set listchars=tab:>\ ,trail:-,extends:>,precedes:<
 endif
@@ -255,7 +256,7 @@ augroup lpag_flagship
 augroup END
 
 set background=dark
-silent! colorscheme luciddye
+silent! colorscheme vividwolf
 set colorcolumn=+1
 
 " }}} Statusline and Colors"
@@ -338,7 +339,8 @@ nnoremap <leader>ep :vsplit ~/.plan/README.markdown<CR>
 nnoremap <leader>et :vsplit ~/.tmux.conf<CR>
 nnoremap <leader>ea :Vsplit after/plugin/abolish.vim<CR>
 nnoremap <leader>eq :split ~/.config/qutebrowser/keys.conf<CR>
-nnoremap <leader>ec :Vvsplit colors/luciddye.vim<CR>
+nnoremap <leader>ec :Vvsplit colors/vividwolf.vim<CR>
+nnoremap <leader>eu :UltiSnipsEdit
 " }}} Quick Access "
 "
 " plugins and ctrlp {{{ "
@@ -647,7 +649,8 @@ let g:UltiSnipsExpandTrigger = '<Tab>'
 let g:UltiSnipsListSnippets = '<C-R><Tab>'
 let g:UltiSnipsJumpForwardTrigger= '<C-J>'
 let g:UltiSnipsJumpBackwardTrigger= '<C-K>'
-inoremap <C-X><C-S> <C-R>=UltiSnips#ExpandSnippet()<CR>
+inoremap <c-x><c-k> <c-x><c-k>
+inoremap <C-x><C-s> <C-R>=UltiSnips#ExpandSnippet()<CR>
 " }}}
 " Snipmate {{{
 " let g:snipMate = get(g:, 'snipMate', {}) " allow vimrc resourcing
@@ -689,7 +692,8 @@ let g:syntastic_auto_loc_list = 0
 let g:syntastic_tex_checkers = ["chktex", "lacheck"]
 "n1 commands ending in nothing are ok sometimes
 "n8 I KNOW WHAT TYPE OF DASHES I USE
-let g:syntastic_tex_chktex_args = "-n1 -n8"
+"n36 in german: sometimes spaces are not necessary around parens
+let g:syntastic_tex_chktex_args = "-n1 -n8 -n36"
 
 " Python Checkers
 let g:syntastic_python_checkers = ['python', 'flake8']
@@ -790,6 +794,7 @@ let g:SuperTabDefaultCompletionType = "context"
 let g:SuperTabContextDefaultCompletionType = "<c-p>"
 let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
 let g:SuperTabContextDiscoverDiscovery = ["&omnifunc:<c-x><c-o>"]
+
 " autocmd FileType * 
 "       \ if &omnifunc != '' |
 "       \ call SuperTabChain(&omnifunc, "<c-p>") |
@@ -804,6 +809,25 @@ let g:delimitMate_expand_cr = 1
 " orgmode {{{ "
 let g:org_agenda_files = ['~/org/index.org']
 " }}} orgmode "
+" neocomplete {{{ "
+let g:neocomplete#enable_at_startup = 1
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+let g:neocomplete#sources#omni#input_patterns.tex =
+      \ '\v\\%('
+      \ . '\a*cite\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+      \ . '|\a*ref%(\s*\{[^}]*|range\s*\{[^,}]*%(}\{)?)'
+      \ . '|hyperref\s*\[[^]]*'
+      \ . '|includegraphics\*?%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+      \ . '|%(include%(only)?|input)\s*\{[^}]*'
+      \ . '|\a*(gls|Gls|GLS)(pl)?\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+      \ . '|includepdf%(\s*\[[^]]*\])?\s*\{[^}]*'
+      \ . '|includestandalone%(\s*\[[^]]*\])?\s*\{[^}]*'
+      \ . ')'
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+" }}} neocomplete "
 " }}}
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
