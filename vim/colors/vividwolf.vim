@@ -107,6 +107,7 @@ highlight WildMenu      guifg=Black   guibg=#ffff00 gui=bold ctermfg=Black cterm
 highlight Cursor        guifg=Black guibg=White ctermfg=Black ctermbg=White
 call s:hibg("ColorColumn","#333333","DarkGrey",81)
 call s:hibg("CursorLine","#333333","DarkGrey",81)
+highlight CursorLine term=reverse cterm=None
 call s:hibg("CursorColumn","#333333","DarkGrey",81)
 highlight NonText       guifg=#404040 ctermfg=8
 highlight SpecialKey    guifg=#404040 ctermfg=8
@@ -195,7 +196,7 @@ call s:hifg("railsUserClass" ,"#AAAAAA","Grey",7) " 101
 "60 lime
 "65 pink
 "70 rose
-call s:hifg("Special"        ,"#33AA00","DarkGreen",60) " 24, 7
+call s:hifg("Special"        ,"#33AA00","DarkGreen",23) " 24, 7
 call s:hifg("Regexp"         ,"#44B4CC","DarkCyan",21) " 74
 call s:hifg("rubyMethod"     ,"#DDE93D","Yellow",77) " 191
 "highlight railsMethod   guifg=#EE1122 ctermfg=1
@@ -256,7 +257,7 @@ fun! s:rainbow(groups, start, ...) abort
 endf
 let s:letters=["A","B","C","D","E","F","G","H","I","J","K","L","M","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 let priority_groups = map(s:letters, "'TodoPriority'.v:val")
-call s:rainbow(priority_groups, 33)
+call s:rainbow(priority_groups, 1)
 
 " }}} todo.txt "
 " pandoc {{{ "

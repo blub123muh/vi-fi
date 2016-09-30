@@ -51,17 +51,15 @@ if has("lua")
   Plugin 'Shougo/neocomplete.vim'
 else
   Plugin 'ajh17/VimCompletesMe'
-  " Plugin 'ervandew/supertab'
 endif
-
 if has("python") || has("python3")
-  Plugin 'SirVer/ultisnips'
-else
-  Plugin 'MarcWeber/vim-addon-mw-utils'
-  Plugin 'tomtom/tlib_vim'
-  Plugin 'garbas/vim-snipmate'
+  Plugin 'SirVer/UltiSnips'
 endif
 Plugin 'honza/vim-snippets'
+Plugin 'Shougo/neosnippet.vim'
+Plugin 'Shougo/neosnippet-snippets'
+Plugin 'Shougo/vimshell.vim'
+Plugin 'Shougo/neco-vim'
 " }}} Completion and Snippets "
 " Extras {{{
 Plugin 'PeterRincker/vim-argumentative'
@@ -101,6 +99,8 @@ Plugin 'freitass/todo.txt-vim'
 " Highly experimental {{{
 " Plugin 'jiangmiao/auto-pairs' USE SURROND :S
 Plugin 'jceb/vim-orgmode'
+Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'dhruvasagar/vim-table-mode'
 " Plugin 'Raimondi/delimitMate'
 " Plugin 'vim-airline/vim-airline'
 " Plugin 'vim-airline/vim-airline-themes'
@@ -108,6 +108,7 @@ Plugin 'Konfekt/FastFold'
 Plugin 'majutsushi/tagbar'
 Plugin 'szw/vim-tags'
 Plugin 'dhruvasagar/vim-dotoo'
+" Plugin 'terryma/vim-multiple-cursors'
 " }}}
 " Colorschemes {{{
 Plugin 'sjl/badwolf'
@@ -145,8 +146,8 @@ if v:version > 703 || v:version == 703 && has("patch541")
 endif
 
 if has('conceal')
-  " set concealcursor=v
   set conceallevel=2
+  " set concealcursor=nvi
 endif
 
 " Decluttering (thanks sjl)
@@ -247,6 +248,35 @@ set title
 
 set statusline=[%n%M]\ %<%t\ ~=\ %Y\ %([tw=%{&textwidth}\ ts=%{&tabstop}\ sw=%{&shiftwidth}\ %{&expandtab?'et':'noet'}]%)%=%l,%c%V\ %P
 
+function! s:Pulse() " {{{
+  " by steve losh
+    redir => old_hi
+        silent execute 'hi CursorLine'
+    redir END
+    let old_hi = split(old_hi, '\n')[0]
+    let old_hi = substitute(old_hi, 'xxx', '', '')
+
+    let steps = 8
+    let width = 1
+    let start = width
+    let end = steps * width
+    let color = 233
+
+    for i in range(start, end, width)
+        execute "hi CursorLine ctermbg=" . (color + i)
+        redraw
+        sleep 6m
+    endfor
+    for i in range(end, start, -1 * width)
+        execute "hi CursorLine ctermbg=" . (color + i)
+        redraw
+        sleep 6m
+    endfor
+
+    execute 'hi ' . old_hi
+endfunction " }}}
+command! -nargs=0 Pulse call s:Pulse()
+
 augroup lpag_flagship
   au!
   autocmd User Flags call Hoist("buffer", {'hl':['StatusLine','StatusLineNC']}, function('fugitive#statusline'))
@@ -258,6 +288,7 @@ augroup END
 set background=dark
 silent! colorscheme vividwolf
 set colorcolumn=+1
+set cursorcolumn cursorline
 
 " }}} Statusline and Colors"
 " Section: Mappings {{{
@@ -265,7 +296,9 @@ let mapleader = ","
 let maplocalleader = "ü"
 " German Keyboard Layout {{{ "
 " Searching with ß. should feel very natural along with the usual ?
-map ß /
+map ß /\v
+map ? ?\v
+nmap <Tab> %
 
 " Its not very handy to move around with altgr
 map ö [
@@ -286,14 +319,18 @@ vnoremap + :
 nmap Q gqip
 
 " forward tick is some of the strongest mappings on the german keyboard
-nnoremap <C-S> :%s/
-vnoremap <C-S> :s/
+nnoremap <C-S> :%s/\v
+vnoremap <C-S> :s/\v
+
 cnoremap ´s \(\)<Left><Left>
 
-
 nnoremap <Space> za
-nnoremap z0 zMzv
+vnoremap <Space> za
+nnoremap z0 zcz0
 
+" try out which feels more confident TODO
+nnoremap <c-k> mzzMzvzz15<c-e>`z:Pulse<cr>
+nnoremap ´ mzzMzvzz15<c-e>`z:Pulse<cr>
 
 nnoremap s :w<CR>
 " Resizing {{{ "
@@ -310,12 +347,13 @@ if exists(":nohls")
   nnoremap <silent> <C-L> :nohls<CR><C-L>
 end
 
+nnoremap <leader>~ b~e
+
 " Insert mode {{{ "
 inoremap <C-R><C-K> <esc>:help digraph-table<cr>
 inoremap <C-J> <Down>
-inoremap <C-K><C-K> <Up>
 inoremap <C-U> <C-G>u<C-U>
-inoremap <C-E> <Esc>A
+inoremap <C-E> <Esc>ea
 inoremap <C-C> <Esc>`^
 " }}} Insert mode "
 
@@ -484,7 +522,14 @@ augroup ft_tex
   autocmd FileType tex iabbrev <buffer> ... \dots
   autocmd FileType tex nnoremap <buffer> <leader>eb :vs %:r.bib<CR>
   " correct cites
-  autocmd FileType tex nnoremap <buffer> <leader>cc :s/\s\\cite/\~\\cite/g<CR>
+  autocmd FileType tex nnoremap <buffer> <leader>cc :%s/\s\+\(\(\\ref\)\\|\(\\cite\)\)/\~\1/g<CR>
+  autocmd FileType tex let b:dispatch = 'latexmk -pdf %'
+augroup END
+" }}}
+" Bib {{{
+augroup ft_bib
+  autocmd!
+  autocmd FileType bib match Error /[äöüß]/
 augroup END
 " }}}
 " Markdown {{{
@@ -645,12 +690,12 @@ augroup VimCompletesMeTex
 augroup END
 " }}}
 " UltiSnips {{{
-let g:UltiSnipsExpandTrigger = '<Tab>'
-let g:UltiSnipsListSnippets = '<C-R><Tab>'
-let g:UltiSnipsJumpForwardTrigger= '<C-J>'
-let g:UltiSnipsJumpBackwardTrigger= '<C-K>'
-inoremap <c-x><c-k> <c-x><c-k>
-inoremap <C-x><C-s> <C-R>=UltiSnips#ExpandSnippet()<CR>
+let g:UltiSnipsExpandTrigger = '<c-k>'
+let g:UltiSnipsListSnippets = '<c-r><c-k>'
+let g:UltiSnipsJumpForwardTrigger= '<C-k>'
+let g:UltiSnipsJumpBackwardTrigger= '<C-j>'
+" inoremap <c-x><c-k> <c-x><c-k>
+" inoremap <c-x><c-s> <C-R>=UltiSnips#ExpandSnippet()<CR>
 " }}}
 " Snipmate {{{
 " let g:snipMate = get(g:, 'snipMate', {}) " allow vimrc resourcing
@@ -662,10 +707,10 @@ inoremap <C-x><C-s> <C-R>=UltiSnips#ExpandSnippet()<CR>
 " }}}
 " {{{ XPTemplate
 let g:xptemplate_vars='$author=Lukas Galke&$email=vim@lpag.de'
-let g:xptemplate_key='´'
-let g:xptemplate_key_visual = '´'
-let g:xptemplate_nav_next = '<C-j>'
-let g:xptemplate_nav_prev = '<C-k>'
+let g:xptemplate_key='<c-k>'
+let g:xptemplate_key_visual = '<c-k>'
+let g:xptemplate_nav_next = '<C-k>'
+let g:xptemplate_nav_prev = '<C-j>'
 " }}}
 " {{{ Nerdtree
 let g:NERDTreeHijackNetrw = 0
@@ -727,7 +772,7 @@ let g:pandoc#modules#disabled = ["menu"]
 let g:pandoc#syntax#conceal#urls = 1
 "}}}
 " Vimtex {{{
-let g:vimtex_latexmk_continuous = 1
+let g:vimtex_latexmk_continuous = 0
 let g:vimtex_latexmk_background = 1
 let g:vimtex_latexmk_callback = 0
 
@@ -795,7 +840,7 @@ let g:SuperTabContextDefaultCompletionType = "<c-p>"
 let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
 let g:SuperTabContextDiscoverDiscovery = ["&omnifunc:<c-x><c-o>"]
 
-" autocmd FileType * 
+" autocmd FileType *
 "       \ if &omnifunc != '' |
 "       \ call SuperTabChain(&omnifunc, "<c-p>") |
 "       " \ call SuperTabSetDefaultCompletionType("<c-x><c-u>") |
@@ -814,8 +859,7 @@ let g:neocomplete#enable_at_startup = 1
 if !exists('g:neocomplete#sources#omni#input_patterns')
   let g:neocomplete#sources#omni#input_patterns = {}
 endif
-let g:neocomplete#sources#omni#input_patterns.tex =
-      \ '\v\\%('
+let g:neocomplete#sources#omni#input_patterns.tex = '\v\\%('
       \ . '\a*cite\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
       \ . '|\a*ref%(\s*\{[^}]*|range\s*\{[^,}]*%(}\{)?)'
       \ . '|hyperref\s*\[[^]]*'
@@ -825,9 +869,53 @@ let g:neocomplete#sources#omni#input_patterns.tex =
       \ . '|includepdf%(\s*\[[^]]*\])?\s*\{[^}]*'
       \ . '|includestandalone%(\s*\[[^]]*\])?\s*\{[^}]*'
       \ . ')'
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+" inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" inoremap <expr><Tab>  neocomplete#start_manual_complete()
 " inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
 " }}} neocomplete "
+" neosnippet {{{ "
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+"SuperTab like snippets' behavior.
+imap <expr><TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ neosnippet#expandable_or_jumpable() ?
+      \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+      \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+imap <expr><C-l>
+      \ neosnippet#expandable_or_jumpable() ?
+      \ "\<Plug>(neosnippet_expand_or_jump)" : "\<C-n>"
+
+let g:neosnippet#enable_snipmate_compatibility = 1
+
+"}}} neosnippet
+" rainbow_parentheses {{{
+" au VimEnter * RainbowParenthesesToggle
+" au Syntax * RainbowParenthesesLoadRound
+" au Syntax * RainbowParenthesesLoadSquare
+" au Syntax * RainbowParenthesesLoadBraces
+" }}}
+" multiple_cursors{{{
+" " Called once right before you start selecting multiple cursors
+" function! Multiple_cursors_before()
+"   if exists(':NeoCompleteLock')==2
+"     exe 'NeoCompleteLock'
+"   endif
+" endfunction
+
+" " Called once only when the multiple selection is canceled (default <Esc>)
+" function! Multiple_cursors_after()
+"   if exists(':NeoCompleteUnlock')==2
+"     exe 'NeoCompleteUnlock'
+"   endif
+" endfunction
+" }}}
 " }}}
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
