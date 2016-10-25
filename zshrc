@@ -96,3 +96,6 @@ alias boring="vim +GatherTodo"
 
 # Pass <C-S> to vim
 stty stop '' -ixoff
+
+export NVM_DIR="/home/lpag/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm

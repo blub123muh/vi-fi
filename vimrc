@@ -4,122 +4,134 @@
 " Description: A rapidly evolving vimrc file
 
 " Section: Plugins {{{
-set nocompatible "be iMproved
-set rtp+=~/.vim/bundle/Vundle.vim
+if &compatible
+  set nocompatible "be iMproved
+endif
+" set rtp+=~/.vim/bundle/Vundle.vim
+set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
 filetype off
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
+" call vundle#begin()
+" Plugin 'VundleVim/Vundle.vim'
+
+call dein#begin('~/.vim/dein')
+call dein#add('Shougo/dein.vim')
 " Tpopes plugins are neat. {{{
-Plugin 'tpope/vim-sensible'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'tpope/vim-vinegar'
-Plugin 'tpope/vim-rhubarb'
-Plugin 'tpope/vim-abolish'
-Plugin 'tpope/vim-jdaddy'
-Plugin 'tpope/vim-scriptease'
-Plugin 'tpope/vim-sleuth'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-pathogen'
-Plugin 'tpope/vim-eunuch'
-Plugin 'tpope/vim-endwise'
-Plugin 'tpope/vim-speeddating'
-Plugin 'tpope/vim-vividchalk'
-Plugin 'tpope/vim-flagship'
-Plugin 'tpope/vim-dispatch'
-Plugin 'tpope/vim-tbone'
-Plugin 'tpope/vim-markdown'
-Plugin 'tpope/vim-afterimage'
-Plugin 'tpope/vim-obsession'
-Plugin 'tpope/vim-projectionist'
-Plugin 'tpope/vim-git'
-Plugin 'tpope/vim-ragtag'
-Plugin 'guns/vim-sexp'
-Plugin 'tpope/vim-sexp-mappings-for-regular-people'
-Plugin 'shumphrey/fugitive-gitlab.vim'
+call dein#add('tpope/vim-sensible')
+call dein#add('tpope/vim-surround')
+call dein#add('tpope/vim-fugitive')
+call dein#add('tpope/vim-repeat')
+call dein#add('tpope/vim-unimpaired')
+call dein#add('tpope/vim-vinegar')
+call dein#add('tpope/vim-rhubarb')
+call dein#add('tpope/vim-abolish')
+call dein#add('tpope/vim-jdaddy')
+call dein#add('tpope/vim-scriptease')
+call dein#add('tpope/vim-sleuth')
+call dein#add('tpope/vim-commentary')
+call dein#add('tpope/vim-pathogen')
+call dein#add('tpope/vim-eunuch')
+call dein#add('tpope/vim-endwise')
+call dein#add('tpope/vim-speeddating')
+call dein#add('tpope/vim-vividchalk')
+call dein#add('tpope/vim-flagship')
+call dein#add('tpope/vim-dispatch')
+call dein#add('tpope/vim-tbone')
+call dein#add('tpope/vim-markdown')
+call dein#add('tpope/vim-afterimage')
+call dein#add('tpope/vim-obsession')
+call dein#add('tpope/vim-projectionist')
+call dein#add('tpope/vim-git')
+call dein#add('tpope/vim-ragtag')
+call dein#add('guns/vim-sexp')
+call dein#add('tpope/vim-sexp-mappings-for-regular-people')
+call dein#add('shumphrey/fugitive-gitlab.vim')
 " }}}
 " Essentials {{{
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'AndrewRadev/splitjoin.vim'
-Plugin 'godlygeek/tabular'
+call dein#add('ctrlpvim/ctrlp.vim')
+call dein#add('AndrewRadev/splitjoin.vim')
+call dein#add('godlygeek/tabular')
+call dein#add('Shougo/vimproc.vim', {'build' : 'make'})
 " }}}
 " <Tab>, Completion, and Snippets {{{ "
-
 if has("lua")
-  Plugin 'Shougo/neocomplete.vim'
+  call dein#add('Shougo/neocomplete.vim')
 else
-  Plugin 'ajh17/VimCompletesMe'
+  call dein#add('ajh17/VimCompletesMe')
 endif
 if has("python") || has("python3")
-  Plugin 'SirVer/UltiSnips'
+  call dein#add('SirVer/UltiSnips')
 endif
-Plugin 'honza/vim-snippets'
-Plugin 'Shougo/neosnippet.vim'
-Plugin 'Shougo/neosnippet-snippets'
-Plugin 'Shougo/vimshell.vim'
-Plugin 'Shougo/neco-vim'
+call dein#add('honza/vim-snippets')
+" call dein#add('Shougo/neosnippet.vim')
+" call dein#add('Shougo/neosnippet-snippets')
+call dein#add('Shougo/vimshell.vim')
+call dein#add('Shougo/neco-vim')
 " }}} Completion and Snippets "
 " Extras {{{
-Plugin 'PeterRincker/vim-argumentative'
-Plugin 'michaeljsmith/vim-indent-object'
-Plugin 'mtth/Scratch.vim'
-Plugin 'mileszs/ack.vim'
-Plugin 'sjl/gundo.vim'
-Plugin 'mhinz/vim-signify'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
+call dein#add('PeterRincker/vim-argumentative')
+call dein#add('michaeljsmith/vim-indent-object')
+call dein#add('mtth/Scratch.vim')
+call dein#add('mileszs/ack.vim')
+call dein#add('sjl/gundo.vim')
+call dein#add('mhinz/vim-signify')
+call dein#add('scrooloose/nerdtree')
+call dein#add('scrooloose/syntastic')
 " Plugin 'vim-scripts/SyntaxComplete'
 
-Plugin 'vim-pandoc/vim-pandoc'
-Plugin 'vim-pandoc/vim-pandoc-syntax'
+call dein#add('vim-pandoc/vim-pandoc')
+call dein#add('vim-pandoc/vim-pandoc-syntax')
 " Plugin 'fmoralesc/vim-pad'
 " }}}
 " Special {{{
-Plugin 'diepm/vim-rest-console'
-Plugin 'JalaiAmitahl/maven-compiler.vim'
+call dein#add('diepm/vim-rest-console')
+call dein#add('JalaiAmitahl/maven-compiler.vim')
 " }}}
 " FileType specific {{{
 
-Plugin 'lervag/vimtex'
+call dein#add('lervag/vimtex')
 
-Plugin 'hynek/vim-python-pep8-indent'
-Plugin 'tmhedberg/SimpylFold'
-Plugin 'vim-erlang/vim-erlang-runtime'
-Plugin 'vim-erlang/vim-erlang-skeletons'
-Plugin 'vim-erlang/erlang-motions.vim'
-Plugin 'raichoo/haskell-vim'
-Plugin 'chrisbra/csv.vim'
-Plugin 'wannesm/wmgraphviz.vim'
-Plugin 'JuliaLang/julia-vim'
-Plugin 'tmux-plugins/vim-tmux'
-Plugin 'freitass/todo.txt-vim'
+call dein#add('hynek/vim-python-pep8-indent')
+call dein#add('tmhedberg/SimpylFold')
+call dein#add('vim-erlang/vim-erlang-runtime')
+call dein#add('vim-erlang/vim-erlang-skeletons')
+call dein#add('vim-erlang/erlang-motions.vim')
+call dein#add('raichoo/haskell-vim')
+call dein#add('chrisbra/csv.vim')
+call dein#add('wannesm/wmgraphviz.vim')
+call dein#add('JuliaLang/julia-vim')
+call dein#add('tmux-plugins/vim-tmux')
+call dein#add('freitass/todo.txt-vim')
+
+call dein#add('leafgarland/typescript-vim')
+" call dein#add('Quramy/tsuquyomi')
 " }}}
 " Highly experimental {{{
 " Plugin 'jiangmiao/auto-pairs' USE SURROND :S
-Plugin 'jceb/vim-orgmode'
-Plugin 'kien/rainbow_parentheses.vim'
-Plugin 'dhruvasagar/vim-table-mode'
+call dein#add('jceb/vim-orgmode')
+call dein#add('vim-scripts/utl.vim')
+call dein#add('kien/rainbow_parentheses.vim')
 " Plugin 'Raimondi/delimitMate'
 " Plugin 'vim-airline/vim-airline'
 " Plugin 'vim-airline/vim-airline-themes'
-Plugin 'Konfekt/FastFold'
-Plugin 'majutsushi/tagbar'
-Plugin 'szw/vim-tags'
-Plugin 'dhruvasagar/vim-dotoo'
+call dein#add('Konfekt/FastFold')
+call dein#add('majutsushi/tagbar')
+call dein#add('szw/vim-tags')
+call dein#add('dhruvasagar/vim-dotoo')
+call dein#add('dhruvasagar/vim-table-mode')
 " Plugin 'terryma/vim-multiple-cursors'
 " }}}
 " Colorschemes {{{
-Plugin 'sjl/badwolf'
-Plugin 'tomasr/molokai'
-Plugin 'nanotech/jellybeans.vim'
-Plugin 'fmoralesc/vim-vitamins'
+call dein#add('sjl/badwolf')
+call dein#add('tomasr/molokai')
+call dein#add('nanotech/jellybeans.vim')
+call dein#add('fmoralesc/vim-vitamins')
 " }}}
-call vundle#end()
-call vifi#interface('~/.vim/vifi')
+" call vundle#end()
+call dein#end()
+" call vifi#interface('~/.vim/vifi')
 execute pathogen#infect('src/{}', 'vifi/{}')
 filetype plugin indent on
+syntax enable
 " }}}
 " Section: Basic Settings {{{ "
 " utf8!
@@ -202,6 +214,7 @@ set wildmode=longest:full,full
 set wildignore+=tags,.*.un~,*.pyc,*.o,*.hi,*.beam,*.class
 " the following is helpful for GatherTodo
 set wildignore+=\%*,tc*.todo.txt
+set wildignore+=*.js,*.map
 " }}}
 " {{{ Tabs, Spaces, Basic movement
 set autoindent
@@ -280,15 +293,17 @@ command! -nargs=0 Pulse call s:Pulse()
 augroup lpag_flagship
   au!
   autocmd User Flags call Hoist("buffer", {'hl':['StatusLine','StatusLineNC']}, function('fugitive#statusline'))
+  autocmd User Flags call Hoist("buffer", {'hl':['StatusLine','StatusLineNC']}, "[%{eclim#project#util#ProjectStatusLine()}]")
   autocmd User Flags call Hoist("window", {'hl':['StatusLine','StatusLineNC']}, "SyntasticStatuslineFlag")
+  autocmd User Flags call Hoist("global", "%{&ignorecase ? '[IC]' : ''}")
   autocmd User Flags call Hoist("global", "%{&ignorecase ? '[IC]' : ''}")
   " autocmd User Flags call Hoist("buffer", "%{&path}")
 augroup END
 
 set background=dark
-silent! colorscheme vividwolf
+silent! colorscheme badwolf
 set colorcolumn=+1
-set cursorcolumn cursorline
+set cursorline
 
 " }}} Statusline and Colors"
 " Section: Mappings {{{
@@ -336,10 +351,10 @@ nnoremap s :w<CR>
 " Resizing {{{ "
 " y = x*3/2 + 1
 " (y-1) * 2/3 = x
-nnoremap <silent> <Up> :exe "resize " . (winheight(0) * 3/2 + 1)<CR>
-nnoremap <silent> <Down> :exe "resize " . ((winheight(0)-1) * 2/3 - 1)<CR>
-nnoremap <silent> <Right> :exe "vertical resize " . (winwidth(0) * 3/2 + 1)<CR>
-nnoremap <silent> <Left> :exe "vertical resize " . ((winwidth(0)-1) * 2/3)<CR>
+" nnoremap <silent> <Up> :exe "resize " . (winheight(0) * 3/2 + 1)<CR>
+" nnoremap <silent> <Down> :exe "resize " . ((winheight(0)-1) * 2/3 - 1)<CR>
+" nnoremap <silent> <Right> :exe "vertical resize " . (winwidth(0) * 3/2 + 1)<CR>
+" nnoremap <silent> <Left> :exe "vertical resize " . ((winwidth(0)-1) * 2/3)<CR>
 " }}} Resizing "
 
 " By T. <the> Pope
@@ -390,38 +405,41 @@ nnoremap <leader>ps :PluginSearch
 nnoremap <leader>pt :CtrlPTag<CR>
 " }}} plugins and ctrlp "
 "
-" tmux {{{ "
-noremap <leader>ty :Tyank<CR>
-noremap <leader>tp :Tput<CR>
+" <leader>t {{{ "
+nnoremap <leader>tg :GatherTodo<CR>
+
+nnoremap <leader>ty :Tyank<CR>
+nnoremap <leader>tp :Tput<CR>
+vnoremap <leader>ty :Tyank<CR>
+vnoremap <leader>tp :Tput<CR>
+
+nnoremap <leader>tr :TableModeRealign<CR>
+nnoremap <leader>te :TableModeEnable<CR>
+nnoremap <leader>td :TableModeDisable<CR>
+nnoremap <leader>tt :TableModeToggle<CR>
+nnoremap <leader>tz :Tablelize
+vnoremap <leader>tz :Tablelize
+
 " }}} tmux "
 
-noremap <leader>gt :GatherTodo<CR>
-
-nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
-
-" Sorting {{{ "
+" <leader>s {{{ "
 nnoremap <leader>ss vip:sort<cr>
 vnoremap <leader>ss :sort<cr>
 nnoremap <leader>s. vip:sort! rf /\.\d*/<cr>
 vnoremap <leader>s. :sort! rf /\.\d*/<cr>
 " }}} Sorting "
 
-nnoremap <leader>tf :TableFormat<CR>
-vnoremap <leader>tf :TableFormat<CR>
-
+nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
 " find double (nested) brackets
 nnoremap <leader>nb /([^)]\{-}([^)]\{-})[^)]\{-})<CR>
 
 " view pdf
-nnoremap <leader>vp :!okular %:r.pdf<cr>
-
-
+nnoremap <leader>vp :!okular %:r.pdf&<cr>
 
 nnoremap <leader>dt mq:%s/\v +$//<CR>`q
 nnoremap <leader>. :<Up><CR>
 nnoremap <leader>= mqgg=G`q
 
-nnoremap <leader>fc :echom foldlevel('.')<CR>
 " Toggle Help/Text FileType;
 nnoremap <leader>ht :let &ft = (&ft==#"help" ? "text" :
       \(&ft==#"text" ? "help" : &ft))<CR>
@@ -444,6 +462,16 @@ augroup line_return
         \     execute 'normal! g`"zvzz' |
         \ endif
 augroup END
+
+augroup misc
+  autocmd!
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+augroup END
+
 
 " function! s:resize_min(...) abort
 "   if a:0
@@ -546,14 +574,9 @@ augroup END
 " Pandoc {{{
 augroup ft_pandoc
   autocmd!
-  au FileType pandoc iabbrev <buffer> -> $\rightarrow$
-  au FileType pandoc iabbrev <buffer> phi $\phi$
-  au FileType pandoc iabbrev <buffer> psi $\psi$
-  au FileType pandoc iabbrev <buffer> Phi $\phi$
-  au FileType pandoc iabbrev <buffer> Psi $\psi$
   au FileType pandoc nnoremap <buffer> <F3> :TOC<CR>
   au FileType pandoc setlocal makeprg=pandoc\ %\ -o\ %:r.pdf\ -sN
-  au FileType pandoc setlocal textwidth=78
+  au FileType pandoc setlocal textwidth=100
 augroup end
 " }}}
 " Julia {{{
@@ -578,7 +601,6 @@ let java_highlight_debug = 1
 let java_minlines = 50
 augroup ft_java
   autocmd!
-  autocmd FileType java iabbrev <buffer> print System.out.println);<left><left>
   " autocmd FileType java setlocal foldmethod=marker foldmarker={,}
   autocmd FileType java setlocal foldmethod=syntax foldlevel=1
   " from help=includeexpr
@@ -634,6 +656,13 @@ augroup ft_bib
   autocmd FileType bib let b:dispatch="biber %"
 augroup end
 " }}} ft_bib "
+" dotoo {{{ "
+augroup ft_dotoo
+  au FileType dotoo let b:checkboxify_unchecked = "[ ]" | let b:checkboxify_checked = "[X]"
+
+
+augroup END
+" }}} dotoo "
 " }}}
 " Section: Plugin settings {{{
 " Fugitive {{{
@@ -690,10 +719,10 @@ augroup VimCompletesMeTex
 augroup END
 " }}}
 " UltiSnips {{{
-let g:UltiSnipsExpandTrigger = '<c-k>'
-let g:UltiSnipsListSnippets = '<c-r><c-k>'
-let g:UltiSnipsJumpForwardTrigger= '<C-k>'
-let g:UltiSnipsJumpBackwardTrigger= '<C-j>'
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsListSnippets = '<c-r><tab>'
+let g:UltiSnipsJumpForwardTrigger= '<C-j>'
+let g:UltiSnipsJumpBackwardTrigger= '<C-k>'
 " inoremap <c-x><c-k> <c-x><c-k>
 " inoremap <c-x><c-s> <C-R>=UltiSnips#ExpandSnippet()<CR>
 " }}}
@@ -719,10 +748,10 @@ let g:NERDTreeRespectWildIgnore = 1
 " Syntastic {{{
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
-let g:syntastic_mode_map = {
-      \ "mode": "active",
-      \ "active_filetypes" : [],
-      \ "passive_filetypes": ["pandoc"]}
+" let g:syntastic_mode_map = {
+"       \ "mode": "active",
+"       \ "active_filetypes" : [],
+"       \ "passive_filetypes": []}
 let g:syntastic_auto_jump = 0
 let g:syntastic_always_populate_loc_list = 0
 let g:syntastic_loc_list_height = 5
@@ -731,6 +760,8 @@ let g:syntastic_id_checkers = 1
 " let g:syntastic_error_symbol = "\u2717"
 " let g:syntastic_warning_symbol = "\u26A0"
 let g:syntastic_auto_loc_list = 0
+map <silent> <Leader>e :Errors<CR>
+map <Leader>s :SyntasticToggleMode<CR>
 
 " Warning 1: Command terminated with space
 " Warning 8: wrong length of dash
@@ -745,14 +776,20 @@ let g:syntastic_python_checkers = ['python', 'flake8']
 let g:syntastic_python_python_exec = '/usr/bin/python3'
 let g:syntastic_python_flake8_exec = '/usr/bin/python3'
 let g:syntastic_python_flake8_args = '-m flake8'
+
+" TypeScript Checkers
+let g:syntastic_typescript_checkers = ['tslint', 'eslint']
+" Html Checkers
+let g:syntastic_html_checkers = ['eslint']
 " }}}
 " Eclim {{{ "
 let g:EclimCompletionMethod = 'omnifunc'
 let g:EclimBrowser = 'qutebrowser'
+let g:EclimProjectStatusLine = 'eclim(p=${name}, n=${natures})'
 " }}} Eclim "
 " Pandoc {{{
-" let g:pandoc#command#autoexec_on_writes = 1
-" let g:pandoc#command#autoexec_command = "Pandoc! pdf -sN"
+let g:pandoc#command#autoexec_on_writes = 1
+let g:pandoc#command#autoexec_command = "Pandoc pdf -sN"
 
 let g:pandoc#folding#fold_yaml = 1
 let g:pandoc#folding#fold_fenced_codeblocks = 1
@@ -770,6 +807,9 @@ let g:pandoc#toc#close_after_navigating = 1
 let g:pandoc#modules#disabled = ["menu"]
 
 let g:pandoc#syntax#conceal#urls = 1
+
+let g:pandoc#spell#enabled = 1
+let g:pandoc#spell#default_langs = ["de_de","en_us"]
 "}}}
 " Vimtex {{{
 let g:vimtex_latexmk_continuous = 0
@@ -801,7 +841,7 @@ let g:vrc_trigger = '<C-j>'
 " }}}
 " vim-tags {{{ "
 let vim_tags_use_vim_dispatch = 1
-let vim_tags_cache_dir = fnamemodify('~/.vim/tmp', ':p')
+" let vim_tags_cache_dir = fnamemodify('~/.vim/tmp'", ':p')
 " }}} vim-tags "
 " Pad {{{
 let g:pad#dir = '~/Notes'
@@ -877,9 +917,9 @@ inoremap <expr><C-l>     neocomplete#complete_common_string()
 " inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
 " }}} neocomplete "
 " neosnippet {{{ "
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+" imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+" smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+" xmap <C-k>     <Plug>(neosnippet_expand_target)
 "SuperTab like snippets' behavior.
 imap <expr><TAB>
       \ pumvisible() ? "\<C-n>" :
@@ -895,12 +935,53 @@ imap <expr><C-l>
 let g:neosnippet#enable_snipmate_compatibility = 1
 
 "}}} neosnippet
+" tsuquyomi (typescript) {{{
+let g:tsuquyomi_completion_detail = 1
+let g:tsuquyomi_disable_quickfix = 1
+" let g:syntastic_typescript_checkers = ['tsuquyomi'] " You shouldn't use 'tsc' checker.
+"}}}
+" }
+" universal text linking {{{ "
+"--- Suggested mappings for most frequent commands  [id=suggested_mappings] [
+"
+nmap <Leader>ge :Utl openLink underCursor edit<CR>
+nmap <Leader>gu :Utl openLink underCursor edit<CR>
+nmap <Leader>gE :Utl openLink underCursor split<CR>
+nmap <Leader>gS :Utl openLink underCursor vsplit<CR>
+nmap <Leader>gt :Utl openLink underCursor tabedit<CR>
+nmap <Leader>gv :Utl openLink underCursor view<CR>
+nmap <Leader>gr :Utl openLink underCursor read<CR>
+"
+"					[id=suggested_mappings_visual]
+vmap <Leader>ge "*y:Utl openLink visual edit<CR>
+vmap <Leader>gu "*y:Utl openLink visual edit<CR>
+vmap <Leader>gE "*y:Utl openLink visual split<CR>
+vmap <Leader>gS "*y:Utl openLink visual vsplit<CR>
+vmap <Leader>gt "*y:Utl openLink visual tabedit<CR>
+vmap <Leader>gv "*y:Utl openLink visual view<CR>
+vmap <Leader>gr "*y:Utl openLink visual read<CR>
+"
+"
+nmap <Leader>cfn :Utl copyFileName underCursor native<CR>
+nmap <Leader>cfs :Utl copyFileName underCursor slash<CR>
+nmap <Leader>cfb :Utl copyFileName underCursor backSlash<CR>
+
+vmap <Leader>cfn "*y:Utl copyFileName visual native<CR>
+vmap <Leader>cfs "*y:Utl copyFileName visual slash<CR>
+vmap <Leader>cfb "*y:Utl copyFileName visual backSlash<CR>
+"
+"
+nmap <Leader>cl :Utl copyLink underCursor<CR>
+"
+vmap <Leader>cl "*y:Utl copyLink visual<CR>
+" }}} universal text linking "
 " rainbow_parentheses {{{
 " au VimEnter * RainbowParenthesesToggle
 " au Syntax * RainbowParenthesesLoadRound
 " au Syntax * RainbowParenthesesLoadSquare
 " au Syntax * RainbowParenthesesLoadBraces
 " }}}
+
 " multiple_cursors{{{
 " " Called once right before you start selecting multiple cursors
 " function! Multiple_cursors_before()
