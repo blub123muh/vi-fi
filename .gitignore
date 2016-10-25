@@ -13,6 +13,7 @@ vim/dein/rollbacks/**
 vim/dein/.dein/*
 !vim/dein/.dein/autoload
 vim/dein/.dein/autoload/*
+!vim/dein/.dein/autoload/dein
 !vim/dein/.dein/autoload/dein.vim
 vim/src/*
 vim/*netrwhist*
