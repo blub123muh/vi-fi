@@ -6,15 +6,7 @@ tags-te
 vim/plugged/**
 vim/bundle/*
 !vim/bundle/Vundle.vim
-vim/dein/temp/**
-vim/dein/merged
-vim/dein/repos/**
-vim/dein/rollbacks/**
-vim/dein/.dein/*
-!vim/dein/.dein/autoload
-vim/dein/.dein/autoload/*
-!vim/dein/.dein/autoload/dein
-!vim/dein/.dein/autoload/dein.vim
+vim/dein/**
 vim/src/*
 vim/*netrwhist*
 vim/tmp
