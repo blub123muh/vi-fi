@@ -59,12 +59,13 @@ else
   call dein#add('ajh17/VimCompletesMe')
 endif
 if has("python") || has("python3")
-  call dein#add('SirVer/UltiSnips')
+  " call dein#add('SirVer/UltiSnips')
 endif
 call dein#add('honza/vim-snippets')
-" call dein#add('Shougo/neosnippet.vim')
-" call dein#add('Shougo/neosnippet-snippets')
+call dein#add('Shougo/neosnippet.vim')
+call dein#add('Shougo/neosnippet-snippets')
 call dein#add('Shougo/vimshell.vim')
+call dein#add('Shougo/context_filetype.vim')
 call dein#add('Shougo/neco-vim')
 " }}} Completion and Snippets "
 " Extras {{{
@@ -80,6 +81,7 @@ call dein#add('scrooloose/syntastic')
 
 call dein#add('vim-pandoc/vim-pandoc')
 call dein#add('vim-pandoc/vim-pandoc-syntax')
+call dein#add('dhruvasagar/vim-table-mode')
 " Plugin 'fmoralesc/vim-pad'
 " }}}
 " Special {{{
@@ -88,20 +90,40 @@ call dein#add('JalaiAmitahl/maven-compiler.vim')
 " }}}
 " FileType specific {{{
 
+" tex
 call dein#add('lervag/vimtex')
 
+" python
 call dein#add('hynek/vim-python-pep8-indent')
 call dein#add('tmhedberg/SimpylFold')
+
+" erlang
 call dein#add('vim-erlang/vim-erlang-runtime')
 call dein#add('vim-erlang/vim-erlang-skeletons')
 call dein#add('vim-erlang/erlang-motions.vim')
+
+" haskell
 call dein#add('raichoo/haskell-vim')
+
+" csv
 call dein#add('chrisbra/csv.vim')
+
+" graphviz
 call dein#add('wannesm/wmgraphviz.vim')
+
+" julia
 call dein#add('JuliaLang/julia-vim')
+
+" tmux
 call dein#add('tmux-plugins/vim-tmux')
+
+" todo
 call dein#add('freitass/todo.txt-vim')
 
+" dotoo
+call dein#add('dhruvasagar/vim-dotoo')
+
+" typescript
 call dein#add('leafgarland/typescript-vim')
 " call dein#add('Quramy/tsuquyomi')
 " }}}
@@ -114,11 +136,11 @@ call dein#add('kien/rainbow_parentheses.vim')
 " Plugin 'vim-airline/vim-airline'
 " Plugin 'vim-airline/vim-airline-themes'
 call dein#add('Konfekt/FastFold')
+
+" tags
 call dein#add('majutsushi/tagbar')
 call dein#add('szw/vim-tags')
-call dein#add('dhruvasagar/vim-dotoo')
-call dein#add('dhruvasagar/vim-table-mode')
-" Plugin 'terryma/vim-multiple-cursors'
+" call dein#add('terryma/vim-multiple-cursors')
 " }}}
 " Colorschemes {{{
 call dein#add('sjl/badwolf')
@@ -165,7 +187,6 @@ endif
 " Decluttering (thanks sjl)
 set undodir=~/.vim/tmp/undo//     " undo files
 set backupdir=~/.vim/tmp/backup// " backups
-set directory=~/.vim/tmp/swap//   " swap files
 
 " Make those folders automatically if they don't already exist.
 if !isdirectory(expand(&undodir))
@@ -173,9 +194,6 @@ if !isdirectory(expand(&undodir))
 endif
 if !isdirectory(expand(&backupdir))
     call mkdir(expand(&backupdir), "p")
-endif
-if !isdirectory(expand(&directory))
-    call mkdir(expand(&directory), "p")
 endif
 
 " Display related {{{ "
@@ -248,7 +266,6 @@ set hlsearch
 " }}} Searching "
 syntax on
 let g:spellfile_URL = 'http://ftp.vim.org/vim/runtime/spell'
-" let g:tex_fast = 'bcmMprsSvV'
 "}}}
 " Section: Statusline and Colors {{{ "
 set showcmd " display incomplete commands
@@ -293,9 +310,8 @@ command! -nargs=0 Pulse call s:Pulse()
 augroup lpag_flagship
   au!
   autocmd User Flags call Hoist("buffer", {'hl':['StatusLine','StatusLineNC']}, function('fugitive#statusline'))
-  autocmd User Flags call Hoist("buffer", {'hl':['StatusLine','StatusLineNC']}, "[%{eclim#project#util#ProjectStatusLine()}]")
+  autocmd User Flags call Hoist("window", {'hl':['StatusLine','StatusLineNC']}, "%{eclim#project#util#ProjectStatusLine()}")
   autocmd User Flags call Hoist("window", {'hl':['StatusLine','StatusLineNC']}, "SyntasticStatuslineFlag")
-  autocmd User Flags call Hoist("global", "%{&ignorecase ? '[IC]' : ''}")
   autocmd User Flags call Hoist("global", "%{&ignorecase ? '[IC]' : ''}")
   " autocmd User Flags call Hoist("buffer", "%{&path}")
 augroup END
@@ -309,6 +325,8 @@ set cursorline
 " Section: Mappings {{{
 let mapleader = ","
 let maplocalleader = "ü"
+nmap Q gqip
+nnoremap <c-k> mzzMzvzz15<c-e>`z:Pulse<cr>
 " German Keyboard Layout {{{ "
 " Searching with ß. should feel very natural along with the usual ?
 map ß /\v
@@ -329,40 +347,43 @@ map ää ]]
 " + as : saves shift, mnemonic as in 'vim +{cmd}'
 nnoremap + :
 vnoremap + :
+vnoremap @+ @:
+vnoremap @+ @:
 " }}} German Keyboard Layout "
-
-nmap Q gqip
-
+" s key {{{ "
+nnoremap s :w<CR>
 " forward tick is some of the strongest mappings on the german keyboard
 nnoremap <C-S> :%s/\v
 vnoremap <C-S> :s/\v
 
 cnoremap ´s \(\)<Left><Left>
-
+" }}} s key "
+" z key {{{ "
 nnoremap <Space> za
 vnoremap <Space> za
 nnoremap z0 zcz0
-
-" try out which feels more confident TODO
-nnoremap <c-k> mzzMzvzz15<c-e>`z:Pulse<cr>
-nnoremap ´ mzzMzvzz15<c-e>`z:Pulse<cr>
-
-nnoremap s :w<CR>
+" }}} z key "
 " Resizing {{{ "
 " y = x*3/2 + 1
 " (y-1) * 2/3 = x
-" nnoremap <silent> <Up> :exe "resize " . (winheight(0) * 3/2 + 1)<CR>
-" nnoremap <silent> <Down> :exe "resize " . ((winheight(0)-1) * 2/3 - 1)<CR>
-" nnoremap <silent> <Right> :exe "vertical resize " . (winwidth(0) * 3/2 + 1)<CR>
-" nnoremap <silent> <Left> :exe "vertical resize " . ((winwidth(0)-1) * 2/3)<CR>
+nnoremap <silent> <leader><Up> :exe "resize " . (winheight(0) * 3/2 + 1)<CR>
+nnoremap <silent> <leader><Down> :exe "resize " . ((winheight(0)-1) * 2/3 - 1)<CR>
+nnoremap <silent> <leader><Right> :exe "vertical resize " . (winwidth(0) * 3/2 + 1)<CR>
+nnoremap <silent> <leader><Left> :exe "vertical resize " . ((winwidth(0)-1) * 2/3)<CR>
 " }}} Resizing "
-
-" By T. <the> Pope
+" {{{ By T. <the> Pope
 if exists(":nohls")
   nnoremap <silent> <C-L> :nohls<CR><C-L>
 end
+" }}}
+" <leader>c {{{ "
+" correct things (mainly in python)
+" }}} <leader>c "
 
-nnoremap <leader>~ b~e
+
+" leader u {{{ "
+nnoremap <leader>uw b~e
+" }}} leader u "
 
 " Insert mode {{{ "
 inoremap <C-R><C-K> <esc>:help digraph-table<cr>
@@ -385,25 +406,25 @@ noremap <F9> :Dispatch<CR>
 noremap <F10> :Start<CR>
 " }}} F Keys "
 
-" Quick Access {{{ "
+" <leader>e {{{ "
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
-nnoremap <leader>sv :source $MYVIMRC<CR>:filetype detect<CR>zv
 nnoremap <leader>ep :vsplit ~/.plan/README.markdown<CR>
 nnoremap <leader>et :vsplit ~/.tmux.conf<CR>
 nnoremap <leader>ea :Vsplit after/plugin/abolish.vim<CR>
 nnoremap <leader>eq :split ~/.config/qutebrowser/keys.conf<CR>
 nnoremap <leader>ec :Vvsplit colors/vividwolf.vim<CR>
-nnoremap <leader>eu :UltiSnipsEdit
-" }}} Quick Access "
-"
-" plugins and ctrlp {{{ "
+nnoremap <leader>eu :UltiSnipsEdit<CR>
+nnoremap <leader>en :NeoSnippetEdit<CR>
+" }}} <leader>e "
+
+" <leader>p {{{ "
 nnoremap <leader>pi :PluginInstall<CR>
 nnoremap <leader>pu :PluginUpdate<CR>
 nnoremap <leader>pc :PluginClean<CR>
 nnoremap <leader>ps :PluginSearch
 
 nnoremap <leader>pt :CtrlPTag<CR>
-" }}} plugins and ctrlp "
+" }}} <leader>p "
 "
 " <leader>t {{{ "
 nnoremap <leader>tg :GatherTodo<CR>
@@ -420,14 +441,19 @@ nnoremap <leader>tt :TableModeToggle<CR>
 nnoremap <leader>tz :Tablelize
 vnoremap <leader>tz :Tablelize
 
+nnoremap <leader>t& :Tabularize /&<CR>
+nnoremap <leader>t<bar> :Tabularize /&<CR>
 " }}} tmux "
 
 " <leader>s {{{ "
+nnoremap <leader>sv :source $MYVIMRC<CR>:filetype detect<CR>zv
 nnoremap <leader>ss vip:sort<cr>
 vnoremap <leader>ss :sort<cr>
 nnoremap <leader>s. vip:sort! rf /\.\d*/<cr>
 vnoremap <leader>s. :sort! rf /\.\d*/<cr>
 " }}} Sorting "
+
+
 
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<CR>
 " find double (nested) brackets
@@ -446,10 +472,6 @@ nnoremap <leader>ht :let &ft = (&ft==#"help" ? "text" :
 
 nnoremap <leader>; mqA;<esc>`q
 
-" tabularize {{{ "
-nnoremap <leader>t& :Tabularize /&<CR>
-nnoremap <leader>t<bar> :Tabularize /&<CR>
-" }}} tabularize "
 " }}}
 " Section: Autocmds {{{
 
@@ -527,11 +549,20 @@ augroup ft_vim
 augroup END
 "}}}
 " Python {{{
+function! s:highlightIdentifiers(bang) abort
+  if a:bang
+    syn match tensorIdentifier /\v<\i?\u\i?>/
+    highlight default link tensorIdentifier Identifier
+  else
+    hi clear tensorIdentifier
+  endif
+endfunction
 let g:python_highlight_all = 1
 augroup ft_python
   autocmd!
   autocmd FileType python setlocal textwidth=79
-  autocmd FileType python nmap <silent> <buffer> <leader>ds <Plug>(pydocstring)
+  autocmd FileType python nnoremap <buffer> <silent> <leader>cc :s/\v([,:])(\k)/\1\ \2/g<CR>
+  autocmd FileType python call s:highlightIdentifiers(1)
 augroup END
 " }}}
 " Tex {{{
@@ -545,9 +576,6 @@ augroup ft_tex
         \| let b:surround_{char2nr("q")} = "``\r''"
   autocmd FileType tex inoremap <buffer> & &<Esc>:Tabularize /&<CR>f&a
   autocmd FileType tex setlocal tw=100
-  autocmd FileType tex iabbrev <buffer> w2v \emph{word2vec}
-  autocmd FileType tex iabbrev <buffer> d2v \emph{doc2vec}
-  autocmd FileType tex iabbrev <buffer> ... \dots
   autocmd FileType tex nnoremap <buffer> <leader>eb :vs %:r.bib<CR>
   " correct cites
   autocmd FileType tex nnoremap <buffer> <leader>cc :%s/\s\+\(\(\\ref\)\\|\(\\cite\)\)/\~\1/g<CR>
@@ -575,7 +603,6 @@ augroup END
 augroup ft_pandoc
   autocmd!
   au FileType pandoc nnoremap <buffer> <F3> :TOC<CR>
-  au FileType pandoc setlocal makeprg=pandoc\ %\ -o\ %:r.pdf\ -sN
   au FileType pandoc setlocal textwidth=100
 augroup end
 " }}}
@@ -636,6 +663,7 @@ augroup END
 " }}}
 " scala {{{ "
 augroup ft_scala
+  au!
   " this one is which you're most likely to use?
   autocmd BufRead,BufNewFile scala setfiletype scala
   autocmd FileType scala setlocal makeprg=scalac\ %
@@ -645,6 +673,7 @@ augroup end
 " }}} scala "
 " dot {{{ "
 augroup ft_dot
+  au!
   " this one is which you're most likely to use?
   autocmd FileType dot setlocal commentstring=//\ %s
   autocmd FileType dot let b:dispatch='dot -Tpng -o %:r.png %'
@@ -652,17 +681,24 @@ augroup end
 " }}} dot "
 " ft_bib {{{ "
 augroup ft_bib
+  au!
   " this one is which you're most likely to use?
   autocmd FileType bib let b:dispatch="biber %"
 augroup end
 " }}} ft_bib "
 " dotoo {{{ "
 augroup ft_dotoo
+  au!
   au FileType dotoo let b:checkboxify_unchecked = "[ ]" | let b:checkboxify_checked = "[X]"
-
-
 augroup END
 " }}} dotoo "
+" neosnippet {{{ "
+augroup ft_neosnippet
+  au!
+  au FileType neosnippet setlocal noet
+augroup END
+" }}} neosnippet "
+
 " }}}
 " Section: Plugin settings {{{
 " Fugitive {{{
@@ -701,7 +737,7 @@ let g:ctrlp_extensions = ['tag']
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 " }}} CtrlP "
-" VimCompletesMe{{{
+" VimCompletesMe {{{
 augroup VimCompletesMeTex
   autocmd!
   " See vimtex help
@@ -719,8 +755,8 @@ augroup VimCompletesMeTex
 augroup END
 " }}}
 " UltiSnips {{{
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsListSnippets = '<c-r><tab>'
+let g:UltiSnipsExpandTrigger = '<c-j>'
+let g:UltiSnipsListSnippets = '<c-r><c-j>'
 let g:UltiSnipsJumpForwardTrigger= '<C-j>'
 let g:UltiSnipsJumpBackwardTrigger= '<C-k>'
 " inoremap <c-x><c-k> <c-x><c-k>
@@ -735,11 +771,11 @@ let g:UltiSnipsJumpBackwardTrigger= '<C-k>'
 " vmap <C-J> <Plug>snipMateVisual
 " }}}
 " {{{ XPTemplate
-let g:xptemplate_vars='$author=Lukas Galke&$email=vim@lpag.de'
-let g:xptemplate_key='<c-k>'
-let g:xptemplate_key_visual = '<c-k>'
-let g:xptemplate_nav_next = '<C-k>'
-let g:xptemplate_nav_prev = '<C-j>'
+" let g:xptemplate_vars='$author=Lukas Galke&$email=vim@lpag.de'
+" let g:xptemplate_key='<c-k>'
+" let g:xptemplate_key_visual = '<c-k>'
+" let g:xptemplate_nav_next = '<C-k>'
+" let g:xptemplate_nav_prev = '<C-j>'
 " }}}
 " {{{ Nerdtree
 let g:NERDTreeHijackNetrw = 0
@@ -775,7 +811,9 @@ let g:syntastic_tex_chktex_args = "-n1 -n8 -n36"
 let g:syntastic_python_checkers = ['python', 'flake8']
 let g:syntastic_python_python_exec = '/usr/bin/python3'
 let g:syntastic_python_flake8_exec = '/usr/bin/python3'
-let g:syntastic_python_flake8_args = '-m flake8'
+let g:syntastic_python_flake8_args = '-m flake8 --ignore=E501'
+
+" let g:syntastic_python_checker_args = '--ignore=E501'
 
 " TypeScript Checkers
 let g:syntastic_typescript_checkers = ['tslint', 'eslint']
@@ -785,11 +823,10 @@ let g:syntastic_html_checkers = ['eslint']
 " Eclim {{{ "
 let g:EclimCompletionMethod = 'omnifunc'
 let g:EclimBrowser = 'qutebrowser'
-let g:EclimProjectStatusLine = 'eclim(p=${name}, n=${natures})'
 " }}} Eclim "
 " Pandoc {{{
-let g:pandoc#command#autoexec_on_writes = 1
-let g:pandoc#command#autoexec_command = "Pandoc pdf -sN"
+" let g:pandoc#command#autoexec_on_writes = 1
+" let g:pandoc#command#autoexec_command = "Pandoc pdf -sN"
 
 let g:pandoc#folding#fold_yaml = 1
 let g:pandoc#folding#fold_fenced_codeblocks = 1
@@ -841,7 +878,6 @@ let g:vrc_trigger = '<C-j>'
 " }}}
 " vim-tags {{{ "
 let vim_tags_use_vim_dispatch = 1
-" let vim_tags_cache_dir = fnamemodify('~/.vim/tmp'", ':p')
 " }}} vim-tags "
 " Pad {{{
 let g:pad#dir = '~/Notes'
@@ -849,7 +885,6 @@ let g:pad#local_dir = 'notes'
 let g:pad#default_format = 'pandoc'
 " }}}
 " Python-mode {{{
-" let g:pymode_python = 'python3'
 " the following are the defaults
 " let g:pymode_indent = []
 " let g:pymode_folding = 1
@@ -858,18 +893,9 @@ let g:pad#default_format = 'pandoc'
 " let g:pymode_doc_bind = 'K'
 " let g:pymode_virtualenv = 1
 " }}}
-" todo.txt {{{ "
-" moved to colors luciddye
-" hi! link TodoPriorityA Statement
-" hi! link TodoPriorityB Identifier
-" hi! link TodoPriorityC Constant
-" hi! link TodoContext String
-" hi! link TodoProject Type
-" }}} todo.txt "
 " csv {{{
 let g:csv_autocmd_arrange = 1
 let g:csv_autocmd_arrange_size = 1024 * 1024
-
 " }}}
 " ragtag {{{ "
 let g:ragtag_global_maps = 1
@@ -917,23 +943,21 @@ inoremap <expr><C-l>     neocomplete#complete_common_string()
 " inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
 " }}} neocomplete "
 " neosnippet {{{ "
-" imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-" smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-" xmap <C-k>     <Plug>(neosnippet_expand_target)
-"SuperTab like snippets' behavior.
-imap <expr><TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ neosnippet#expandable_or_jumpable() ?
-      \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-      \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
+let g:neosnippet#snippets_directory = '~/.vim/neosnippets'
+let g:neosnippet#enable_snipmate_compatibility = 1
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
 imap <expr><C-l>
       \ neosnippet#expandable_or_jumpable() ?
       \ "\<Plug>(neosnippet_expand_or_jump)" : "\<C-n>"
-
-let g:neosnippet#enable_snipmate_compatibility = 1
-
+"SuperTab like snippets' behavior.
+" imap <expr><TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ neosnippet#expandable_or_jumpable() ?
+"       \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+" smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+"       \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 "}}} neosnippet
 " tsuquyomi (typescript) {{{
 let g:tsuquyomi_completion_detail = 1
@@ -976,10 +1000,31 @@ nmap <Leader>cl :Utl copyLink underCursor<CR>
 vmap <Leader>cl "*y:Utl copyLink visual<CR>
 " }}} universal text linking "
 " rainbow_parentheses {{{
-" au VimEnter * RainbowParenthesesToggle
-" au Syntax * RainbowParenthesesLoadRound
-" au Syntax * RainbowParenthesesLoadSquare
-" au Syntax * RainbowParenthesesLoadBraces
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['black',       'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
+augroup rainbow_parens
+  autocmd!
+  au VimEnter * RainbowParenthesesToggle
+  au Syntax * RainbowParenthesesLoadRound
+  au Syntax * RainbowParenthesesLoadSquare
+  au Syntax * RainbowParenthesesLoadBraces
+augroup END
 " }}}
 
 " multiple_cursors{{{
@@ -997,6 +1042,9 @@ vmap <Leader>cl "*y:Utl copyLink visual<CR>
 "   endif
 " endfunction
 " }}}
+" dotoo {{{
+let g:dotoo#agenda#files = ['~/.plan/*.dotoo', '~/git/vec4ir/vec4ir.dotoo']
+" }}} dotoo
 " }}}
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local

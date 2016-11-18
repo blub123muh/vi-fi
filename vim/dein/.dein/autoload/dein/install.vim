@@ -225,7 +225,8 @@ function! s:clear_runtimepath() abort "{{{
   if !isdirectory(parent)
     call mkdir(parent, 'p')
   endif
-  if rename(dein#util#_get_runtime_path(), dest)
+  silent! let err = rename(dein#util#_get_runtime_path(), dest)
+  if get(l:, 'err', -1)
     call dein#util#_error('Rename failed.')
     call dein#util#_error('src=' . dein#util#_get_runtime_path())
     call dein#util#_error('dest=' . dest)
@@ -373,13 +374,17 @@ function! dein#install#_remote_plugins() abort "{{{
         \ values(dein#get()),
         \ "isdirectory(v:val.rtp . '/rplugin')"))
 
+  let &runtimepath = dein#util#_join_rtp(dein#util#_uniq(
+        \ dein#util#_split_rtp(&runtimepath)), &runtimepath, '')
+
   if exists(':UpdateRemotePlugins')
     UpdateRemotePlugins
   endif
 endfunction"}}}
 
 function! dein#install#_each(cmd, plugins) abort "{{{
-  let plugins = filter(dein#util#_get_plugins(a:plugins), 'isdirectory(v:val.path)')
+  let plugins = filter(dein#util#_get_plugins(a:plugins),
+        \ 'isdirectory(v:val.path)')
 
   let global_context_save = s:global_context
 
@@ -411,6 +416,14 @@ function! dein#install#_each(cmd, plugins) abort "{{{
     let s:global_context = global_context_save
     call dein#install#_cd(cwd)
   endtry
+endfunction"}}}
+function! dein#install#_build(plugins) abort "{{{
+  for plugin in filter(dein#util#_get_plugins(a:plugins),
+        \ "isdirectory(v:val.path) && has_key(v:val, 'build')")
+    call s:print_progress_message('Building: ' . plugin.name)
+    call dein#install#_each(plugin.build, plugin)
+  endfor
+  return dein#install#_get_last_status()
 endfunction"}}}
 
 function! dein#install#_get_log() abort "{{{
@@ -973,7 +986,7 @@ endfunction"}}}
 function! s:init_job(process, context, cmd) abort "{{{
   if has('nvim') && a:context.async
     " Use neovim async jobs
-    let a:process.proc = jobstart(a:cmd, {
+    let a:process.proc = jobstart([&shell, &shellcmdflag, a:cmd], {
           \ 'on_stdout': function('s:job_handler_neovim'),
           \ 'on_stderr': function('s:job_handler_neovim'),
           \ 'on_exit': function('s:job_handler_neovim'),
@@ -1081,7 +1094,7 @@ function! s:check_output(context, process) abort "{{{
           \ type.get_uri(plugin.repo, plugin) : ''
 
     call dein#call_hook('post_update', plugin)
-    if s:build(plugin)
+    if dein#install#_build([plugin.name])
           \ && confirm('Build failed. Uninstall "'
           \   .plugin.name.'" now?', "yes\nNo", 2) == 1
       " Remove.
@@ -1253,22 +1266,6 @@ function! s:vimproc_system(cmd) abort "{{{
   endwhile
 
   call proc.waitpid()
-endfunction"}}}
-function! s:build(plugin) abort "{{{
-  " Environment check.
-  let build = get(a:plugin, 'build')
-  if type(build) == type({})
-    call s:error('Dictionary type of build is no longer supported')
-    return 1
-  elseif build == ''
-    return 0
-  endif
-
-  call s:print_progress_message('Building...')
-
-  call dein#install#_each(build, a:plugin)
-
-  return dein#install#_get_last_status()
 endfunction"}}}
 function! s:channel2id(channel) abort "{{{
   return matchstr(a:channel, '\d\+')

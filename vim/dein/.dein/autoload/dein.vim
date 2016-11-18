@@ -4,15 +4,9 @@
 " License: MIT license
 "=============================================================================
 
-if v:version < 704
-  call dein#util#_error('Does not work this version of Vim (' . v:version . ').')
-  finish
-endif
-
 function! dein#_init() abort "{{{
   let g:dein#name = ''
   let g:dein#plugin = {}
-
   let g:dein#_plugins = {}
   let g:dein#_base_path = ''
   let g:dein#_runtime_path = ''
@@ -25,35 +19,22 @@ function! dein#_init() abort "{{{
   let g:dein#_event_plugins = {}
 
   augroup dein
-    autocmd!
     autocmd FuncUndefined * call dein#autoload#_on_func(expand('<afile>'))
+    autocmd BufRead *? call dein#autoload#_on_default_event('BufRead')
+    autocmd BufNewFile *? call dein#autoload#_on_default_event('BufNewFile')
+    autocmd BufNew *? call dein#autoload#_on_default_event('BufNew')
+    autocmd VimEnter *? call dein#autoload#_on_default_event('VimEnter')
+    autocmd FileType *? call dein#autoload#_on_default_event('FileType')
   augroup END
+  augroup dein-events | augroup END
 
-  augroup dein-events
-    autocmd!
-  augroup END
-
-  if exists('##CmdUndefined')
-    autocmd dein CmdUndefined *
-          \ call dein#autoload#_on_pre_cmd(expand('<afile>'))
-  endif
-
-  for event in [
-        \ 'BufRead', 'BufNewFile', 'BufNew', 'VimEnter', 'FileType',
-        \ ]
-    execute 'autocmd dein' event '*'
-          \ "if &filetype != '' || bufnr('$') != 1
-          \  || expand('<afile>') != '' |
-          \    call dein#autoload#_on_default_event(".string(event).") |
-          \  endif"
-  endfor
+  if !exists('##CmdUndefined') | return | endif
+  autocmd dein CmdUndefined *
+        \ call dein#autoload#_on_pre_cmd(expand('<afile>'))
 endfunction"}}}
-
 function! dein#tap(name) abort "{{{
   if !has_key(g:dein#_plugins, a:name)
-        \ || !isdirectory(g:dein#_plugins[a:name].path)
-    return 0
-  endif
+        \ || !isdirectory(g:dein#_plugins[a:name].path) | return 0 | endif
 
   let g:dein#name = a:name
   let g:dein#plugin = g:dein#_plugins[a:name]
@@ -62,7 +43,6 @@ endfunction"}}}
 function! dein#is_sourced(name) abort "{{{
   return get(get(g:dein#_plugins, a:name, {}), 'sourced', 0)
 endfunction"}}}
-
 function! dein#load_cache_raw(...) abort "{{{
   if a:0 | let g:dein#_vimrcs = a:1 | endif
   let starting = a:0 > 1 ? a:2 : has('vim_starting')
@@ -77,8 +57,7 @@ function! dein#load_cache_raw(...) abort "{{{
   endif
 
   let list = readfile(cache)
-  if len(list) != 3
-        \ || string(g:dein#_vimrcs) !=# list[0]
+  if len(list) != 3 || string(g:dein#_vimrcs) !=# list[0]
     return [{}, {}]
   endif
   return [dein#_json2vim(list[1]), dein#_json2vim(list[2])]
@@ -87,36 +66,26 @@ function! dein#_get_cache_file() abort "{{{
   return g:dein#_base_path.'/cache_'.fnamemodify(v:progname, ':r')
 endfunction"}}}
 function! dein#_vim2json(expr) abort "{{{
-  return   (has('nvim') && exists('*json_encode')) ? json_encode(a:expr)
+  return   has('nvim') ? json_encode(a:expr)
         \ : has('patch-7.4.1498') ? js_encode(a:expr) : string(a:expr)
 endfunction "}}}
 function! dein#_json2vim(expr) abort "{{{
-  sandbox return (has('nvim') && exists('*json_encode') ? json_decode(a:expr)
+  sandbox return (has('nvim') ? json_decode(a:expr)
         \ : has('patch-7.4.1498') ? js_decode(a:expr) : eval(a:expr))
 endfunction "}}}
-
 function! dein#load_state(path, ...) abort "{{{
-  let starting = a:0 > 0 ? a:1 : has('vim_starting')
-
-  if !starting
-    return 1
-  endif
+  if !(a:0 > 0 ? a:1 : has('vim_starting')) | return 1 | endif
 
   call dein#_init()
-
   let g:dein#_base_path = expand(a:path)
 
   let state = dein#_get_state_file()
-  if !filereadable(state)
-    return 1
-  endif
-
+  if !filereadable(state) | return 1 | endif
   try
     execute 'source' fnameescape(state)
   catch
     if v:exception !=# 'Cache loading error'
-      call dein#util#_error('Error occurred while loading state : '
-            \ . v:exception)
+      call dein#util#_error('Loading state error: ' . v:exception)
     endif
     call dein#clear_state()
     return 1
@@ -131,7 +100,6 @@ endfunction"}}}
 function! dein#_get_state_file() abort "{{{
   return g:dein#_base_path.'/state_'.fnamemodify(v:progname, ':r').'.vim'
 endfunction"}}}
-
 function! dein#begin(path, ...) abort "{{{
   return dein#util#_begin(a:path, empty(a:000) ? [$MYVIMRC] : a:1)
 endfunction"}}}
@@ -154,10 +122,7 @@ function! dein#check_install(...) abort "{{{
   let plugins = filter(empty(a:000) ? values(dein#get()) :
         \ filter(map(copy(a:1), 'dein#get(v:val)'), '!empty(v:val)'),
         \     '!isdirectory(v:val.path)')
-  if empty(plugins)
-    return 0
-  endif
-
+  if empty(plugins) | return 0 | endif
   call dein#util#_notify('Not installed plugins: ' .
         \ string(map(plugins, 'v:val.name')))
   return 1
@@ -215,6 +180,9 @@ function! dein#get_updates_log() abort "{{{
 endfunction"}}}
 function! dein#each(command, ...) abort "{{{
   return dein#install#_each(a:command, (a:0 ? a:1 : []))
+endfunction"}}}
+function! dein#build(...) abort "{{{
+  return dein#install#_build(a:0 ? a:1 : [])
 endfunction"}}}
 function! dein#plugins2toml(plugins) abort "{{{
   return dein#parse#_plugins2toml(a:plugins)

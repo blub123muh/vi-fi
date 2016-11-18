@@ -92,17 +92,27 @@ function! dein#util#_notify(msg) abort "{{{
       let cmd .= ' "' . icon . '"'
     endif
   elseif dein#util#_is_mac()
+    let cmd = ''
+    if exists('$TMUX')
+      if !executable('reattach-to-user-namespace')
+        call dein#util#_error(
+              \ 'Please install "reattach-to-user-namespace" command'
+              \ . 'to use notification in tmux.')
+        return
+      endif
+
+      " Use reattach-to-user-namespace in tmux
+      let cmd .= 'reattach-to-user-namespace '
+    endif
     if executable('terminal-notifier')
-      let cmd = 'terminal-notifier -title '
+      let cmd .= 'terminal-notifier -title '
             \ . string(title) . ' -message ' . string(a:msg)
       if icon != ''
         let cmd .= ' -appIcon ' . string(icon)
       endif
     else
-      let cmd = printf("%s osascript -e 'display notification "
-            \        ."\"%s\" with title \"%s\"'",
-            \ (exists('$TMUX') && executable('reattach-to-user-namespace') ?
-            \  'reattach-to-user-namespace' : ''), a:msg, title)
+      let cmd .= printf("osascript -e 'display notification "
+            \        ."\"%s\" with title \"%s\"'", a:msg, title)
     endif
   endif
 
@@ -115,21 +125,22 @@ function! dein#util#_chomp(str) abort "{{{
   return a:str != '' && a:str[-1:] == '/' ? a:str[: -2] : a:str
 endfunction"}}}
 
-function! dein#util#_uniq(list, ...) abort "{{{
-  let list = a:0 ? map(copy(a:list),
-        \              printf('[v:val, %s]', a:1)) : copy(a:list)
+function! dein#util#_uniq(list) abort "{{{
+  let list = copy(a:list)
   let i = 0
   let seen = {}
   while i < len(list)
-    let key = string(a:0 ? list[i][1] : list[i])
-    if has_key(seen, key)
+    let key = list[i]
+    if key != '' && has_key(seen, key)
       call remove(list, i)
     else
-      let seen[key] = 1
+      if key != ''
+        let seen[key] = 1
+      endif
       let i += 1
     endif
   endwhile
-  return a:0 ? map(list, 'v:val[0]') : list
+  return list
 endfunction"}}}
 
 function! dein#util#_has_vimproc() abort "{{{
@@ -240,6 +251,8 @@ function! dein#util#_save_state(is_starting) abort "{{{
   endif
 
   let g:dein#_vimrcs = dein#util#_uniq(g:dein#_vimrcs)
+  let &runtimepath = dein#util#_join_rtp(dein#util#_uniq(
+        \ dein#util#_split_rtp(&runtimepath)), &runtimepath, '')
 
   call dein#util#_save_cache(g:dein#_vimrcs, 1, a:is_starting)
 
@@ -302,6 +315,11 @@ endfunction"}}}
 function! dein#util#_begin(path, vimrcs) abort "{{{
   if !exists('#dein')
     call dein#_init()
+  endif
+
+  if v:version < 704
+    call dein#util#_error('Does not work in the Vim (' . v:version . ').')
+    return 1
   endif
 
   if a:path == '' || g:dein#_block_level != 0
