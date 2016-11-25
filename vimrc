@@ -442,6 +442,7 @@ nnoremap <leader>tz :Tablelize
 vnoremap <leader>tz :Tablelize
 
 nnoremap <leader>t& :Tabularize /&<CR>
+nnoremap <leader>t# :Tabularize /#/l2r1<CR>
 nnoremap <leader>t<bar> :Tabularize /&<CR>
 " }}} tmux "
 
@@ -551,8 +552,9 @@ augroup END
 " Python {{{
 function! s:highlightIdentifiers(bang) abort
   if a:bang
-    syn match tensorIdentifier /\v<\i?\u\i?>/
-    highlight default link tensorIdentifier Identifier
+    syn match tensorIdentifier /\v<_*\u(_\i+)?>/
+    " highlight default link tensorIdentifier Identifier
+    highlight tensorIdentifier cterm=bold
   else
     hi clear tensorIdentifier
   endif
@@ -574,7 +576,6 @@ augroup ft_tex
         \| let b:surround_{char2nr("e")} =
         \ "\\begin{\1environment: \1}\n\t\r\n\\end{\1\1}"
         \| let b:surround_{char2nr("q")} = "``\r''"
-  autocmd FileType tex inoremap <buffer> & &<Esc>:Tabularize /&<CR>f&a
   autocmd FileType tex setlocal tw=100
   autocmd FileType tex nnoremap <buffer> <leader>eb :vs %:r.bib<CR>
   " correct cites
@@ -604,6 +605,8 @@ augroup ft_pandoc
   autocmd!
   au FileType pandoc nnoremap <buffer> <F3> :TOC<CR>
   au FileType pandoc setlocal textwidth=100
+  au FileType pandoc nnoremap <localleader>ll :Pandoc pdf<CR>
+  au FileType pandoc nnoremap <localleader>lv :Pandoc! pdf<CR>
 augroup end
 " }}}
 " Julia {{{
