@@ -110,7 +110,7 @@ function! dein#install#_reinstall(plugins) abort "{{{
   endfor
 
   call dein#install#_update(dein#util#_convert2list(a:plugins),
-        \ 'install', dein#install#_is_async())
+        \ 'install', 0)
 endfunction"}}}
 function! dein#install#_direct_install(repo, options) abort "{{{
   let options = copy(a:options)
@@ -212,7 +212,7 @@ function! dein#install#_recache_runtimepath() abort "{{{
 
   call dein#clear_state()
 
-  call s:notify(strftime('Runtimepath updated: (%Y/%m/%d %H:%M:%S)'))
+  call s:log([strftime('Runtimepath updated: (%Y/%m/%d %H:%M:%S)')])
 endfunction"}}}
 function! s:clear_runtimepath() abort "{{{
   if dein#util#_get_cache_path() == ''
@@ -233,8 +233,8 @@ function! s:clear_runtimepath() abort "{{{
     return
   endif
 
-  " Dummy call to create runtime path
-  call dein#util#_get_runtime_path()
+  " Create runtime path
+  call mkdir(dein#util#_get_runtime_path(), 'p')
 
   " Remove previous runtime path
   for path in filter(dein#util#_globlist(
@@ -396,21 +396,13 @@ function! dein#install#_each(cmd, plugins) abort "{{{
     for plugin in plugins
       call dein#install#_cd(plugin.path)
 
-      if !dein#util#_has_vimproc()
-        let output = system(a:cmd)
-        if v:shell_error
-          call s:print_message(output)
-        else
-          call s:error(output)
-        endif
-      else
-        call s:vimproc_system(a:cmd)
+      execute '!' . a:cmd
+      if !v:shell_error
+        redraw
       endif
     endfor
   catch
-    " Build error from vimproc.
-    let message = v:exception . ' ' . v:throwpoint
-    call s:nonskip_error(message)
+    call s:nonskip_error(v:exception . ' ' . v:throwpoint)
     return 1
   finally
     let s:global_context = global_context_save
@@ -423,7 +415,7 @@ function! dein#install#_build(plugins) abort "{{{
     call s:print_progress_message('Building: ' . plugin.name)
     call dein#install#_each(plugin.build, plugin)
   endfor
-  return dein#install#_get_last_status()
+  return v:shell_error
 endfunction"}}}
 
 function! dein#install#_get_log() abort "{{{
@@ -630,15 +622,17 @@ endfunction"}}}
 function! dein#install#_system(command) abort "{{{
   let command = s:iconv(a:command, &encoding, 'char')
 
-  let output = dein#util#_has_vimproc() && !has('nvim') ?
-        \ vimproc#system(command) : system(command)
+  let output = s:has_vimproc() ? vimproc#system(command) : system(command)
 
   let output = s:iconv(output, 'char', &encoding)
 
   return substitute(output, '\n$', '', '')
 endfunction"}}}
+function! s:has_vimproc() abort "{{{
+  return dein#util#_has_vimproc() && dein#util#_is_windows()
+endfunction"}}}
 function! dein#install#_get_last_status() abort "{{{
-  return dein#util#_has_vimproc() ? vimproc#get_last_status() : v:shell_error
+  return s:has_vimproc() ? vimproc#get_last_status() : v:shell_error
 endfunction"}}}
 function! dein#install#_rm(path) abort "{{{
   if !isdirectory(a:path) && !filereadable(a:path)
@@ -833,12 +827,9 @@ function! s:done(context) abort "{{{
   call s:notify(s:get_errored_message(a:context.errored_plugins))
 
   if a:context.update_type !=# 'check_update'
-        \ && (!empty(a:context.synced_plugins)
-        \     || !empty(a:context.errored_plugins))
     call dein#install#_recache_runtimepath()
-  else
-    call s:notify(strftime('Done: (%Y/%m/%d %H:%M:%S)'))
   endif
+  call s:notify(strftime('Done: (%Y/%m/%d %H:%M:%S)'))
 
   " Disable installation handler
   let s:global_context = {}
@@ -957,7 +948,6 @@ function! s:init_process(plugin, context, cmd) abort "{{{
           \ 'output': '',
           \ 'status': -1,
           \ 'eof': 0,
-          \ 'start_time': localtime(),
           \ }
 
     if isdirectory(a:plugin.path)
@@ -1018,23 +1008,19 @@ function! s:init_job(process, context, cmd) abort "{{{
     let a:process.output = dein#install#_system(a:cmd)
     let a:process.status = dein#install#_get_last_status()
   endif
+
+  let a:process.start_time = localtime()
 endfunction"}}}
 function! s:check_output(context, process) abort "{{{
-  let is_timeout = (localtime() - a:process.start_time)
-        \             >= get(a:process.plugin, 'timeout',
-        \                    g:dein#install_process_timeout)
-
   if a:context.async && has_key(a:process, 'proc')
-    let [is_skip, status] =
-          \ s:get_async_result(a:process, is_timeout)
+    let [is_timeout, is_skip, status] = s:get_async_result(a:process)
   elseif dein#util#_has_vimproc() && has_key(a:process, 'proc')
-    let [is_skip, status] =
-          \ s:get_vimproc_result(a:process, is_timeout)
+    let [is_timeout, is_skip, status] = s:get_vimproc_result(a:process)
   else
-    let [is_skip, status] = [0, a:process.status]
+    let [is_timeout, is_skip, status] = [0, 0, a:process.status]
   endif
 
-  if is_skip
+  if is_skip && !is_timeout
     return
   endif
 
@@ -1061,8 +1047,10 @@ function! s:check_output(context, process) abort "{{{
       call s:error('Maybe wrong username or repository.')
     endif
 
-    call s:error((is_timeout ? 'Process timeout.' :
-          \    split(a:process.output, '\n')))
+    call s:error((is_timeout ?
+          \    strftime('Process timeout: (%Y/%m/%d %H:%M:%S)') :
+          \    split(a:process.output, '\n')
+          \ ))
 
     call add(a:context.errored_plugins,
           \ plugin)
@@ -1107,9 +1095,9 @@ function! s:check_output(context, process) abort "{{{
 
   let a:process.eof = 1
 endfunction"}}}
-function! s:get_async_result(process, is_timeout) abort "{{{
+function! s:get_async_result(process) abort "{{{
   if !has_key(s:job_info, a:process.proc)
-    return [1, -1]
+    return [0, 1, -1]
   endif
 
   let job = s:job_info[a:process.proc]
@@ -1123,55 +1111,67 @@ function! s:get_async_result(process, is_timeout) abort "{{{
     endif
   endif
 
-  if !job.eof && !a:is_timeout
-    let output = join(job.candidates[: -2], "\n")
-    if output != ''
-      let a:process.output .= output
-      call s:print_message(s:get_short_message(
-            \ a:process.plugin, a:process.number,
-            \ a:process.max_plugins, output))
-    endif
-    let job.candidates = job.candidates[-1:]
-    return [1, -1]
-  else
-    if a:is_timeout
-      silent! call call(
-            \ (has('nvim') ? 'jobstop' : 'job_stop'),
-            \ (has('nvim') ? a:process.proc : a:process.job))
-    endif
-    let output = join(job.candidates, "\n")
-    if output != ''
-      let a:process.output .= output
-      call s:print_message(s:get_short_message(
-            \ a:process.plugin, a:process.number,
-            \ a:process.max_plugins, output))
-    endif
-    let a:process.output = substitute(
-          \ a:process.output, 'DETACH', '', '')
-    let job.candidates = []
-  endif
-
-  let status = job.status
-
-  return [0, status]
-endfunction"}}}
-function! s:get_vimproc_result(process, is_timeout) abort "{{{
-  let output = vimproc#util#iconv(
-        \ a:process.proc.stdout.read(-1, 300), 'char', &encoding)
+  let output = join((job.eof ?
+        \ job.candidates : job.candidates[: -2]), "\n")
   if output != ''
     let a:process.output .= output
+    let a:process.start_time = localtime()
     call s:print_message(s:get_short_message(
           \ a:process.plugin, a:process.number,
           \ a:process.max_plugins, output))
   endif
-  if !a:process.proc.stdout.eof && !a:is_timeout
-    return [1, -1]
+  let job.candidates = job.eof ? [] : job.candidates[-1:]
+
+  let is_timeout = (localtime() - a:process.start_time)
+        \             >= get(a:process.plugin, 'timeout',
+        \                    g:dein#install_process_timeout)
+
+  if job.eof
+    let is_timeout = 0
+    let is_skip = 0
+    let status = job.status
+  else
+    let is_skip = 1
+    let status = -1
   endif
+
+  if is_timeout
+    silent! call call(
+          \ (has('nvim') ? 'jobstop' : 'job_stop'),
+          \ (has('nvim') ? a:process.proc : a:process.job))
+    let status = -1
+  endif
+
+  return [is_timeout, is_skip, status]
+endfunction"}}}
+function! s:get_vimproc_result(process) abort "{{{
+  let output = s:iconv(a:process.proc.stdout.read(-1, 300),
+        \ 'char', &encoding)
+  if output != ''
+    let a:process.output .= output
+    let a:process.start_time = localtime()
+    call s:print_message(s:get_short_message(
+          \ a:process.plugin, a:process.number,
+          \ a:process.max_plugins, output))
+  endif
+
+  let is_timeout = (localtime() - a:process.start_time)
+        \             >= get(a:process.plugin, 'timeout',
+        \                    g:dein#install_process_timeout)
+
+  if !a:process.proc.stdout.eof && !is_timeout
+    return [is_timeout, 1, -1]
+  endif
+
+  if a:process.proc.stdout.eof
+    let is_timeout = 0
+  endif
+
   call a:process.proc.stdout.close()
 
   let status = a:process.proc.waitpid()[1]
 
-  return [0, status]
+  return [is_timeout, 0, status]
 endfunction"}}}
 
 function! s:iconv(expr, from, to) abort "{{{
@@ -1244,28 +1244,6 @@ function! s:notify(msg) abort "{{{
   call dein#util#_notify(a:msg)
 
   call s:updates_log(msg)
-endfunction"}}}
-function! s:vimproc_system(cmd) abort "{{{
-  let proc = vimproc#pgroup_open(a:cmd, 1)
-
-  " Close handles.
-  call proc.stdin.close()
-
-  while !proc.stdout.eof
-    if !proc.stderr.eof
-      " Print error.
-      call s:error(proc.stderr.read_lines(-1, 100))
-    endif
-
-    call s:print_message(proc.stdout.read_lines(-1, 100))
-  endwhile
-
-  while !proc.stderr.eof
-    " Print error.
-    call s:error(proc.stderr.read_lines(-1, 100))
-  endwhile
-
-  call proc.waitpid()
 endfunction"}}}
 function! s:channel2id(channel) abort "{{{
   return matchstr(a:channel, '\d\+')

@@ -40,19 +40,37 @@ function! dein#util#_get_base_path() abort "{{{
   return g:dein#_base_path
 endfunction"}}}
 function! dein#util#_get_runtime_path() abort "{{{
+  if g:dein#_runtime_path != ''
+    return g:dein#_runtime_path
+  endif
+
+  let g:dein#_runtime_path = dein#util#_get_cache_path() . '/.dein'
   if !isdirectory(g:dein#_runtime_path)
     call mkdir(g:dein#_runtime_path, 'p')
   endif
-
   return g:dein#_runtime_path
 endfunction"}}}
 function! dein#util#_get_cache_path() abort "{{{
-  let cache = get(g:, 'dein#cache_directory', g:dein#_base_path)
-  if cache != '' && !isdirectory(cache)
-    call mkdir(cache, 'p')
+  if g:dein#_cache_path != ''
+    return g:dein#_cache_path
   endif
 
-  return cache
+  let g:dein#_cache_path = get(g:,
+        \ 'dein#cache_directory', g:dein#_base_path)
+        \ . '/.cache/' . fnamemodify(dein#util#_get_myvimrc(), ':t')
+  if !isdirectory(g:dein#_cache_path)
+    call mkdir(g:dein#_cache_path, 'p')
+  endif
+  return g:dein#_cache_path
+endfunction"}}}
+function! dein#util#_get_vimrcs(vimrcs) abort "{{{
+  return !empty(a:vimrcs) ?
+        \ dein#util#_convert2list(a:vimrcs) : [dein#util#_get_myvimrc()]
+endfunction"}}}
+function! dein#util#_get_myvimrc() abort "{{{
+  return $MYVIMRC != '' ? $MYVIMRC :
+        \ matchstr(split(dein#util#_redir('scriptnames'), '\n')[0],
+        \  '^\s*\d\+:\s\zs.*')
 endfunction"}}}
 
 function! dein#util#_error(msg) abort "{{{
@@ -158,6 +176,7 @@ endfunction"}}}
 function! dein#util#_check_lazy_plugins() abort "{{{
   return map(filter(dein#util#_get_lazy_plugins(),
         \   "isdirectory(v:val.rtp)
+        \    && get(v:val, 'hook_source', '') == ''
         \    && !isdirectory(v:val.rtp . '/plugin')
         \    && !isdirectory(v:val.rtp . '/after/plugin')"),
         \   'v:val.name')
@@ -220,7 +239,8 @@ function! dein#util#_save_cache(vimrcs, is_state, is_starting) abort "{{{
 
   call writefile([string(a:vimrcs),
         \         dein#_vim2json(plugins), dein#_vim2json(g:dein#_ftplugin)],
-        \ dein#_get_cache_file())
+        \ get(g:, 'dein#cache_directory', g:dein#_base_path)
+        \ .'/cache_'.fnamemodify(v:progname, ':r'))
 endfunction"}}}
 function! dein#util#_check_vimrcs() abort "{{{
   let time = getftime(dein#util#_get_runtime_path())
@@ -259,12 +279,14 @@ function! dein#util#_save_state(is_starting) abort "{{{
   " Version check
 
   let lines = [
-        \ 'let [plugins, ftplugin] = dein#load_cache_raw('. string(g:dein#_vimrcs) .', 1)',
+        \ 'let [plugins, ftplugin] = dein#load_cache_raw('.
+        \      string(g:dein#_vimrcs) .')',
         \ "if empty(plugins) | throw 'Cache loading error' | endif",
         \ 'let g:dein#_plugins = plugins',
         \ 'let g:dein#_ftplugin = ftplugin',
         \ 'let g:dein#_base_path = ' . string(g:dein#_base_path),
         \ 'let g:dein#_runtime_path = ' . string(g:dein#_runtime_path),
+        \ 'let g:dein#_cache_path = ' . string(g:dein#_cache_path),
         \ 'let &runtimepath = ' . string(&runtimepath),
         \ ]
 
@@ -303,7 +325,8 @@ function! dein#util#_save_state(is_starting) abort "{{{
           \ event, event, string(plugins)))
   endfor
 
-  call writefile(lines, dein#_get_state_file())
+  call writefile(lines, get(g:, 'dein#cache_directory', g:dein#_base_path)
+        \ .'/state_'.fnamemodify(v:progname, ':r').'.vim')
 endfunction"}}}
 function! dein#util#_clear_state() abort "{{{
   for cache in dein#util#_globlist(g:dein#_base_path.'/state_*.vim')
@@ -332,8 +355,9 @@ function! dein#util#_begin(path, vimrcs) abort "{{{
   if g:dein#_base_path[-1:] == '/'
     let g:dein#_base_path = g:dein#_base_path[: -2]
   endif
-  let g:dein#_runtime_path = g:dein#_base_path . '/.dein'
-  let g:dein#_vimrcs = dein#util#_convert2list(a:vimrcs)
+  call dein#util#_get_runtime_path()
+  call dein#util#_get_cache_path()
+  let g:dein#_vimrcs = dein#util#_get_vimrcs(a:vimrcs)
   let g:dein#_hook_add = ''
 
   " Filetype off
@@ -554,8 +578,8 @@ function! dein#util#_split(expr) abort "{{{
 endfunction"}}}
 
 function! dein#util#_redir(cmd) abort "{{{
-  if exists('*capture')
-    return capture(a:cmd)
+  if exists('*execute')
+    return execute(a:cmd)
   else
     let [save_verbose, save_verbosefile] = [&verbose, &verbosefile]
     set verbose=0 verbosefile=

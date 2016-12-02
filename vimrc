@@ -248,8 +248,11 @@ nnoremap j gj
 nnoremap k gk
 nnoremap gj j
 nnoremap gk k
-nnoremap H ^
-nnoremap L $
+
+" Easier to type, and I never use the default behavior.
+noremap H ^
+noremap L $
+vnoremap L g_
 " }}}
 " handy for vinegar and so on
 set autowrite
@@ -275,8 +278,18 @@ set showtabline=2
 " recommended by flagship
 set guioptions-=e
 set title
+function! SL(function)
+  if exists('*'.a:function)
+    return call(a:function,[])
+  else
+    return ''
+  endif
+endfunction
+
 
 set statusline=[%n%M]\ %<%t\ ~=\ %Y\ %([tw=%{&textwidth}\ ts=%{&tabstop}\ sw=%{&shiftwidth}\ %{&expandtab?'et':'noet'}]%)%=%l,%c%V\ %P
+" set statusline=[%n]\ %<%.99f\ %h%w%m%r%{SL('CapsLockStatusline')}%y%*%=%-14.(%l,%c%V%)\ %P
+
 
 function! s:Pulse() " {{{
   " by steve losh
@@ -311,15 +324,25 @@ augroup lpag_flagship
   au!
   autocmd User Flags call Hoist("buffer", {'hl':['StatusLine','StatusLineNC']}, function('fugitive#statusline'))
   autocmd User Flags call Hoist("window", {'hl':['StatusLine','StatusLineNC']}, "%{eclim#project#util#ProjectStatusLine()}")
-  autocmd User Flags call Hoist("window", {'hl':['StatusLine','StatusLineNC']}, "SyntasticStatuslineFlag")
+  autocmd User Flags call Hoist("buffer", {'hl':['StatusLine','StatusLineNC']}, "SyntasticStatuslineFlag")
   autocmd User Flags call Hoist("global", "%{&ignorecase ? '[IC]' : ''}")
   " autocmd User Flags call Hoist("buffer", "%{&path}")
 augroup END
 
 set background=dark
 silent! colorscheme badwolf
+
 set colorcolumn=+1
 set cursorline
+augroup cline
+  "thanks to sjl
+  au!
+  au WinLeave,InsertEnter * set nocursorline
+  au WinEnter,InsertLeave * set cursorline
+augroup END
+
+" highlight git conflict markers
+match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 
 " }}} Statusline and Colors"
 " Section: Mappings {{{
@@ -379,6 +402,16 @@ end
 " <leader>c {{{ "
 " correct things (mainly in python)
 " }}} <leader>c "
+" Keep search matches in the middle of the window.
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" Same when jumping around
+nnoremap g; g;zz
+nnoremap g, g,zz
+nnoremap <c-o> <c-o>zz
+
+
 
 
 " leader u {{{ "
@@ -423,11 +456,12 @@ nnoremap <leader>pu :PluginUpdate<CR>
 nnoremap <leader>pc :PluginClean<CR>
 nnoremap <leader>ps :PluginSearch
 
-nnoremap <leader>pt :CtrlPTag<CR>
 " }}} <leader>p "
 "
 " <leader>t {{{ "
 nnoremap <leader>tg :GatherTodo<CR>
+nmap <leader>to OTODO: <esc><Plug>CommentaryLineA
+
 
 nnoremap <leader>ty :Tyank<CR>
 nnoremap <leader>tp :Tput<CR>
@@ -464,7 +498,6 @@ nnoremap <leader>nb /([^)]\{-}([^)]\{-})[^)]\{-})<CR>
 nnoremap <leader>vp :!okular %:r.pdf&<cr>
 
 nnoremap <leader>dt mq:%s/\v +$//<CR>`q
-nnoremap <leader>. :<Up><CR>
 nnoremap <leader>= mqgg=G`q
 
 " Toggle Help/Text FileType;
@@ -594,10 +627,21 @@ let g:markdown_fenced_languages = ['python', 'java']
 let g:markdown_syntax_conceal = 1
 let g:markdown_folding = 1
 augroup ft_markdown
-  autocmd!
-  au FileType markdown setlocal makeprg=mdl\ %
-  au FileType markdown let b:dispatch="pandoc -f markdown -t latex -o %:p:r.pdf %"
-  au FileType markdown inoremap <buffer> <Bar> <Bar><Esc>:Tabularize/<Bar>/l1<CR>a
+    au!
+
+    au BufNewFile,BufRead *.m*down setlocal filetype=markdown foldlevel=1
+
+    au Filetype markdown setlocal spell
+    au FileType markdown setlocal makeprg=mdl\ %
+
+    " Use <localleader>1/2/3 to add headings.
+    au Filetype markdown nnoremap <buffer> <localleader>1 yypVr=:redraw<cr>
+    au Filetype markdown nnoremap <buffer> <localleader>2 yypVr-:redraw<cr>
+    au Filetype markdown nnoremap <buffer> <localleader>3 mzI###<space><esc>`zllll
+    au Filetype markdown nnoremap <buffer> <localleader>4 mzI####<space><esc>`zlllll
+
+    au Filetype markdown nnoremap <buffer> <localleader>p VV:'<,'>!python -m json.tool<cr>
+    au Filetype markdown vnoremap <buffer> <localleader>p :!python -m json.tool<cr>
 augroup END
 " }}}
 " Pandoc {{{
@@ -677,12 +721,11 @@ augroup end
 " dot {{{ "
 augroup ft_dot
   au!
-  " this one is which you're most likely to use?
   autocmd FileType dot setlocal commentstring=//\ %s
   autocmd FileType dot let b:dispatch='dot -Tpng -o %:r.png %'
 augroup end
 " }}} dot "
-" ft_bib {{{ "
+" bib {{{ "
 augroup ft_bib
   au!
   " this one is which you're most likely to use?
@@ -735,7 +778,9 @@ nnoremap S :call <SID>or_else("SplitjoinSplit","gqq")<CR>
 nnoremap J :call <SID>or_else("SplitjoinJoin","J")<CR>
 " }}}
 " CtrlP {{{ "
-let g:ctrlp_types = ['mru', 'fil']
+let g:ctrlp_map = '<leader>,'
+nnoremap <leader>. :CtrlPTag<cr>
+nnoremap <leader>b :CtrlPBuffer<cr>
 let g:ctrlp_extensions = ['tag']
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
@@ -765,20 +810,8 @@ let g:UltiSnipsJumpBackwardTrigger= '<C-k>'
 " inoremap <c-x><c-k> <c-x><c-k>
 " inoremap <c-x><c-s> <C-R>=UltiSnips#ExpandSnippet()<CR>
 " }}}
-" Snipmate {{{
-" let g:snipMate = get(g:, 'snipMate', {}) " allow vimrc resourcing
-" let g:snips_author = "Lukas Galke"
-" imap <C-J> <Plug>snipMateNextOrTrigger
-" imap <C-K> <Plug>snipMateBack
-" imap <C-R><C-J> <Plug>snipMateShow
-" vmap <C-J> <Plug>snipMateVisual
-" }}}
-" {{{ XPTemplate
-" let g:xptemplate_vars='$author=Lukas Galke&$email=vim@lpag.de'
-" let g:xptemplate_key='<c-k>'
-" let g:xptemplate_key_visual = '<c-k>'
-" let g:xptemplate_nav_next = '<C-k>'
-" let g:xptemplate_nav_prev = '<C-j>'
+" {{{ Ack
+nnoremap <leader>a :Ack!<space>
 " }}}
 " {{{ Nerdtree
 let g:NERDTreeHijackNetrw = 0

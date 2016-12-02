@@ -1,0 +1,18 @@
+snippet     printshape
+abbr        output the shape to stderr
+options     head
+	print("${3}${1:X}.shape:", $1.shape${2:, file=sys.stderr})
+	${0}
+
+snippet     testmod
+abbr        doctest.testmod()
+options     head
+	import doctest
+	doctest.testmod(${1})
+	${0}
+
+snippet     flatten
+abbr        flattens list of lists
+options     head
+	[item for sublist in ${1:thelist} for item in sublist]
+
