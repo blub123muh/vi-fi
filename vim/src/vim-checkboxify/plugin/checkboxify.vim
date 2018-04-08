@@ -25,7 +25,7 @@ if !exists('g:checkboxify_checked')
 endif
 
 if !exists('g:checkboxify_brute')
-  let g:checkboxify_brute = 1
+  let g:checkboxify_brute = 0
 endif
 
 

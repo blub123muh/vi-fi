@@ -411,13 +411,6 @@ nnoremap g; g;zz
 nnoremap g, g,zz
 nnoremap <c-o> <c-o>zz
 
-
-
-
-" leader u {{{ "
-nnoremap <leader>uw b~e
-" }}} leader u "
-
 " Insert mode {{{ "
 inoremap <C-R><C-K> <esc>:help digraph-table<cr>
 inoremap <C-J> <Down>
@@ -487,6 +480,8 @@ vnoremap <leader>ss :sort<cr>
 nnoremap <leader>s. vip:sort! rf /\.\d*/<cr>
 vnoremap <leader>s. :sort! rf /\.\d*/<cr>
 " }}} Sorting "
+
+nnoremap <leader>cc wb~e
 
 
 
@@ -596,7 +591,6 @@ let g:python_highlight_all = 1
 augroup ft_python
   autocmd!
   autocmd FileType python setlocal textwidth=79
-  autocmd FileType python nnoremap <buffer> <silent> <leader>cc :s/\v([,:])(\k)/\1\ \2/g<CR>
   autocmd FileType python call s:highlightIdentifiers(1)
 augroup END
 " }}}
@@ -612,7 +606,7 @@ augroup ft_tex
   autocmd FileType tex setlocal tw=100
   autocmd FileType tex nnoremap <buffer> <leader>eb :vs %:r.bib<CR>
   " correct cites
-  autocmd FileType tex nnoremap <buffer> <leader>cc :%s/\s\+\(\(\\ref\)\\|\(\\cite\)\)/\~\1/g<CR>
+  autocmd FileType tex nnoremap <buffer> <leader>cr :%s/\s\+\(\(\\ref\)\\|\(\\cite\)\)/\~\1/g<CR>
   autocmd FileType tex let b:dispatch = 'latexmk -pdf %'
 augroup END
 " }}}
@@ -847,7 +841,7 @@ let g:syntastic_tex_chktex_args = "-n1 -n8 -n36"
 let g:syntastic_python_checkers = ['python', 'flake8']
 let g:syntastic_python_python_exec = '/usr/bin/python3'
 let g:syntastic_python_flake8_exec = '/usr/bin/python3'
-let g:syntastic_python_flake8_args = '-m flake8 --ignore=E501'
+let g:syntastic_python_flake8_args = '-m flake8 --ignore=E501,E203'
 
 " let g:syntastic_python_checker_args = '--ignore=E501'
 
@@ -901,7 +895,7 @@ let g:vimtex_fold_preamble = 1
 let g:vimtex_fold_comments = 1
 let g:vimtex_indent_enabled = 1
 let g:vimtex_indent_bib_enabled = 1
-let g:vimtex_format_enabled = 0
+let g:vimtex_format_enabled = 1
 augroup vimtex_mappings
   au!
   au User VimtexEventInitPost nmap <F3> <plug>(vimtex-toc-toggle)

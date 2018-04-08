@@ -1,16 +1,22 @@
 [user]
-	email = git@lpag.de
+	email = github@lpag.de
 	name = Lukas Galke
 [push]
 	default = simple
 [core]
 	editor = vim
-	excludesfile = /home/lpag/.gitignore
+	excludesfile = ~/.cvsignore
 [alias]
 	la = log --oneline --decorate --all --graph
 	co = checkout
 	br = branch
 	ci = commit
 	st = status
+[diff]
+	tool = vimdiff
+[merge]
+	tool = vimdiff
+[difftool]
+	prompt = false
 
 ; vim: set ft=gitconfig:

@@ -14,7 +14,7 @@ autoload -Uz colors && colors
 
 # Uncomment the following line to use hyphen-insensitive completion. Case
 # sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
+HYPHEN_INSENSITIVE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
 # DISABLE_AUTO_UPDATE="true"
@@ -59,10 +59,11 @@ plugins=(git dnf tmux vi-mode)
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
+source ~/.aliases
 
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
-PROMPT="(%{$fg_bold[magenta]%}%h%{$reset_color%},%{$fg_bold[yellow]%}%j%{$reset_color%}) $PROMPT"
+PROMPT="[%{$fg_bold[magenta]%}\$(t | wc -l | sed -e's/ *//')%{$reset_color%}] (%{$fg_bold[green]%}%h%{$reset_color%},%{$fg_bold[yellow]%}%j%{$reset_color%}) $PROMPT"
 
 
 # Preferred editor for local and remote sessions
@@ -83,19 +84,28 @@ fi
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 #
-# Example aliases
-alias zshconfig="vim ~/.zshrc"
-alias ohmyzsh="vim ~/.oh-my-zsh"
-alias rm="rm -i"
-alias ev="vim ~/.vimrc"
-alias ez="vim ~/.zshrc"
-alias et="vim ~/.tmux.conf"
-alias ep="vim ~/.plan/README.markdown"
-alias clearhist="echo '' > ~/.zsh_history && exec $SHELL -l"
-alias boring="vim +GatherTodo"
 
 # Pass <C-S> to vim
 stty stop '' -ixoff
 
 export NVM_DIR="/home/lpag/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+## Aliases
+# alias zshconfig="vim ~/.zshrc"
+# alias ohmyzsh="vim ~/.oh-my-zsh"
+# alias rm="rm -i"
+# alias ev="vim ~/.vimrc"
+# alias ez="vim ~/.zshrc"
+# alias et="vim ~/.tmux.conf"
+# alias ep="vim ~/.plan/README.markdown"
+# alias clearhist="echo '' > ~/.zsh_history && exec $SHELL -l"
+# alias boring="vim +GatherTodo"
+# alias v="vim"
+# alias vv="vim ~/.vimrc"
+# alias vm="vim ~/.mutt/muttrc"
+# alias vz="vim ~/.zshrc"
+# alias vimpager="/usr/share/vim/vim80/macros/less.sh"
+# alias man="man -P /usr/share/vim/vim80/macros/less.sh"
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
